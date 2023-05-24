@@ -23,3 +23,6 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::get('/api/bills', [App\Http\Controllers\BillController::class, 'index'])->name('bills.list');
 Route::post('/api/bills', [App\Http\Controllers\BillController::class, 'store'])->name('bills.store');
+
+
+Route::get('/api/registers', [App\Http\Controllers\RegisterController::class, 'index'])->name('registers');

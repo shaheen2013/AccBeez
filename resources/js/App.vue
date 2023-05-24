@@ -30,6 +30,9 @@
                                 <el-menu-item index="2-2">
                                     <router-link to="/bills/create">Bill Create</router-link>
                                 </el-menu-item>
+                                <el-menu-item index="2-3">
+                                    <router-link to="/register">Register</router-link>
+                                </el-menu-item>
                             </el-menu-item-group>
                         </el-sub-menu>
                     </el-menu>
