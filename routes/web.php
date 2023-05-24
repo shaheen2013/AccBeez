@@ -21,5 +21,5 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/bills', [App\Http\Controllers\BillController::class, 'index'])->name('bills.list');
+Route::get('/api/bills', [App\Http\Controllers\BillController::class, 'index'])->name('bills.list');
 Route::post('/api/bills', [App\Http\Controllers\BillController::class, 'store'])->name('bills.store');

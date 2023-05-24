@@ -4,6 +4,8 @@
         status-icon>
         <el-form-item label="Date" required>
             <el-date-picker v-model="bill.date" type="date" label="Pick a date" placeholder="Pick a date"
+                format="YYYY-MM-DD"
+                value-format="YYYY-MM-DD"
                 style="width: 100%" />
         </el-form-item>
         <el-form-item label="Description" prop="description">
@@ -67,7 +69,7 @@
         </el-row>
 
         <el-form-item label="Invoice Total">
-            <el-input v-model="bill.invoice_total" type="text" placeholder="Invoice Total" />
+            <el-input v-model="bill.invoice_total" type="text" placeholder="Invoice Total" disabled />
         </el-form-item>
 
         <el-form-item>

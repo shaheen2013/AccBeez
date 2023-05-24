@@ -10,7 +10,11 @@ class BillController extends Controller
 {
     public function index()
     {
-        dd('hi index');
+        // dd('hi index');
+        $bills = Bill::all();
+
+        // Return the customers as a response
+        return response()->json($bills);
     }
 
     public function store(Request $request)

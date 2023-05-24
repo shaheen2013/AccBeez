@@ -12,4 +12,7 @@ class BillItem extends Model
     public function bill(){
         return $this->belongsTo(Bill::class);
     }
+    public function product(){
+        return $this->belongsTo(Product::class);
+    }
 }

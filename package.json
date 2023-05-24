@@ -19,6 +19,7 @@
         "vue": "^3.2.37"
     },
     "dependencies": {
-        "element-plus": "^2.3.5"
+        "element-plus": "^2.3.5",
+        "vue-router": "^4.2.1"
     }
 }
