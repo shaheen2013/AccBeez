@@ -6,6 +6,9 @@
 
 import './bootstrap';
 import { createApp } from 'vue';
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
+import Welcome from './Welcome.vue';
 
 /**
  * Next, we will create a fresh Vue application instance. You may then begin
@@ -13,27 +16,27 @@ import { createApp } from 'vue';
  * to use in your application's views. An example is included for you.
  */
 
+// const app = createApp(Welcome);
 const app = createApp({});
+app.use(ElementPlus)
 
 import ExampleComponent from './components/ExampleComponent.vue';
-app.component('example-component', ExampleComponent);
+import App from './App.vue';
+import BillCreate from './components/Bills/Create.vue';
+import BillList from './components/Bills/List.vue';
+// import BillItem from './components/Bills/Item.vue';
+// import ExampleComponent from './components/ExampleComponent.vue';
+// import ExampleComponent from './components/ExampleComponent.vue';
+// import ExampleComponent from './components/ExampleComponent.vue';
+// import ExampleComponent from './components/ExampleComponent.vue';
 
-/**
- * The following block of code may be used to automatically register your
- * Vue components. It will recursively scan this directory for the Vue
- * components and automatically register them with their "basename".
- *
- * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
- */
 
-// Object.entries(import.meta.glob('./**/*.vue', { eager: true })).forEach(([path, definition]) => {
-//     app.component(path.split('/').pop().replace(/\.\w+$/, ''), definition.default);
-// });
+app.component('example-component', ExampleComponent)
+    .component('app', App)
+    .component('bill-create', BillCreate)
+    .component('bill-list', BillList)
+    // .component('bill-item', BillItem)
+    ;
 
-/**
- * Finally, we will attach the application instance to a HTML element with
- * an "id" attribute of "app". This element is included with the "auth"
- * scaffolding. Otherwise, you will need to add an element yourself.
- */
 
 app.mount('#app');
