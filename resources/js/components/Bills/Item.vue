@@ -1,16 +1,18 @@
 <template>
     <tr>
         <td>
-            <el-input v-model="item.product_id" type="text" placeholder="Product" />
+            <el-input v-model="item.product_sku" type="text" placeholder="Product" />
         </td>
         <td>
-            <el-input v-model="item.rate" type="text" placeholder="Rate" />
+            <el-input v-model="item.rate" type="text" placeholder="Rate"
+                        @blur="calculateTotal" />
         </td>
         <td>
-            <el-input v-model="item.quantity" type="text" placeholder="Quantity" />
+            <el-input v-model="item.quantity" type="text" placeholder="Quantity"
+                        @blur="calculateTotal" />
         </td>
         <td>
-            <el-input v-model="item.item_total" type="text" placeholder="Item Total" />
+            <el-input v-model="item.total" type="text" placeholder="Total" disabled style="color: #000000" />
         </td>
     </tr>
 </template>
@@ -21,24 +23,31 @@
 
 export default {
     name:'BillItem',
-    props: {
-        item: {
-            type: Object,
-            required: true
+    props: ['item', 'bill'],
+    data() {
+        return {
+            routeName: null,
+        };
+    },
+    mounted() {
+    },
+    created() {  },
+    methods: {
+        calculateTotal() {
+            this.item.total = parseFloat(this.item.rate) * parseFloat(this.item.quantity);
+            console.log('calculateTotal', this.item.total);
+            let summation = this.bill.items.reduce((total, element) => total + element.total, 0);
+            console.log('summation:', summation);
+            this.$emit('changeInvoiceTotal', summation);
         }
     },
-//   props: ['item', 'items'],
-  data() {
-    return {
-        routeName: null,
-    };
-  },
-  mounted() {
-  },
-  created() {  },
-  methods: {
-
-  },
+    computed: {
+        // calculateTotal() {
+        //     this.item.total = parseFloat(this.item.rate) * parseFloat(this.item.quantity);
+        //     console.log('calculateTotal', this.item.total);
+        //     return this.item.total
+        // }
+    },
 };
 </script>
 

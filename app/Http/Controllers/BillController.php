@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bill;
+use App\Models\BillItem;
 use Illuminate\Http\Request;
 
 class BillController extends Controller
@@ -11,8 +13,15 @@ class BillController extends Controller
         dd('hi index');
     }
 
-    public function store()
+    public function store(Request $request)
     {
-
+        $billData = $request->only('description', 'date', 'invoice_total');
+        // dd('store', $request->all(), $billData);
+        $bill = Bill::create($billData);
+        foreach($request->items as $item){
+            $item['bill_id'] = $bill->id;
+            BillItem::create($item);
+        }
+        return $bill;
     }
 }
