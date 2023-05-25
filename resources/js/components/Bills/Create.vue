@@ -1,7 +1,12 @@
 <template>
     <el-form ref="ruleFormRef" :model="bill" :rules="rules" class="demo-bill"
         label-position="top"
-        status-icon>
+        status-icon
+    >
+        <el-text tag="b"  v-if="operation === 'view'" type="primary" size="large">View Bill</el-text>
+        <el-text tag="b"  v-if="operation === 'edit'" type="primary" size="large">Edit Bill</el-text>
+        <el-text tag="b"  v-if="operation === 'create'" type="primary" size="large">Create Bill</el-text>
+
         <el-form-item label="Date" required>
             <el-date-picker v-model="bill.date" type="date" label="Pick a date" placeholder="Pick a date"
                 format="YYYY-MM-DD"
@@ -68,6 +73,8 @@
 <script >
 
 import BillItem from "./Item.vue";
+import { showErrors } from '@/utils/helper.js'
+
 export default {
     name: 'BillCreate',
     data() {
@@ -145,7 +152,8 @@ export default {
                             this.$router.push('/bills');
                         });
             } catch (error) {
-                console.error(error);
+                showErrors(error);
+                console.error('error in response:', error.response.data);
             }
         },
         async updateBill() {
@@ -157,6 +165,7 @@ export default {
                             this.$router.push('/bills');
                         });
             } catch (error) {
+                showErrors(error);
                 console.error(error);
             }
         },
