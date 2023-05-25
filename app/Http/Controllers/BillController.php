@@ -74,4 +74,21 @@ class BillController extends Controller
         }
     }
 
+    public function delete($id)
+    {
+        try {
+            $bill = Bill::find($id);
+            DB::beginTransaction();
+            BillItem::where('bill_id', $id)->delete();
+            $bill->delete();
+            DB::commit();
+
+            $bills = Bill::all();
+            return response()->json($bills);
+        } catch (Exception $ex) {
+            DB::rollBack();
+            return 'Delete Failed';
+        }
+    }
+
 }

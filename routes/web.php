@@ -25,6 +25,7 @@ Route::get('/api/bills', [App\Http\Controllers\BillController::class, 'index'])-
 Route::post('/api/bills', [App\Http\Controllers\BillController::class, 'store'])->name('bills.store');
 Route::get('/api/bills/edit/{id}', [App\Http\Controllers\BillController::class, 'edit'])->name('bills.edit');
 Route::post('/api/bills/{id}', [App\Http\Controllers\BillController::class, 'update'])->name('bills.update');
+Route::delete('/api/bills/{id}', [App\Http\Controllers\BillController::class, 'delete'])->name('bills.delete');
 
 
 Route::get('/api/boms', [App\Http\Controllers\BomController::class, 'index'])->name('boms.list');

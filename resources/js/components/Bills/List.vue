@@ -14,32 +14,46 @@
             <el-table-column prop="id" label="Operations" >
 
                 <template  #default="scope">
+
                     <router-link :to="'/bills/edit/'+scope.row.id">
-                        <el-button
+
+                        <el-icon :size="20" :color="color" style="width: 1em; height: 1em; margin-right: 8px" >
+                            <Edit />
+                        </el-icon>
+                        <!-- <el-button
                             type="primary"
                             size="small"
                             icon="el-icon-edit"
                         >
                             Edit
-                        </el-button>
+                        </el-button> -->
                     </router-link>
                     <router-link :to="'/bills/view/'+scope.row.id">
-                        <el-button
+                        <el-icon :size="20" :color="color" style="width: 1em; height: 1em; margin-right: 8px" >
+                            <View />
+                        </el-icon>
+                        <!-- <el-button
                             type="warning"
                             size="small"
                             icon="el-icon-view"
                         >
                             View
-                        </el-button>
+                        </el-button> -->
                     </router-link>
-                    <el-button
+                    <el-icon :size="20" :color="'red'"
+                            style="width: 1em; height: 1em; margin-right: 8px"
+                            @click="handleDelete(scope.row.id);"
+                    >
+                        <Delete />
+                    </el-icon>
+                    <!-- <el-button
                         type="danger"
                         size="small"
                         icon="el-icon-delete"
                         @click="handleDelete(scope.row.id);"
                     >
                         Delete
-                    </el-button>
+                    </el-button> -->
                 </template>
             </el-table-column>
         </el-table>
@@ -51,7 +65,10 @@
 
 <script >
 
+    // import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import BillItem from "./Item.vue";
+import { ElMessage, ElMessageBox } from 'element-plus'
+
 export default {
     name: 'BillList',
     data() {
@@ -76,6 +93,32 @@ export default {
     methods: {
         handleDelete(id){
             console.log(id);
+
+            ElMessageBox.confirm(
+                'proxy will permanently delete the file. Continue?',
+                'Warning',
+                {
+                    confirmButtonText: 'OK',
+                    cancelButtonText: 'Cancel',
+                    type: 'warning',
+                }
+            ).then(() => {
+                axios.delete(`/api/bills/`+id).
+                    then((res) => {
+                        console.log('res:', res);
+                        this.bills = res.data;
+                        ElMessage({
+                            type: 'success',
+                            message: 'Delete completed',
+                        })
+                    });
+            }).catch(() => {
+                ElMessage({
+                    type: 'info',
+                    message: 'Delete canceled',
+                })
+            })
+
         }
 
     },
