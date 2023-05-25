@@ -20,6 +20,16 @@ const routes = [
         name: 'BillCreate',
         component: BillCreate
     },
+    {
+        path: '/bills/edit/:id',
+        name: 'BillEdit',
+        component: BillCreate
+    },
+    {
+        path: '/bills/view/:id',
+        name: 'BillView',
+        component: BillCreate
+    },
 ];
 
 const router = createRouter({

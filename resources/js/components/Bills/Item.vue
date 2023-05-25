@@ -1,14 +1,14 @@
 <template>
     <tr>
         <td>
-            <el-input v-model="item.sku" type="text" placeholder="SKU" />
+            <el-input v-model="item.sku" type="text" placeholder="SKU" :disabled="operation === 'view'" />
         </td>
         <td>
-            <el-input v-model="item.rate" type="text" placeholder="Rate"
+            <el-input v-model="item.rate" type="text" placeholder="Rate" :disabled="operation === 'view'"
                         @blur="calculateTotal" />
         </td>
         <td>
-            <el-input v-model="item.quantity" type="text" placeholder="Quantity"
+            <el-input v-model="item.quantity" type="text" placeholder="Quantity" :disabled="operation === 'view'"
                         @blur="calculateTotal" />
         </td>
         <td>
@@ -23,10 +23,9 @@
 
 export default {
     name:'BillItem',
-    props: ['item', 'bill'],
+    props: ['item', 'bill', 'operation'],
     data() {
         return {
-            routeName: null,
         };
     },
     mounted() {
@@ -35,18 +34,11 @@ export default {
     methods: {
         calculateTotal() {
             this.item.total = parseFloat(this.item.rate) * parseFloat(this.item.quantity);
-            console.log('calculateTotal', this.item.total);
+            // console.log('calculateTotal', this.item.total);
             let summation = this.bill.items.reduce((total, element) => total + element.total, 0);
-            console.log('summation:', summation);
+            // console.log('summation:', summation);
             this.$emit('changeInvoiceTotal', summation);
         }
-    },
-    computed: {
-        // calculateTotal() {
-        //     this.item.total = parseFloat(this.item.rate) * parseFloat(this.item.quantity);
-        //     console.log('calculateTotal', this.item.total);
-        //     return this.item.total
-        // }
     },
 };
 </script>
