@@ -7,13 +7,14 @@
                         <el-sub-menu index="1">
                             <template #title>
                                 <el-icon>
-                                    <message />
-                                </el-icon>Navigator One
+                                    <icon-menu />
+                                </el-icon>Boms
                             </template>
                             <el-menu-item-group>
-                                <template #title>Group 1</template>
-                                <el-menu-item index="1-1">Option 1</el-menu-item>
-                                <el-menu-item index="1-2">Option 2</el-menu-item>
+                                <el-menu-item index="1-1">
+                                    <!-- Bills -->
+                                    <router-link to="/boms">List</router-link>
+                                </el-menu-item>
                             </el-menu-item-group>
                         </el-sub-menu>
                         <el-sub-menu index="2">
@@ -27,9 +28,9 @@
                                     <!-- Bills -->
                                     <router-link to="/bills">Bills</router-link>
                                 </el-menu-item>
-                                <el-menu-item index="2-2">
+                                <!-- <el-menu-item index="2-2">
                                     <router-link to="/bills/create">Bill Create</router-link>
-                                </el-menu-item>
+                                </el-menu-item> -->
                                 <el-menu-item index="2-3">
                                     <router-link to="/register">Register</router-link>
                                 </el-menu-item>

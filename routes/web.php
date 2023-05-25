@@ -27,4 +27,10 @@ Route::get('/api/bills/edit/{id}', [App\Http\Controllers\BillController::class, 
 Route::post('/api/bills/{id}', [App\Http\Controllers\BillController::class, 'update'])->name('bills.update');
 
 
+Route::get('/api/boms', [App\Http\Controllers\BomController::class, 'index'])->name('boms.list');
+Route::post('/api/boms', [App\Http\Controllers\BomController::class, 'store'])->name('boms.store');
+Route::get('/api/boms/edit/{id}', [App\Http\Controllers\BomController::class, 'edit'])->name('boms.edit');
+Route::post('/api/boms/{id}', [App\Http\Controllers\BomController::class, 'update'])->name('boms.update');
+
+
 Route::get('/api/registers', [App\Http\Controllers\RegisterController::class, 'index'])->name('registers');

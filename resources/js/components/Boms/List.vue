@@ -1,20 +1,18 @@
 
 <template>
     <div style="padding: 10px;">
-        <h1>Bill List</h1>
+        <h1>BOM List</h1>
         <el-button type="primary" size="medium">
-            <!-- <router-link to="/bills/create">Create</router-link> -->
-            <router-link to="/bills/create" style="text-decoration: none; color: inherit;">Create</router-link>
+            <!-- <router-link to="/boms/create">Create</router-link> -->
+            <router-link to="/boms/create" style="text-decoration: none; color: inherit;">Create</router-link>
         </el-button>
 
-        <el-table :data="bills">
-            <el-table-column prop="date" label="Date" />
-            <el-table-column prop="description" label="Description" />
-            <el-table-column prop="invoice_total" label="Invoice Total" />
+        <el-table :data="boms">
+            <el-table-column prop="name" label="Name" />
             <el-table-column prop="id" label="Operations" >
 
                 <template  #default="scope">
-                    <router-link :to="'/bills/edit/'+scope.row.id">
+                    <router-link :to="'/boms/edit/'+scope.row.id">
                         <el-button
                             type="primary"
                             size="small"
@@ -23,7 +21,7 @@
                             Edit
                         </el-button>
                     </router-link>
-                    <router-link :to="'/bills/view/'+scope.row.id">
+                    <router-link :to="'/boms/view/'+scope.row.id">
                         <el-button
                             type="warning"
                             size="small"
@@ -51,23 +49,23 @@
 
 <script >
 
-import BillItem from "./Item.vue";
+import BomItem from "./Item.vue";
 export default {
-    name: 'BillList',
+    name: 'BomList',
     data() {
         return {
-            bills: []
+            boms: []
         };
     },
     components:{
-        BillItem
+        BomItem
     },
     async mounted() {
         try {
-            await axios.get(`/api/bills`).
+            await axios.get(`/api/boms`).
                     then((res) => {
                         console.log('res:', res);
-                        this.bills = res.data;
+                        this.boms = res.data;
                     });
         } catch (error) {
             console.error(error);
