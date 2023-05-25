@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('quantity')->default(0);
             $table->double('rate')->default(0);
             $table->double('total')->default(0);
-            $table->text('product_sku')->nullalbe();
+            $table->text('sku')->nullalbe();
             $table->timestamps();
         });
     }

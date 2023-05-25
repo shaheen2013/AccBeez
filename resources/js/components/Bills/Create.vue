@@ -43,7 +43,7 @@
                 <table >
                     <thead >
                         <tr >
-                            <th width="30%">Product</th>
+                            <th width="30%">SKU</th>
                             <th width="20%">Rate</th>
                             <th width="20%">Quantity</th>
                             <th width="30%">Item Total</th>
@@ -76,7 +76,7 @@
             <el-button type="primary" @click="createBill">
                 Create
             </el-button>
-            <el-button @click="resetForm(ruleFormRef)">Reset</el-button>
+            <!-- <el-button @click="resetForm(ruleFormRef)">Reset</el-button> -->
         </el-form-item>
     </el-form>
 </template>
@@ -88,8 +88,9 @@ export default {
     name: 'BillCreate',
     data() {
         return {
+            routeName: '',
             singleItem: {
-                'product_sku': null,
+                'sku': null,
                 'quantity': 0,
                 'rate': 0,
                 'total': 0,
@@ -99,7 +100,7 @@ export default {
                 invoice_total: 0,
                 date: '',
                 items: [{
-                    'product_sku': null,
+                    'sku': null,
                     'quantity': 0,
                     'rate': 0,
                     'total': 0,
@@ -111,8 +112,8 @@ export default {
         BillItem
     },
     mounted() {
-        // this.routeName = this.$route.name;
-        // console.log('Route Name: ', this.routeName);
+        this.routeName = this.$route.name;
+        console.log('Route Name: ', this.routeName);
     },
     created() {  },
     methods: {
@@ -134,7 +135,8 @@ export default {
             try {
                 await axios.post(`/api/bills`, this.bill).
                         then((res) => {
-                            console.log('res:', res);
+                            console.log('res:', res, this.$router);
+                            this.$router.push('/bills');
                         });
             } catch (error) {
                 console.error(error);

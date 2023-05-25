@@ -8,11 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class BillItem extends Model
 {
     use HasFactory;
-    protected $fillable = ['bill_id', 'quantity', 'rate', 'total', 'product_sku'];
+    protected $fillable = ['bill_id', 'quantity', 'rate', 'total', 'sku'];
     public function bill(){
         return $this->belongsTo(Bill::class);
-    }
-    public function product(){
-        return $this->belongsTo(Product::class);
     }
 }

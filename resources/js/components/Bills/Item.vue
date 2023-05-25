@@ -1,7 +1,7 @@
 <template>
     <tr>
         <td>
-            <el-input v-model="item.product_sku" type="text" placeholder="Product" />
+            <el-input v-model="item.sku" type="text" placeholder="SKU" />
         </td>
         <td>
             <el-input v-model="item.rate" type="text" placeholder="Rate"
