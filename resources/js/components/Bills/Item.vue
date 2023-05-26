@@ -36,7 +36,7 @@ export default {
             this.item.total = parseFloat(this.item.rate) * parseFloat(this.item.quantity);
             // console.log('calculateTotal', this.item.total);
             let summation = this.bill.items.reduce((total, element) => total + element.total, 0);
-            // console.log('summation:', summation);
+            console.log('summation:', summation);
             this.$emit('changeInvoiceTotal', summation);
         }
     },
