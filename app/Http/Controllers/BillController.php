@@ -8,13 +8,20 @@ use App\Models\BillItem;
 use Illuminate\Http\Request;
 use App\Http\Requests\BillRequest;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class BillController extends Controller
 {
+    // public function __construct()
+    // {
+    //    $this->middleware('auth');
+    // }
+
     public function index()
     {
         // dd('hi index');
         $bills = Bill::all();
+        // dd(Auth::check(), auth());
 
         // Return the customers as a response
         return response()->json($bills);

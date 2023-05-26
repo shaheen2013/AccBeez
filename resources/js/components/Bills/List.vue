@@ -16,7 +16,6 @@
                 <template  #default="scope">
 
                     <router-link :to="'/bills/edit/'+scope.row.id">
-
                         <el-icon :size="20" :color="color" style="width: 1em; height: 1em; margin-right: 8px" >
                             <Edit />
                         </el-icon>

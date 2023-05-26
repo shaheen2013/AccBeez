@@ -27,6 +27,7 @@ Route::get('/', function () {
 // })->where('any','.*');
 
 Route::get('/{any}', function () {
+    // dd(Auth::check());
     if (Auth::check()) {
         return view('master');
     } else {

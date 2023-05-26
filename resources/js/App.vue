@@ -7,22 +7,17 @@
                     <el-menu>
                         <el-menu-item index="1">
                             <el-icon><icon-menu /></el-icon>
-                            <router-link to="/boms" style="text-decoration: none; color: black;">BOM</router-link>
-                        </el-menu-item>
-
-                        <!-- <router-link to="/bills" style="text-decoration: none; color: black;">Bills</router-link> -->
-
-                        <el-menu-item index="2">
-                            <el-icon><icon-menu /></el-icon>
                             <router-link to="/bills" style="text-decoration: none; color: black;">Bills</router-link>
                         </el-menu-item>
-
-                        <el-menu-item index="3">
+                        <el-menu-item index="2">
                             <el-icon><icon-menu /></el-icon>
                             <router-link to="/register"  style="text-decoration: none; color: black;">Register</router-link>
                         </el-menu-item>
+                        <el-menu-item index="3">
+                            <el-icon><icon-menu /></el-icon>
+                            <router-link to="/boms" style="text-decoration: none; color: black;">BOM</router-link>
+                        </el-menu-item>
                     </el-menu>
-
 
 
                     <!-- <el-menu :default-openeds="['1', '3']">
@@ -55,7 +50,6 @@
                         </el-sub-menu>
                     </el-menu> -->
 
-
                 </el-scrollbar>
             </el-aside>
 
@@ -68,15 +62,8 @@
 </template>
 
 <script lang="ts" setup>
-    import {
-        ref
-    } from 'vue'
-    import {
-        Menu as IconMenu,
-        Message,
-        Setting
-    } from '@element-plus/icons-vue'
-
+    import { ref } from 'vue'
+    import { Menu as IconMenu, Message, Setting } from '@element-plus/icons-vue'
 </script>
 
 <style >

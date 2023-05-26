@@ -131,6 +131,17 @@ export default {
                     });
             console.log('Bill edit', this.bill)
         }
+
+        // axios.get('/api/session')
+        //         .then(response => {
+        //             const sessionData = response.data;
+        //             const token = sessionData.csrf_token;
+        //             console.log('sessionData, token', sessionData, token);
+        //             // Store the token or session data as needed
+        //         })
+        //         .catch(error => {
+        //             console.error(error);
+        //         });
     },
     methods: {
 

@@ -17,6 +17,9 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+// Route::middleware('auth:api')->get('/session', function () {
+//     return session()->all();
+// });
 
 Route::get('/bills', [App\Http\Controllers\BillController::class, 'index'])->name('bills.list');
 Route::post('/bills', [App\Http\Controllers\BillController::class, 'store'])->name('bills.store');
