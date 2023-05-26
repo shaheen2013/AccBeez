@@ -14,6 +14,11 @@
         <td>
             <el-input v-model="item.total" type="text" placeholder="Total" disabled style="color: #000000" />
         </td>
+        <td v-if="operation !== 'view'">
+            <el-button type="danger" @click="getDeletedItemsId(index, item.id)">
+                Delete
+            </el-button>
+        </td>
     </tr>
 </template>
 
@@ -23,7 +28,7 @@
 
 export default {
     name:'BillItem',
-    props: ['item', 'bill', 'operation'],
+    props: ['item', 'bill', 'operation', 'deletedItemsID', 'index', 'billItems'],
     data() {
         return {
         };
@@ -34,10 +39,20 @@ export default {
     methods: {
         calculateTotal() {
             this.item.total = parseFloat(this.item.rate) * parseFloat(this.item.quantity);
-            // console.log('calculateTotal', this.item.total);
             let summation = this.bill.items.reduce((total, element) => total + element.total, 0);
             console.log('summation:', summation);
             this.$emit('changeInvoiceTotal', summation);
+        },
+        getDeletedItemsId(index, id) {
+            if(id) {
+                this.deletedItemsID.push(id);
+            }
+            this.deleteRow(index);
+            this.calculateTotal();
+            // console.log('deletedItemsID', id, this.deletedItemsID);
+        },
+        deleteRow(index) {
+            this.billItems.splice(index, 1);
         }
     },
 };

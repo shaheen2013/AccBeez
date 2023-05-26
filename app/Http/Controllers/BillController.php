@@ -57,6 +57,9 @@ class BillController extends Controller
             $bill = Bill::find($id);
             DB::beginTransaction();
             $bill->update($billData);
+            foreach($request->deletedItemsID as $deletedID){
+                $this->deleteItem($deletedID);
+            }
             // dd('update', $request->all(), $billData, $bill);
             foreach($request->items as $item){
                 $item['bill_id'] = $bill->id;
@@ -91,4 +94,11 @@ class BillController extends Controller
         }
     }
 
+    public function deleteItem($id)
+    {
+        $item = BillItem::find($id);
+        if(isset($item)){
+            $item->delete();
+        }
+    }
 }

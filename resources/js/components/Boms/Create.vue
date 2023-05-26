@@ -1,5 +1,5 @@
 <template>
-    <el-form ref="ruleFormRef" :model="bom" :rules="rules" class="demo-bom"
+    <el-form ref="ruleFormRef" :model="bom" class="demo-bom"
         label-position="top"
         status-icon
     >
@@ -16,18 +16,22 @@
                 <table class="table table-borderless">
                     <thead>
                         <tr >
-                            <th width="50%">SKU</th>
-                            <th width="50%">Quantity</th>
+                            <th :style="operation === 'view' ? { 'width': '40%' } : { 'width': '50%' }" >SKU</th>
+                            <th :style="operation === 'view' ? { 'width': '40%' } : { 'width': '50%' }" >Quantity</th>
+                            <th v-if="operation !== 'view'" width="20%">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <bomItem
                             v-for="(item, index) in bom.items"
                             :key="index"
+                            :index="index"
                             :item="item"
+                            :bomItems="bom.items"
                             :bom="bom"
                             :operation="operation"
                             @changeInvoiceTotal="changeInvoiceTotal"
+                            :deletedItemsID="deletedItemsID"
                         />
                     </tbody>
                 </table>
@@ -74,7 +78,8 @@ export default {
                     'sku': null,
                     'quantity': 0,
                 }]
-            }
+            },
+            deletedItemsID: [],
         };
     },
     components:{
@@ -131,6 +136,7 @@ export default {
             }
         },
         async updateBom() {
+            this.bom.deletedItemsID = this.deletedItemsID;
             console.log('updateBom:', this.bom)
             try {
                 await axios.post(`/api/boms/`+this.bom.id, this.bom).

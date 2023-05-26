@@ -64,8 +64,6 @@
 
 
 <script >
-
-    // import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import BillItem from "./Item.vue";
 import { ElMessage, ElMessageBox } from 'element-plus'
 

@@ -67,8 +67,9 @@
 
 
 <script >
-
 import BomItem from "./Item.vue";
+import { ElMessage, ElMessageBox } from 'element-plus'
+
 export default {
     name: 'BomList',
     data() {
@@ -93,6 +94,31 @@ export default {
     methods: {
         handleDelete(id){
             console.log(id);
+            ElMessageBox.confirm(
+                'proxy will permanently delete the file. Continue?',
+                'Warning',
+                {
+                    confirmButtonText: 'OK',
+                    cancelButtonText: 'Cancel',
+                    type: 'warning',
+                }
+            ).then(() => {
+                axios.delete(`/api/boms/`+id).
+                    then((res) => {
+                        console.log('res:', res);
+                        this.boms = res.data;
+                        ElMessage({
+                            type: 'success',
+                            message: 'Delete completed',
+                        })
+                    });
+            }).catch(() => {
+                ElMessage({
+                    type: 'info',
+                    message: 'Delete canceled',
+                })
+            })
+
         }
 
     },

@@ -6,6 +6,11 @@
         <td>
             <el-input v-model="item.quantity" type="text" placeholder="Quantity" :disabled="operation === 'view'" />
         </td>
+        <td v-if="operation !== 'view'">
+            <el-button type="danger" @click="getDeletedItemsId(index, item.id)">
+                Delete
+            </el-button>
+        </td>
     </tr>
 </template>
 
@@ -14,8 +19,8 @@
 <script>
 
 export default {
-    name:'BillItem',
-    props: ['item', 'bom', 'operation'],
+    name:'BomItem',
+    props: ['item', 'bom', 'operation', 'deletedItemsID', 'index', 'bomItems'],
     data() {
         return {
         };
@@ -24,6 +29,16 @@ export default {
     },
     created() {  },
     methods: {
+        getDeletedItemsId(index, id) {
+            if(id) {
+                this.deletedItemsID.push(id);
+            }
+            this.deleteRow(index);
+            console.log('deletedItemsID', id, this.deletedItemsID);
+        },
+        deleteRow(index) {
+            this.bomItems.splice(index, 1);
+        }
     },
 };
 </script>

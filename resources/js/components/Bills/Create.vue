@@ -1,5 +1,5 @@
 <template>
-    <el-form ref="ruleFormRef" :model="bill" :rules="rules" class="demo-bill"
+    <el-form ref="ruleFormRef" :model="bill" class="demo-bill"
         label-position="top"
         status-icon
     >
@@ -25,21 +25,24 @@
                 <table class="table table-borderless">
                     <thead >
                         <tr >
-                            <th width="30%">SKU</th>
+                            <th :style="operation === 'view' ? { 'width': '40%' } : { 'width': '30%' }" >SKU</th>
                             <th width="20%">Rate</th>
                             <th width="20%">Quantity</th>
-                            <th width="30%">Item Total</th>
-                            <!-- <th width="10%">Action</th> -->
+                            <th width="20%">Item Total</th>
+                            <th v-if="operation !== 'view'" width="10%">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <billItem
                             v-for="(item, index) in bill.items"
                             :key="index"
+                            :index="index"
                             :item="item"
+                            :billItems="bill.items"
                             :bill="bill"
                             :operation="operation"
                             @changeInvoiceTotal="changeInvoiceTotal"
+                            :deletedItemsID="deletedItemsID"
                         />
                     </tbody>
                 </table>
@@ -96,7 +99,8 @@ export default {
                     'rate': 0,
                     'total': 0,
                 }]
-            }
+            },
+            deletedItemsID: [],
         };
     },
     components:{
@@ -155,6 +159,7 @@ export default {
             }
         },
         async updateBill() {
+            this.bill.deletedItemsID = this.deletedItemsID;
             console.log('updateBill:', this.bill)
             try {
                 await axios.post(`/api/bills/`+this.bill.id, this.bill).

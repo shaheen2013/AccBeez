@@ -4,10 +4,7 @@
             <el-aside width="200px">
                 <el-scrollbar>
 
-                    <el-menu
-                        @open="handleOpen"
-                        @close="handleClose"
-                    >
+                    <el-menu>
                         <el-menu-item index="1">
                             <el-icon><icon-menu /></el-icon>
                             <router-link to="/boms" style="text-decoration: none; color: black;">BOM</router-link>

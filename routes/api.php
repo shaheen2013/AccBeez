@@ -29,6 +29,7 @@ Route::get('/boms', [App\Http\Controllers\BomController::class, 'index'])->name(
 Route::post('/boms', [App\Http\Controllers\BomController::class, 'store'])->name('boms.store');
 Route::get('/boms/edit/{id}', [App\Http\Controllers\BomController::class, 'edit'])->name('boms.edit');
 Route::post('/boms/{id}', [App\Http\Controllers\BomController::class, 'update'])->name('boms.update');
+Route::delete('/boms/{id}', [App\Http\Controllers\BomController::class, 'delete'])->name('boms.delete');
 
 
 Route::get('/registers', [App\Http\Controllers\RegisterController::class, 'index'])->name('registers');

@@ -55,6 +55,9 @@ class BomController extends Controller
             $bom = Bom::find($id);
             DB::beginTransaction();
             $bom->update($bomData);
+            foreach($request->deletedItemsID as $deletedID){
+                $this->deleteItem($deletedID);
+            }
             // dd('update', $request->all(), $bomData, $bom);
             foreach($request->items as $item){
                 $item['bom_id'] = $bom->id;
@@ -72,4 +75,29 @@ class BomController extends Controller
         }
     }
 
+
+    public function delete($id)
+    {
+        try {
+            $bom = Bom::find($id);
+            DB::beginTransaction();
+            BomItem::where('bom_id', $id)->delete();
+            $bom->delete();
+            DB::commit();
+
+            $boms = Bom::all();
+            return response()->json($boms);
+        } catch (Exception $ex) {
+            DB::rollBack();
+            return 'Delete Failed';
+        }
+    }
+
+    public function deleteItem($id)
+    {
+        $item = BomItem::find($id);
+        if(isset($item)){
+            $item->delete();
+        }
+    }
 }
