@@ -12,7 +12,7 @@
             <el-table-column prop="id" label="Operations" >
 
                 <template  #default="scope">
-                    <router-link :to="'/boms/edit/'+scope.row.id">
+                    <!-- <router-link :to="'/boms/edit/'+scope.row.id">
                         <el-button
                             type="primary"
                             size="small"
@@ -37,7 +37,26 @@
                         @click="handleDelete(scope.row.id);"
                     >
                         Delete
-                    </el-button>
+                    </el-button> -->
+
+
+                    <router-link :to="'/boms/edit/'+scope.row.id">
+
+                        <el-icon :size="20" :color="color" style="width: 1em; height: 1em; margin-right: 8px" >
+                            <Edit />
+                        </el-icon>
+                    </router-link>
+                    <router-link :to="'/boms/view/'+scope.row.id">
+                        <el-icon :size="20" :color="color" style="width: 1em; height: 1em; margin-right: 8px" >
+                            <View />
+                        </el-icon>
+                    </router-link>
+                    <el-icon :size="20" :color="'red'"
+                            style="width: 1em; height: 1em; margin-right: 8px"
+                            @click="handleDelete(scope.row.id);"
+                    >
+                        <Delete />
+                    </el-icon>
                 </template>
             </el-table-column>
         </el-table>

@@ -11,22 +11,13 @@
             <el-input v-model="bom.name" type="text" :disabled="operation === 'view'" />
         </el-form-item>
 
-
-
         <el-row>
-            <el-col :span="18">
-                <h5>Items</h5>
-            </el-col>
-        </el-row>
-
-        <el-row :gutter="10">
             <el-col :span="24">
-                <table >
-                    <thead >
+                <table class="table table-borderless">
+                    <thead>
                         <tr >
                             <th width="50%">SKU</th>
                             <th width="50%">Quantity</th>
-                            <!-- <th width="10%">Action</th> -->
                         </tr>
                     </thead>
                     <tbody>
@@ -40,19 +31,24 @@
                         />
                     </tbody>
                 </table>
-                <el-button type="info" @click="addItem" v-if="operation === 'create' || operation === 'edit'">
+                <el-button type="info" @click="addItem" v-if="operation === 'create' || operation === 'edit'"
+                            class="mb-3">
                     Add
                 </el-button>
             </el-col>
-
         </el-row>
-        <el-form-item>
-            <el-button v-if="operation === 'create'" type="primary" @click="createBom">Create</el-button>
-            <el-button v-if="operation === 'edit'" type="primary" @click="updateBom">Update</el-button>
-            <router-link :to="'/boms'">
-                <el-button type="info">Back</el-button>
-            </router-link>
-        </el-form-item>
+
+        <el-row>
+            <el-col>
+
+                <el-button v-if="operation === 'create'" type="primary" @click="createBom" class="me-2">Create</el-button>
+                <el-button v-if="operation === 'edit'" type="primary" @click="updateBom" class="me-2">Update</el-button>
+                <router-link :to="'/boms'">
+                    <el-button type="info" class="me-2">Back</el-button>
+                </router-link>
+            </el-col>
+        </el-row>
+
     </el-form>
 </template>
 
@@ -152,7 +148,7 @@ export default {
 </script>
 
 
-<style >
+<style scoped>
     .demo-bom {
         padding: 10px;
     }
@@ -160,6 +156,31 @@ export default {
         font-weight:bold !important;
         color: #212529;
     }
+
+    /* .table-container {
+        overflow: hidden;
+    }
+
+    .table-container table {
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    .table-container tbody {
+        display: block;
+        overflow-y: auto;
+    }
+
+    .table-container tbody::-webkit-scrollbar {
+        display: none;
+    }
+
+    .table-container tbody tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    } */
+
     /* .el-input.is-disabled .el-input__inner {
         color: #000000 !important;
         cursor: not-allowed;

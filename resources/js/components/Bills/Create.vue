@@ -21,14 +21,8 @@
 
 
         <el-row>
-            <el-col :span="18">
-                <h5>Items</h5>
-            </el-col>
-        </el-row>
-
-        <el-row :gutter="10">
             <el-col :span="24">
-                <table >
+                <table class="table table-borderless">
                     <thead >
                         <tr >
                             <th width="30%">SKU</th>
@@ -49,7 +43,8 @@
                         />
                     </tbody>
                 </table>
-                <el-button type="info" @click="addItem" v-if="operation === 'create' || operation === 'edit'">
+                <el-button type="info" @click="addItem" v-if="operation === 'create' || operation === 'edit'"
+                            class="mb-3">
                     Add
                 </el-button>
             </el-col>
@@ -60,13 +55,16 @@
             <el-input v-model="bill.invoice_total" type="text" placeholder="Invoice Total" disabled />
         </el-form-item>
 
-        <el-form-item>
-            <el-button v-if="operation === 'create'" type="primary" @click="createBill">Create</el-button>
-            <el-button v-if="operation === 'edit'" type="primary" @click="updateBill">Update</el-button>
-            <router-link :to="'/bills'">
-                <el-button type="info">Back</el-button>
-            </router-link>
-        </el-form-item>
+        <el-row>
+            <el-col>
+                <el-button v-if="operation === 'create'" type="primary" @click="createBill" class="me-2">Create</el-button>
+                <el-button v-if="operation === 'edit'" type="primary" @click="updateBill" class="me-2">Update</el-button>
+                <router-link :to="'/bills'">
+                    <el-button type="info" class="me-2">Back</el-button>
+                </router-link>
+            </el-col>
+        </el-row>
+
     </el-form>
 </template>
 

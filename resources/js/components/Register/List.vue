@@ -3,8 +3,8 @@
     <div style="padding:20px;">
         <h1>Register List</h1>
         <el-table :data="registers">
-            <el-table-column prop="sku" label="SKU" width="140" />
-            <el-table-column prop="total_items" label="Total Item" width="120" />
+            <el-table-column prop="sku" label="SKU" />
+            <el-table-column prop="total_items" label="Total Item" />
             <el-table-column prop="avg_cost" label="Average Cost" />
         </el-table>
 

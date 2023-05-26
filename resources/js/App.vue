@@ -1,9 +1,34 @@
 <template>
     <div class="common-layout">
-        <el-container class="layout-container-demo" style="height: 500px">
+        <el-container class="layout-container-demo">
             <el-aside width="200px">
                 <el-scrollbar>
-                    <el-menu :default-openeds="['1', '3']">
+
+                    <el-menu
+                        @open="handleOpen"
+                        @close="handleClose"
+                    >
+                        <el-menu-item index="1">
+                            <el-icon><icon-menu /></el-icon>
+                            <router-link to="/boms" style="text-decoration: none; color: black;">BOM</router-link>
+                        </el-menu-item>
+
+                        <!-- <router-link to="/bills" style="text-decoration: none; color: black;">Bills</router-link> -->
+
+                        <el-menu-item index="2">
+                            <el-icon><icon-menu /></el-icon>
+                            <router-link to="/bills" style="text-decoration: none; color: black;">Bills</router-link>
+                        </el-menu-item>
+
+                        <el-menu-item index="3">
+                            <el-icon><icon-menu /></el-icon>
+                            <router-link to="/register"  style="text-decoration: none; color: black;">Register</router-link>
+                        </el-menu-item>
+                    </el-menu>
+
+
+
+                    <!-- <el-menu :default-openeds="['1', '3']">
                         <el-sub-menu index="1">
                             <template #title>
                                 <el-icon>
@@ -12,7 +37,6 @@
                             </template>
                             <el-menu-item-group>
                                 <el-menu-item index="1-1">
-                                    <!-- Bills -->
                                     <router-link to="/boms">List</router-link>
                                 </el-menu-item>
                             </el-menu-item-group>
@@ -25,18 +49,16 @@
                             </template>
                             <el-menu-item-group>
                                 <el-menu-item index="2-1">
-                                    <!-- Bills -->
                                     <router-link to="/bills">Bills</router-link>
                                 </el-menu-item>
-                                <!-- <el-menu-item index="2-2">
-                                    <router-link to="/bills/create">Bill Create</router-link>
-                                </el-menu-item> -->
                                 <el-menu-item index="2-3">
                                     <router-link to="/register">Register</router-link>
                                 </el-menu-item>
                             </el-menu-item-group>
                         </el-sub-menu>
-                    </el-menu>
+                    </el-menu> -->
+
+
                 </el-scrollbar>
             </el-aside>
 
@@ -69,7 +91,7 @@
 
     .layout-container-demo .el-aside {
         color: var(--el-text-color-primary);
-        background: var(--el-color-primary-light-8);
+        /* background: var(--el-color-primary-light-8); */
     }
 
     .layout-container-demo .el-menu {
