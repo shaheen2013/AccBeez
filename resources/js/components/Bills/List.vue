@@ -2,7 +2,7 @@
 <template>
     <div style="padding: 10px;">
         <h1>Bill List</h1>
-        <el-button type="primary" size="medium">
+        <el-button type="primary">
             <!-- <router-link to="/bills/create">Create</router-link> -->
             <router-link to="/bills/create" style="text-decoration: none; color: inherit;">Create</router-link>
         </el-button>
@@ -16,7 +16,7 @@
                 <template  #default="scope">
 
                     <router-link :to="'/bills/edit/'+scope.row.id">
-                        <el-icon :size="20" :color="color" style="width: 1em; height: 1em; margin-right: 8px" >
+                        <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px" >
                             <Edit />
                         </el-icon>
                         <!-- <el-button
@@ -28,7 +28,7 @@
                         </el-button> -->
                     </router-link>
                     <router-link :to="'/bills/view/'+scope.row.id">
-                        <el-icon :size="20" :color="color" style="width: 1em; height: 1em; margin-right: 8px" >
+                        <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px" >
                             <View />
                         </el-icon>
                         <!-- <el-button
@@ -70,7 +70,7 @@ export default {
     name: 'BillList',
     data() {
         return {
-            bills: []
+            bills: [],
         };
     },
     components:{
@@ -123,8 +123,4 @@ export default {
 </script>
 
 <style>
-a href{
-    text-decoration: none;
-    color: inherit;
-}
 </style>

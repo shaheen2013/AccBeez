@@ -40,7 +40,7 @@ export default {
         calculateTotal() {
             this.item.total = parseFloat(this.item.rate) * parseFloat(this.item.quantity);
             let summation = this.bill.items.reduce((total, element) => total + element.total, 0);
-            console.log('summation:', summation);
+            // console.log('summation:', summation);
             this.$emit('changeInvoiceTotal', summation);
         },
         getDeletedItemsId(index, id) {

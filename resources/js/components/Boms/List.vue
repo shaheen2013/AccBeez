@@ -2,7 +2,7 @@
 <template>
     <div style="padding: 10px;">
         <h1>BOM List</h1>
-        <el-button type="primary" size="medium">
+        <el-button type="primary">
             <!-- <router-link to="/boms/create">Create</router-link> -->
             <router-link to="/boms/create" style="text-decoration: none; color: inherit;">Create</router-link>
         </el-button>
