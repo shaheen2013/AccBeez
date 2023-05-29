@@ -26,7 +26,7 @@ class UserController extends Controller
         $users = User::all();
         // dd(Auth::check(), auth());
 
-        // Return the customers as a response
+        // Return the users as a response
         return response()->json($users);
     }
 
@@ -96,12 +96,25 @@ class UserController extends Controller
 
     public function confirm_registration(Request $request)
     {
-        dd($request->all(), request(), 'hi');
+        // dd($request->all(), request(), 'hi');
         $user = User::where('email', $request->email)
                     ->where('invitation_token', $request->code)
                     ->first();
         return view('register.register', compact('user'));
         // $request->get('invitee');
+    }
+
+    public function update_registration(Request $request)
+    {
+        $user = User::where('email', $request->email)
+                    ->where('invitation_token', $request->invitation_token)
+                    ->first();
+                    // dd($request->all(), $user);
+
+        $user->password = Hash::make($request->password);
+        $user->markEmailAsVerified();
+        $user->save();
+        return redirect()->route('login');
     }
 
 }
