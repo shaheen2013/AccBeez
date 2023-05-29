@@ -20,6 +20,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // Route::middleware('auth:api')->get('/session', function () {
 //     return session()->all();
 // });
+Route::middleware('auth:api')->get('/user', function (Request $request) {
+    return $request->user();
+});
 
 Route::get('/bills', [App\Http\Controllers\BillController::class, 'index'])->name('bills.list');
 Route::post('/bills', [App\Http\Controllers\BillController::class, 'store'])->name('bills.store');

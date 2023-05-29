@@ -5,6 +5,7 @@ import 'element-plus/dist/index.css'
 import router from './router'
 import Welcome from './Welcome.vue';
 import App from './App.vue';
+// import store from './store/index.js'
 
 
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'

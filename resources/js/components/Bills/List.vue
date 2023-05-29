@@ -64,6 +64,8 @@
 
 <script >
 import BillItem from "./Item.vue";
+// import axios from 'axios';
+
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 export default {
@@ -86,6 +88,19 @@ export default {
         } catch (error) {
             console.error(error);
         }
+
+        
+        // Fetch logged-in user data
+        // axios.get('/api/user')
+        //     .then(response => {
+        //         const user = response.data;
+        //         console.log(user);
+        //         // Do something with the user data
+        //     })
+        //     .catch(error => {
+        //         console.error(error);
+        //     });
+
     },
     methods: {
         handleDelete(id){
