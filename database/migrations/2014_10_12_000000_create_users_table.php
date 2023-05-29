@@ -18,7 +18,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('role')->nullable();
-            $table->string('access_token')->nullable();
+            $table->string('invitation_token', 32)->unique()->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

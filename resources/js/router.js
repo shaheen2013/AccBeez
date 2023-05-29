@@ -4,6 +4,8 @@ import BillList from './components/Bills/List.vue';
 import Register from './components/Register/List.vue';
 import BomCreate from './components/Boms/Create.vue';
 import BomList from './components/Boms/List.vue';
+import UserCreate from './components/Users/Create.vue';
+import UserList from './components/Users/List.vue';
 
 const routes = [
     {
@@ -50,6 +52,29 @@ const routes = [
         path: '/boms/view/:id',
         name: 'BomView',
         component: BomCreate
+    },
+
+
+
+    {
+        path: '/users',
+        name: 'UserList',
+        component: UserList
+    },
+    {
+        path: '/users/create',
+        name: 'UserCreate',
+        component: UserCreate
+    },
+    {
+        path: '/users/edit/:id',
+        name: 'UserEdit',
+        component: UserCreate
+    },
+    {
+        path: '/users/view/:id',
+        name: 'UserView',
+        component: UserCreate
     },
 ];
 

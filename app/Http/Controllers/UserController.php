@@ -1,0 +1,107 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Exception;
+use App\Models\User;
+use Illuminate\Http\Request;
+use App\Http\Requests\UserRequest;
+use Illuminate\Support\Facades\DB;
+use App\Events\SendVerificationCode;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use App\Mail\SendVerificationCodeMail;
+use App\Events\EmailVerificationCodeEvent;
+
+class UserController extends Controller
+{
+    // public function __construct()
+    // {
+    //    $this->middleware('auth');
+    // }
+
+    public function index()
+    {
+        // dd('hi index');
+        $users = User::all();
+        // dd(Auth::check(), auth());
+
+        // Return the customers as a response
+        return response()->json($users);
+    }
+
+    public function store(UserRequest $request)
+    {
+        // dd(config('app.url'));
+        try {
+            $userData = $request->only('name', 'email');
+
+            DB::beginTransaction();
+            $userData['invitation_token'] = random_int(100000, 999999);
+            $userData['password'] = Hash::make('123456');
+            $userData['role'] = 'user';
+            $user = User::create($userData);
+            // event(new SendVerificationCode($user->email, $user->invitation_token));
+            // dd('store', $request->all(), $userData);
+            DB::commit();
+            SendVerificationCode::dispatch($user['email'], $user['invitation_token']);
+            return $user;
+        } catch (Exception $ex) {
+            DB::rollBack();
+            return response()->json( new \Illuminate\Support\MessageBag(['catch_exception'=>$ex->getMessage()]), 403);
+        }
+    }
+
+
+    public function edit($id)
+    {
+        // dd('hi index');
+        $user = User::with('userItems')->find($id);
+
+        // Return the customers as a response
+        return response()->json($user);
+    }
+
+
+    public function update(UserRequest $request, $id)
+    {
+        try {
+            $userData = $request->only('name', 'email');
+            $user = User::find($id);
+            DB::beginTransaction();
+            $user->update($userData);
+            DB::commit();
+            return $user;
+        } catch (Exception $ex) {
+            DB::rollBack();
+            return response()->json( new \Illuminate\Support\MessageBag(['catch_exception'=>$ex->getMessage()]), 403);
+        }
+    }
+
+    public function delete($id)
+    {
+        try {
+            $user = User::find($id);
+            DB::beginTransaction();
+            $user->delete();
+            DB::commit();
+
+            $users = User::all();
+            return response()->json($users);
+        } catch (Exception $ex) {
+            DB::rollBack();
+            return 'Delete Failed';
+        }
+    }
+
+    public function confirm_registration(Request $request)
+    {
+        dd($request->all(), request(), 'hi');
+        $user = User::where('email', $request->email)
+                    ->where('invitation_token', $request->code)
+                    ->first();
+        return view('register.register', compact('user'));
+        // $request->get('invitee');
+    }
+
+}

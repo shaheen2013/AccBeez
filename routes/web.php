@@ -21,10 +21,12 @@ Route::get('/', function () {
     }
 });
 
-// Route::get('/{any}', function () {
-//     // return view('layouts.app');
-//     return view('master');
-// })->where('any','.*');
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/confirm_registration', [App\Http\Controllers\UserController::class, 'confirm_registration'])->name('confirm_registration');
+
+
 
 Route::get('/{any}', function () {
     // dd(Auth::check());
@@ -34,18 +36,3 @@ Route::get('/{any}', function () {
         return redirect('/login');
     }
 })->where('any', '^(?!login).*$');
-
-
-// Route::get('/{any}', function () {
-//     if (request()->path() === 'login') {
-//         return view('master');
-//     } else {
-//         return redirect('/login');
-//     }
-// })->where('any', '^(?!login).*$');
-
-
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-

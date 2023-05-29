@@ -25,25 +25,25 @@ class UserSeeder extends Seeder
                 'remember_token' => Str::random(10),
             ]
         );
-        User::query()->create(
-            [
-                'name' => 'Mediusware',
-                'email' => 'mediusware@gmail.com',
-                'email_verified_at' => now(),
-                'password' => Hash::make('123456'),
-                'role' => 'user',
-                'remember_token' => Str::random(10),
-            ]
-        );
-        User::query()->create(
-            [
-                'name' => 'ABC',
-                'email' => 'abc@gmail.com',
-                'email_verified_at' => now(),
-                'password' => Hash::make('123456'),
-                'role' => 'user',
-                'remember_token' => Str::random(10),
-            ]
-        );
+        // User::query()->create(
+        //     [
+        //         'name' => 'Mediusware',
+        //         'email' => 'mediusware@gmail.com',
+        //         'email_verified_at' => now(),
+        //         'password' => Hash::make('123456'),
+        //         'role' => 'user',
+        //         'remember_token' => Str::random(10),
+        //     ]
+        // );
+        // User::query()->create(
+        //     [
+        //         'name' => 'ABC',
+        //         'email' => 'abc@gmail.com',
+        //         'email_verified_at' => now(),
+        //         'password' => Hash::make('123456'),
+        //         'role' => 'user',
+        //         'remember_token' => Str::random(10),
+        //     ]
+        // );
     }
 }

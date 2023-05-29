@@ -38,4 +38,11 @@ Route::post('/boms/{id}', [App\Http\Controllers\BomController::class, 'update'])
 Route::delete('/boms/{id}', [App\Http\Controllers\BomController::class, 'delete'])->name('boms.delete');
 
 
+Route::get('/users', [App\Http\Controllers\UserController::class, 'index'])->name('users.list');
+Route::post('/users', [App\Http\Controllers\UserController::class, 'store'])->name('users.store');
+Route::get('/users/edit/{id}', [App\Http\Controllers\UserController::class, 'edit'])->name('users.edit');
+Route::post('/users/{id}', [App\Http\Controllers\UserController::class, 'update'])->name('users.update');
+Route::delete('/users/{id}', [App\Http\Controllers\UserController::class, 'delete'])->name('users.delete');
+
+
 Route::get('/registers', [App\Http\Controllers\RegisterController::class, 'index'])->name('registers');

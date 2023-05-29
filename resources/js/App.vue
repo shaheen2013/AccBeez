@@ -8,8 +8,7 @@
                         <el-menu-item index="1">
                             <el-icon><icon-menu /></el-icon>
                             <router-link to="/bills" style="text-decoration: none;"
-                                        :style="[$route.path === '/bills' ? {color: 'royalblue'} : {color: 'black'}]"
-                                    >
+                                        :style="[$route.path === '/bills' ? {color: 'royalblue'} : {color: 'black'}]">
                                     Bills
                             </router-link>
                         </el-menu-item>
@@ -17,14 +16,21 @@
                             <el-icon><icon-menu /></el-icon>
                             <router-link to="/register" style="text-decoration: none;"
                                         :style="[$route.path === '/register' ? {color: 'royalblue'} : {color: 'black'}]">
-                                        Register
+                                    Register
                             </router-link>
                         </el-menu-item>
                         <el-menu-item index="3">
                             <el-icon><icon-menu /></el-icon>
                             <router-link to="/boms" style="text-decoration: none;"
                                         :style="[$route.path === '/boms' ? {color: 'royalblue'} : {color: 'black'}]">
-                                        BOM
+                                    BOM
+                            </router-link>
+                        </el-menu-item>
+                        <el-menu-item index="4">
+                            <el-icon><icon-menu /></el-icon>
+                            <router-link to="/users" style="text-decoration: none;"
+                                        :style="[$route.path === '/users' ? {color: 'royalblue'} : {color: 'black'}]">
+                                    Users
                             </router-link>
                         </el-menu-item>
                     </el-menu>
@@ -74,6 +80,19 @@
 <script lang="ts" setup>
     import { ref } from 'vue'
     import { Menu as IconMenu, Message, Setting } from '@element-plus/icons-vue'
+
+    // const props = defineProps({
+    //     loggedInUser: {
+    //         type: String,
+    //         required: true
+    //     }
+    // });
+
+    // // You can still use the created() lifecycle hook like this
+    // const created = () => {
+    //     console.log('user:', props.loggedInUser);
+    // };
+
 </script>
 
 <style >
