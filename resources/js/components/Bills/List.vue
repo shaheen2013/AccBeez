@@ -2,7 +2,7 @@
 <template>
     <div style="padding: 10px;">
         <h1>Bill List</h1>
-        <el-button type="primary">
+        <el-button type="primary" v-if="logged_in_user && logged_in_user.role === 'admin'">
             <!-- <router-link to="/bills/create">Create</router-link> -->
             <router-link to="/bills/create" style="text-decoration: none; color: inherit;">Create</router-link>
         </el-button>
@@ -14,8 +14,7 @@
             <el-table-column prop="id" label="Operations" >
 
                 <template  #default="scope">
-
-                    <router-link :to="'/bills/edit/'+scope.row.id">
+                    <router-link :to="'/bills/edit/'+scope.row.id"  v-if="logged_in_user && logged_in_user.role === 'admin'">
                         <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px" >
                             <Edit />
                         </el-icon>
@@ -42,6 +41,7 @@
                     <el-icon :size="20" :color="'red'"
                             style="width: 1em; height: 1em; margin-right: 8px"
                             @click="handleDelete(scope.row.id);"
+                             v-if="logged_in_user && logged_in_user.role === 'admin'"
                     >
                         <Delete />
                     </el-icon>
@@ -73,6 +73,7 @@ export default {
     data() {
         return {
             bills: [],
+            logged_in_user: null
         };
     },
     components:{
@@ -84,6 +85,11 @@ export default {
                     then((res) => {
                         // console.log('res:', res);
                         this.bills = res.data;
+                    });
+            await axios.get(`/logged_in_user`).
+                    then((res) => {
+                        this.logged_in_user = res.data;
+                        console.log('logged_in_user:', this.logged_in_user);
                     });
         } catch (error) {
             console.error(error);

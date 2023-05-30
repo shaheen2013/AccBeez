@@ -2,7 +2,7 @@
 <template>
     <div style="padding: 10px;">
         <h1>BOM List</h1>
-        <el-button type="primary">
+        <el-button type="primary" v-if="logged_in_user && logged_in_user.role === 'admin'">
             <!-- <router-link to="/boms/create">Create</router-link> -->
             <router-link to="/boms/create" style="text-decoration: none; color: inherit;">Create</router-link>
         </el-button>
@@ -41,8 +41,7 @@
 
 
                     <router-link :to="'/boms/edit/'+scope.row.id">
-
-                        <el-icon :size="20" :color="color" style="width: 1em; height: 1em; margin-right: 8px" >
+                        <el-icon :size="20" :color="color" style="width: 1em; height: 1em; margin-right: 8px"  v-if="logged_in_user && logged_in_user.role === 'admin'">
                             <Edit />
                         </el-icon>
                     </router-link>
@@ -54,6 +53,7 @@
                     <el-icon :size="20" :color="'red'"
                             style="width: 1em; height: 1em; margin-right: 8px"
                             @click="handleDelete(scope.row.id);"
+                             v-if="logged_in_user && logged_in_user.role === 'admin'"
                     >
                         <Delete />
                     </el-icon>
@@ -74,7 +74,8 @@ export default {
     name: 'BomList',
     data() {
         return {
-            boms: []
+            boms: [],
+            logged_in_user: null
         };
     },
     components:{
@@ -86,6 +87,11 @@ export default {
                     then((res) => {
                         console.log('res:', res);
                         this.boms = res.data;
+                    });
+            await axios.get(`/logged_in_user`).
+                    then((res) => {
+                        this.logged_in_user = res.data;
+                        console.log('logged_in_user:', this.logged_in_user);
                     });
         } catch (error) {
             console.error(error);

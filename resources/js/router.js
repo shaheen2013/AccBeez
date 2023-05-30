@@ -6,6 +6,7 @@ import BomCreate from './components/Boms/Create.vue';
 import BomList from './components/Boms/List.vue';
 import UserCreate from './components/Users/Create.vue';
 import UserList from './components/Users/List.vue';
+import NotFoundPage from './components/NotFoundPage.vue';
 
 const routes = [
     {
@@ -76,6 +77,12 @@ const routes = [
         name: 'UserView',
         component: UserCreate
     },
+    {
+        path: '/:pathMatch(.*)*',
+        component: NotFoundPage
+    },
+
+    //   { path: '*', redirect: '/404' },
 ];
 
 const router = createRouter({

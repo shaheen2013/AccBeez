@@ -117,4 +117,20 @@ class UserController extends Controller
         return redirect()->route('login');
     }
 
+
+    public function logged_in_user(Request $request)
+    {
+        $logged_in_user = Auth::user();
+        return response()->json($logged_in_user);
+        // $user = User::where('email', $request->email)
+        //             ->where('invitation_token', $request->invitation_token)
+        //             ->first();
+        //             // dd($request->all(), $user);
+
+        // $user->password = Hash::make($request->password);
+        // $user->markEmailAsVerified();
+        // $user->save();
+        // return redirect()->route('login');
+    }
+
 }
