@@ -82,14 +82,14 @@ export default {
         try {
             await axios.get(`/api/bills`).
                     then((res) => {
-                        console.log('res:', res);
+                        // console.log('res:', res);
                         this.bills = res.data;
                     });
         } catch (error) {
             console.error(error);
         }
 
-        
+
         // Fetch logged-in user data
         // axios.get('/api/user')
         //     .then(response => {

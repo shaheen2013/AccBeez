@@ -40,6 +40,7 @@
                             :billItems="bill.items"
                             :bill="bill"
                             :operation="operation"
+                            :products="products"
                             @changeInvoiceTotal="changeInvoiceTotal"
                             :deletedItemsID="deletedItemsID"
                         />
@@ -106,7 +107,7 @@ export default {
     components:{
         BillItem
     },
-    created() {
+    async created() {
         if(this.$route.name == 'BillCreate'){
             this.operation = 'create';
         } else if(this.$route.name == 'BillEdit'){
@@ -132,22 +133,12 @@ export default {
             console.log('Bill edit', this.bill)
         }
 
-        
-        axios.get(`/api/products`).
+
+        await axios.get(`/api/products`).
                 then((res) => {
-                    console.log('products:', res);
                     this.products = res.data;
+                    console.log('products:', this.products);
                 });
-        // axios.get('/api/session')
-        //         .then(response => {
-        //             const sessionData = response.data;
-        //             const token = sessionData.csrf_token;
-        //             console.log('sessionData, token', sessionData, token);
-        //             // Store the token or session data as needed
-        //         })
-        //         .catch(error => {
-        //             console.error(error);
-        //         });
     },
     methods: {
 

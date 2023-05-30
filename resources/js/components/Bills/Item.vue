@@ -10,8 +10,7 @@
                 @select="handleSelect"
             >
                 <template #default="{ item }">
-                <div class="value">{{ item.value }}</div>
-                <span class="link">{{ item.link }}</span>
+                    <div class="value">{{ item.sku }}</div>
                 </template>
             </el-autocomplete>
         </td>
@@ -40,7 +39,7 @@
 
 export default {
     name:'BillItem',
-    props: ['item', 'bill', 'operation', 'deletedItemsID', 'index', 'billItems'],
+    props: ['item', 'bill', 'operation', 'deletedItemsID', 'index', 'billItems', 'products'],
     data() {
         return {
         };
@@ -52,7 +51,7 @@ export default {
         calculateTotal() {
             this.item.total = parseFloat(this.item.rate) * parseFloat(this.item.quantity);
             let summation = this.bill.items.reduce((total, element) => total + element.total, 0);
-            // console.log('summation:', summation);
+            console.log('summation:', summation, this.item.total);
             this.$emit('changeInvoiceTotal', summation);
         },
         getDeletedItemsId(index, id) {
@@ -66,13 +65,49 @@ export default {
         deleteRow(index) {
             this.billItems.splice(index, 1);
         },
-        querySearch(queryString){
-            console.log(queryString);
+
+        querySearch(queryString, cb) {
+            // var productArray = Object.values(this.products)
+            const products = Object.values(this.products);
+            const results = queryString
+                ? products.filter(this.createFilter(queryString))
+                : products;
+            console.log('results', results, queryString);
+            // call callback function to return suggestions
+            cb(results);
         },
-        handleSelect(){
-            
-            console.log('handleSelect');
-        }
+        createFilter(queryString) {
+            return (product) => {
+                return product.sku.toLowerCase().includes( queryString.toLowerCase());
+            };
+        },
+        handleSelect(product) {
+            // console.log('handleSelect:', product, this.billItems);
+            if (this.billItems &&  this.itemExist(product)) {
+                ElNotification({
+                    type: 'error',
+                    title: 'Error',
+                    message: 'Item already exists in the list',
+                });
+                // this.billItems.forEach((item) => {
+                //     // console.log('item in forech', item)
+
+                //     if (item && item.sku === product.sku) {
+                //         item.quantity++;
+                //     }
+                // });
+            } else {
+                this.item.sku = product.sku;
+                this.item.rate = product.rate;
+            }
+            this.calculateTotal();
+        },
+        itemExist(product) {
+            // console.log('itemExist', product);
+            return this.billItems.some(el => {
+                return el.sku === product.sku;
+            });
+        },
     },
 };
 </script>
@@ -84,5 +119,22 @@ export default {
 }
 td {
   vertical-align: top;
+}
+
+
+.my-autocomplete li {
+  line-height: normal;
+  padding: 7px;
+}
+.my-autocomplete li .name {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.my-autocomplete li .addr {
+  font-size: 12px;
+  color: #b4b4b4;
+}
+.my-autocomplete li .highlighted .addr {
+  color: #ddd;
 }
 </style>

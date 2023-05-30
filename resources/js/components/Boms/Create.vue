@@ -30,6 +30,7 @@
                             :bomItems="bom.items"
                             :bom="bom"
                             :operation="operation"
+                            :products="products"
                             @changeInvoiceTotal="changeInvoiceTotal"
                             :deletedItemsID="deletedItemsID"
                         />
@@ -80,12 +81,13 @@ export default {
                 }]
             },
             deletedItemsID: [],
+            products: [],
         };
     },
     components:{
         BomItem
     },
-    created() {
+    async created() {
         if(this.$route.name == 'BomCreate'){
             this.operation = 'create';
         } else if(this.$route.name == 'BomEdit'){
@@ -97,7 +99,6 @@ export default {
             let paths = this.$route.path.split("/");
             this.bom.id = paths[3];
         }
-        console.log('Route Name: ', this.$route.name);
         if(this.bom.id){
             axios.get(`/api/boms/edit/`+this.bom.id).
                     then((res) => {
@@ -106,8 +107,14 @@ export default {
                         this.bom.name = res.data.name;
                         this.bom.items = res.data.bom_items;
                     });
-            console.log('BOM edit', this.bom)
+            // console.log('BOM edit', this.bom)
         }
+
+        await axios.get(`/api/products`).
+                then((res) => {
+                    this.products = res.data;
+                    console.log('products:', this.products);
+                });
     },
     methods: {
 
@@ -119,17 +126,26 @@ export default {
             console.log('changeInvoiceTotal:', val);
             this.bom.invoice_total = val;
         },
-        submitForm(){
-            console.log(this.bom)
-        },
         async createBom() {
             console.log('createBom:', this.bom)
             try {
-                await axios.post(`/api/boms`, this.bom).
-                        then((res) => {
-                            console.log('res:', res, this.$router);
-                            this.$router.push('/boms');
-                        });
+                // const hasAllElems = arr1.every(elem => arr2.includes(elem));
+                // this.bom.items.every(elem => this.products.includes(elem));
+                const hasAllElems = this.bom.items.every(elem => Object.values(this.products).some(product => product.sku === elem.sku));
+                console.log('hasAllElems', hasAllElems);
+                if(hasAllElems) {
+                    await axios.post(`/api/boms`, this.bom).
+                            then((res) => {
+                                console.log('res:', res, this.$router);
+                                this.$router.push('/boms');
+                            });
+                } else {
+                    ElNotification({
+                        type: 'error',
+                        title: 'Error',
+                        message: 'Some bill items doesn\'t exist in product list',
+                    });
+                }
             } catch (error) {
                 showErrors(error);
                 console.error('error in response:', error.response.data);
@@ -137,13 +153,26 @@ export default {
         },
         async updateBom() {
             this.bom.deletedItemsID = this.deletedItemsID;
-            console.log('updateBom:', this.bom)
+            // console.log('updateBom:', this.bom)
             try {
-                await axios.post(`/api/boms/`+this.bom.id, this.bom).
-                        then((res) => {
-                            console.log('res:', res, this.$router);
-                            this.$router.push('/boms');
-                        });
+                var hasAllElems = this.bom.items.every(elem => {
+                    // console.log('elem', elem, this.products);
+                    return Object.values(this.products).some(product => product.sku === elem.sku)
+                });
+                // console.log('hasAllElems', hasAllElems);
+                if(hasAllElems) {
+                    await axios.post(`/api/boms/`+this.bom.id, this.bom).
+                            then((res) => {
+                                console.log('res:', res, this.$router);
+                                this.$router.push('/boms');
+                            });
+                } else {
+                    ElNotification({
+                        type: 'error',
+                        title: 'Error',
+                        message: 'Some bill items doesn\'t exist in product list',
+                    });
+                }
             } catch (error) {
                 showErrors(error);
                 console.error(error);
