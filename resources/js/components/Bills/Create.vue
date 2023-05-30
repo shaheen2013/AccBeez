@@ -3,9 +3,9 @@
         label-position="top"
         status-icon
     >
-        <el-text tag="b"  v-if="operation === 'view'" type="primary" size="large">View Bill</el-text>
-        <el-text tag="b"  v-if="operation === 'edit'" type="primary" size="large">Edit Bill</el-text>
-        <el-text tag="b"  v-if="operation === 'create'" type="primary" size="large">Create Bill</el-text>
+        <el-text tag="b" v-if="operation === 'view'" type="primary" size="large">View Bill</el-text>
+        <el-text tag="b" v-if="operation === 'edit'" type="primary" size="large">Edit Bill</el-text>
+        <el-text tag="b" v-if="operation === 'create'" type="primary" size="large">Create Bill</el-text>
 
         <el-form-item label="Date" required>
             <el-date-picker v-model="bill.date" type="date" label="Pick a date" placeholder="Pick a date"
@@ -17,7 +17,6 @@
         <el-form-item label="Description" prop="description">
             <el-input v-model="bill.description" type="textarea" :disabled="operation === 'view'" />
         </el-form-item>
-
 
 
         <el-row>
@@ -101,6 +100,7 @@ export default {
                 }]
             },
             deletedItemsID: [],
+            products: [],
         };
     },
     components:{
@@ -132,6 +132,12 @@ export default {
             console.log('Bill edit', this.bill)
         }
 
+        
+        axios.get(`/api/products`).
+                then((res) => {
+                    console.log('products:', res);
+                    this.products = res.data;
+                });
         // axios.get('/api/session')
         //         .then(response => {
         //             const sessionData = response.data;

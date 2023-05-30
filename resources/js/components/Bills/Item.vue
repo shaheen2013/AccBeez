@@ -1,7 +1,19 @@
 <template>
     <tr>
         <td>
-            <el-input v-model="item.sku" type="text" placeholder="SKU" :disabled="operation === 'view'" />
+            <!-- <el-input v-model="item.sku" type="text" placeholder="SKU" :disabled="operation === 'view'" /> -->
+            <el-autocomplete
+                v-model="item.sku"
+                :fetch-suggestions="querySearch"
+                popper-class="my-autocomplete"
+                placeholder="Please input"
+                @select="handleSelect"
+            >
+                <template #default="{ item }">
+                <div class="value">{{ item.value }}</div>
+                <span class="link">{{ item.link }}</span>
+                </template>
+            </el-autocomplete>
         </td>
         <td>
             <el-input v-model="item.rate" type="text" placeholder="Rate" :disabled="operation === 'view'"
@@ -53,6 +65,13 @@ export default {
         },
         deleteRow(index) {
             this.billItems.splice(index, 1);
+        },
+        querySearch(queryString){
+            console.log(queryString);
+        },
+        handleSelect(){
+            
+            console.log('handleSelect');
         }
     },
 };
