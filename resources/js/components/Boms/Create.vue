@@ -7,52 +7,77 @@
         <el-text tag="b"  v-if="operation === 'edit'" type="primary" size="large">Edit BOM</el-text>
         <el-text tag="b"  v-if="operation === 'create'" type="primary" size="large">Create BOM</el-text>
 
-        <el-form-item label="Name" prop="name">
-            <el-input v-model="bom.name" type="text" :disabled="operation === 'view'" />
-        </el-form-item>
 
-        <el-row>
-            <el-col :span="24">
-                <table class="table table-borderless">
-                    <thead>
-                        <tr >
-                            <th :style="operation === 'view' ? { 'width': '40%' } : { 'width': '50%' }" >SKU</th>
-                            <th :style="operation === 'view' ? { 'width': '40%' } : { 'width': '50%' }" >Quantity</th>
-                            <th v-if="operation !== 'view'" width="20%">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <bomItem
-                            v-for="(item, index) in bom.items"
-                            :key="index"
-                            :index="index"
-                            :item="item"
-                            :bomItems="bom.items"
-                            :bom="bom"
-                            :operation="operation"
-                            :products="products"
-                            @changeInvoiceTotal="changeInvoiceTotal"
-                            :deletedItemsID="deletedItemsID"
-                        />
-                    </tbody>
-                </table>
-                <el-button type="info" @click="addItem" v-if="operation === 'create' || operation === 'edit'"
-                            class="mb-3">
-                    Add
-                </el-button>
-            </el-col>
-        </el-row>
+        <el-card class="box-card">
+            <el-form-item label="Name" prop="name">
+                <el-input v-model="bom.name" type="text" :disabled="operation === 'view'" />
+            </el-form-item>
 
-        <el-row>
-            <el-col>
+            <el-row>
+                <el-col :span="24">
+                    <table class="table table-borderless">
+                        <thead>
+                            <tr>
+                                <th :style="operation === 'view' ? { 'width': '40%' } : { 'width': '30%' }">
+                                    <span class="required-indicator" v-if="operation !== 'view'">*</span>
+                                    <span>SKU</span>
+                                </th>
+                                <th width="20%">
+                                    <span class="required-indicator" v-if="operation !== 'view'">*</span>
+                                    <span>Rate</span>
+                                </th>
+                                <th width="20%">
+                                    <span class="required-indicator" v-if="operation !== 'view'">*</span>
+                                    <span>Quantity</span>
+                                </th>
+                                <th width="20%">
+                                    <span class="required-indicator" v-if="operation !== 'view'">*</span>
+                                    <span>Item Total</span>
+                                </th>
+                                <th v-if="operation !== 'view'" width="10%">Actions</th>
+                            </tr>
+                        </thead>
 
-                <el-button v-if="operation === 'create'" type="primary" @click="createBom" class="me-2">Create</el-button>
-                <el-button v-if="operation === 'edit'" type="primary" @click="updateBom" class="me-2">Update</el-button>
-                <router-link :to="'/boms'">
-                    <el-button type="info" class="me-2">Back</el-button>
-                </router-link>
-            </el-col>
-        </el-row>
+                        <tbody>
+                            <bomItem
+                                v-for="(item, index) in bom.items"
+                                :key="index"
+                                :index="index"
+                                :item="item"
+                                :bomItems="bom.items"
+                                :bom="bom"
+                                :operation="operation"
+                                :products="products"
+                                @changeInvoiceTotal="changeInvoiceTotal"
+                                :deletedItemsID="deletedItemsID"
+                            />
+                        </tbody>
+                    </table>
+                    <el-button type="info" @click="addItem" v-if="operation === 'create' || operation === 'edit'"
+                                class="mb-3">
+                        Add
+                    </el-button>
+                </el-col>
+            </el-row>
+
+
+            <el-form-item label="Invoice Total">
+                <el-input v-model="bom.invoice_total" type="text" placeholder="Invoice Total" disabled />
+            </el-form-item>
+
+
+            <el-row>
+                <el-col>
+
+                    <el-button v-if="operation === 'create'" type="primary" @click="createBom" class="me-2">Create</el-button>
+                    <el-button v-if="operation === 'edit'" type="primary" @click="updateBom" class="me-2">Update</el-button>
+                    <router-link :to="'/boms'">
+                        <el-button type="info" class="me-2">Back</el-button>
+                    </router-link>
+                </el-col>
+            </el-row>
+
+        </el-card>
 
     </el-form>
 </template>
@@ -71,13 +96,18 @@ export default {
             singleItem: {
                 'sku': null,
                 'quantity': 0,
+                'rate': 0,
+                'total': 0,
             },
             bom : {
                 id: null,
+                invoice_total: 0,
                 name: '',
                 items: [{
                     'sku': null,
                     'quantity': 0,
+                    'rate': 0,
+                    'total': 0,
                 }]
             },
             deletedItemsID: [],
@@ -105,6 +135,7 @@ export default {
                         console.log('res:', res);
                         this.bom.id = res.data.id;
                         this.bom.name = res.data.name;
+                        this.bom.invoice_total = res.data.invoice_total;
                         this.bom.items = res.data.bom_items;
                     });
             // console.log('BOM edit', this.bom)
@@ -129,8 +160,6 @@ export default {
         async createBom() {
             console.log('createBom:', this.bom)
             try {
-                // const hasAllElems = arr1.every(elem => arr2.includes(elem));
-                // this.bom.items.every(elem => this.products.includes(elem));
                 const hasAllElems = this.bom.items.every(elem => Object.values(this.products).some(product => product.sku === elem.sku));
                 console.log('hasAllElems', hasAllElems);
                 if(hasAllElems) {
@@ -143,7 +172,7 @@ export default {
                     ElNotification({
                         type: 'error',
                         title: 'Error',
-                        message: 'Some bill items doesn\'t exist in product list',
+                        message: 'Some bom items doesn\'t exist in product list',
                     });
                 }
             } catch (error) {
@@ -159,7 +188,6 @@ export default {
                     // console.log('elem', elem, this.products);
                     return Object.values(this.products).some(product => product.sku === elem.sku)
                 });
-                // console.log('hasAllElems', hasAllElems);
                 if(hasAllElems) {
                     await axios.post(`/api/boms/`+this.bom.id, this.bom).
                             then((res) => {
@@ -170,7 +198,7 @@ export default {
                     ElNotification({
                         type: 'error',
                         title: 'Error',
-                        message: 'Some bill items doesn\'t exist in product list',
+                        message: 'Some bom items doesn\'t exist in product list',
                     });
                 }
             } catch (error) {
@@ -191,34 +219,12 @@ export default {
         font-weight:bold !important;
         color: #212529;
     }
-
-    /* .table-container {
-        overflow: hidden;
+    th {
+        padding-left: 0 !important;
+        padding-top: 0 !important;
     }
-
-    .table-container table {
-        width: 100%;
-        table-layout: fixed;
+    .required-indicator {
+        color: red;
+        margin-right: 3px;
     }
-
-    .table-container tbody {
-        display: block;
-        overflow-y: auto;
-    }
-
-    .table-container tbody::-webkit-scrollbar {
-        display: none;
-    }
-
-    .table-container tbody tr {
-        display: table;
-        width: 100%;
-        table-layout: fixed;
-    } */
-
-    /* .el-input.is-disabled .el-input__inner {
-        color: #000000 !important;
-        cursor: not-allowed;
-        border-color: #000000 !important;
-    } */
 </style>>

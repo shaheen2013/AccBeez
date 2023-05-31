@@ -6,8 +6,10 @@
                 v-model="item.sku"
                 :fetch-suggestions="querySearch"
                 popper-class="my-autocomplete"
-                placeholder="Please input"
+                placeholder="SKU"
                 @select="handleSelect"
+                style="width:100%"
+                :disabled="operation === 'view'"
             >
                 <template #default="{ item }">
                     <div class="value">{{ item.sku }}</div>
@@ -16,7 +18,7 @@
         </td>
         <td>
             <el-input v-model="item.rate" type="text" placeholder="Rate" :disabled="operation === 'view'"
-                        @blur="calculateTotal" />
+                        @blur="calculateTotal"  />
         </td>
         <td>
             <el-input v-model="item.quantity" type="text" placeholder="Quantity" :disabled="operation === 'view'"
@@ -26,7 +28,7 @@
             <el-input v-model="item.total" type="text" placeholder="Total" disabled style="color: #000000" />
         </td>
         <td v-if="operation !== 'view'">
-            <el-button type="danger" @click="getDeletedItemsId(index, item.id)">
+            <el-button type="danger" @click="getDeletedItemsId(index, item.id)" style="width:100%; padding-right:0;">
                 Delete
             </el-button>
         </td>
@@ -137,4 +139,9 @@ td {
 .my-autocomplete li .highlighted .addr {
   color: #ddd;
 }
+td{
+    padding-left: 0 !important;
+    padding-top: 0 !important;
+}
+
 </style>

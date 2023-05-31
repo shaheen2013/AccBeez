@@ -1,45 +1,18 @@
 
 <template>
     <div style="padding: 10px;">
-        <h1>BOM List</h1>
-        <el-button type="primary" v-if="logged_in_user && logged_in_user.role === 'admin'">
-            <!-- <router-link to="/boms/create">Create</router-link> -->
-            <router-link to="/boms/create" style="text-decoration: none; color: inherit;">Create</router-link>
-        </el-button>
+        <h1>
+            Bom List
+            <el-button type="primary" v-if="logged_in_user && logged_in_user.role === 'admin'" style="float: right;">
+                <router-link to="/boms/create" style="text-decoration: none; color: inherit;">Create</router-link>
+            </el-button>
+        </h1>
 
         <el-table :data="boms">
             <el-table-column prop="name" label="Name" />
             <el-table-column prop="id" label="Operations" >
 
                 <template  #default="scope">
-                    <!-- <router-link :to="'/boms/edit/'+scope.row.id">
-                        <el-button
-                            type="primary"
-                            size="small"
-                            icon="el-icon-edit"
-                        >
-                            Edit
-                        </el-button>
-                    </router-link>
-                    <router-link :to="'/boms/view/'+scope.row.id">
-                        <el-button
-                            type="warning"
-                            size="small"
-                            icon="el-icon-view"
-                        >
-                            View
-                        </el-button>
-                    </router-link>
-                    <el-button
-                        type="danger"
-                        size="small"
-                        icon="el-icon-delete"
-                        @click="handleDelete(scope.row.id);"
-                    >
-                        Delete
-                    </el-button> -->
-
-
                     <router-link :to="'/boms/edit/'+scope.row.id">
                         <el-icon :size="20" :color="color" style="width: 1em; height: 1em; margin-right: 8px"  v-if="logged_in_user && logged_in_user.role === 'admin'">
                             <Edit />
@@ -101,7 +74,7 @@ export default {
         handleDelete(id){
             console.log(id);
             ElMessageBox.confirm(
-                'proxy will permanently delete the file. Continue?',
+                'Are you sure you want to delete the BOM?',
                 'Warning',
                 {
                     confirmButtonText: 'OK',

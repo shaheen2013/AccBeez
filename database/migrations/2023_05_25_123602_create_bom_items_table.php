@@ -16,6 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('bom_id');
             $table->text('sku');
             $table->integer('quantity')->default(0);
+            $table->double('rate')->default(0);
+            $table->double('total')->default(0);
             $table->timestamps();
         });
     }

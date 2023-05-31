@@ -23,7 +23,7 @@ class BomController extends Controller
     public function store(BomRequest $request)
     {
         try {
-            $bomData = $request->only('name');
+            $bomData = $request->only('name', 'invoice_total');
             DB::beginTransaction();
             $bom = Bom::create($bomData);
             foreach($request->items as $item){
@@ -51,7 +51,7 @@ class BomController extends Controller
     public function update(BomRequest $request, $id)
     {
         try {
-            $bomData = $request->only('name');
+            $bomData = $request->only('name', 'invoice_total');
             $bom = Bom::find($id);
             DB::beginTransaction();
             $bom->update($bomData);

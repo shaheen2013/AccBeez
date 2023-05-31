@@ -1,11 +1,12 @@
 
 <template>
     <div style="padding: 10px;">
-        <h1>Bill List</h1>
-        <el-button type="primary" v-if="logged_in_user && logged_in_user.role === 'admin'">
-            <!-- <router-link to="/bills/create">Create</router-link> -->
-            <router-link to="/bills/create" style="text-decoration: none; color: inherit;">Create</router-link>
-        </el-button>
+        <h1>
+            Bill List
+            <el-button type="primary" v-if="logged_in_user && logged_in_user.role === 'admin'" style="float: right;">
+                <router-link to="/bills/create" style="text-decoration: none; color: inherit;">Create</router-link>
+            </el-button>
+        </h1>
 
         <el-table :data="bills">
             <el-table-column prop="date" label="Date" />
@@ -64,7 +65,6 @@
 
 <script >
 import BillItem from "./Item.vue";
-// import axios from 'axios';
 
 import { ElMessage, ElMessageBox } from 'element-plus'
 
@@ -94,26 +94,13 @@ export default {
         } catch (error) {
             console.error(error);
         }
-
-
-        // Fetch logged-in user data
-        // axios.get('/api/user')
-        //     .then(response => {
-        //         const user = response.data;
-        //         console.log(user);
-        //         // Do something with the user data
-        //     })
-        //     .catch(error => {
-        //         console.error(error);
-        //     });
-
     },
     methods: {
         handleDelete(id){
             console.log(id);
 
             ElMessageBox.confirm(
-                'proxy will permanently delete the file. Continue?',
+                'Are you sure you want to delete the Bill?',
                 'Warning',
                 {
                     confirmButtonText: 'OK',

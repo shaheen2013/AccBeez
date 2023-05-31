@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Bom extends Model
 {
     use HasFactory;
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'invoice_total'];
     public function bomItems(){
         return $this->hasMany(BomItem::class);
     }
