@@ -1,23 +1,12 @@
 <template>
     <div class="warning-wrapper">
         <div class="content-wrapper">
-            <img :src="warningImg" alt="This is the 404 image">
-            <h1>Page not Found</h1>
+            <h1>This is the dashboard</h1>
         </div>
     </div>
 </template>
 
 <script>
-    // import warningImg from '../components/image/404img.jpg'
-    import warningImg from '../components/Images/404img2.png'
-
-    export default {
-        data() {
-            return {
-                warningImg: warningImg
-            }
-        }
-    }
 </script>
 
 <style scoped>

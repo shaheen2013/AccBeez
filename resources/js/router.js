@@ -7,8 +7,14 @@ import BomList from './components/Boms/List.vue';
 import UserCreate from './components/Users/Create.vue';
 import UserList from './components/Users/List.vue';
 import NotFoundPage from './components/NotFoundPage.vue';
+import Dashboard from './components/Dashboard.vue';
 
 const routes = [
+    {
+        path: '/',
+        name: 'dashboard',
+        component: Dashboard,
+    },
     {
         path: '/register',
         name: 'register',
@@ -54,9 +60,6 @@ const routes = [
         name: 'BomView',
         component: BomCreate
     },
-
-
-
     {
         path: '/users',
         name: 'UserList',
