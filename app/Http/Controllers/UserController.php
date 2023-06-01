@@ -56,7 +56,7 @@ class UserController extends Controller
     public function edit($id)
     {
         // dd('hi index');
-        $user = User::with('userItems')->find($id);
+        $user = User::find($id);
 
         // Return the customers as a response
         return response()->json($user);
@@ -122,15 +122,6 @@ class UserController extends Controller
     {
         $logged_in_user = Auth::user();
         return response()->json($logged_in_user);
-        // $user = User::where('email', $request->email)
-        //             ->where('invitation_token', $request->invitation_token)
-        //             ->first();
-        //             // dd($request->all(), $user);
-
-        // $user->password = Hash::make($request->password);
-        // $user->markEmailAsVerified();
-        // $user->save();
-        // return redirect()->route('login');
     }
 
 }

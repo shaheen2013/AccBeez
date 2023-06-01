@@ -62,7 +62,7 @@
 
 
             <el-form-item label="Invoice Total">
-                <el-input v-model="bom.invoice_total" type="text" placeholder="Invoice Total" disabled />
+                <el-input v-model="formattedTotal" type="text" placeholder="Invoice Total" disabled />
             </el-form-item>
 
 
@@ -205,6 +205,11 @@ export default {
                 showErrors(error);
                 console.error(error);
             }
+        },
+    },
+    computed: {
+        formattedTotal() {
+            return this.bom.invoice_total.toFixed(2); // Apply precision formatting
         },
     },
 };

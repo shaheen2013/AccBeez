@@ -17,26 +17,28 @@
             </el-autocomplete>
         </td>
         <td>
+            <el-input v-model="formattedRate" type="number" placeholder="Rate" :disabled="operation === 'view'"
+                        @blur="calculateTotal" />
             <!-- <el-input v-model="item.rate" type="number" placeholder="Rate" :disabled="operation === 'view'"
                         @blur="calculateTotal"  /> -->
-            <el-input-number v-model="item.rate" type="text" placeholder="Rate" :disabled="operation === 'view'"
-                        :style="{ 'text-align': 'left' , 'width': '100%'}"
+            <!-- <el-input-number v-model="item.rate" type="text" placeholder="Rate" :disabled="operation === 'view'"
+                        :className="text-start"
                         :controls="false"
                         :precision="2"
-                        @blur="calculateTotal" />
+                        @blur="calculateTotal" /> -->
         </td>
         <td>
             <!-- <el-input v-model="item.quantity" type="number" placeholder="Quantity" :disabled="operation === 'view'"
                         @blur="calculateTotal" /> -->
             <el-input-number v-model="item.quantity" type="text" placeholder="Quantity" :disabled="operation === 'view'"
-                        :style="{ 'width': '100%', 'text-align': 'left' }"
+                        :className="text-start"
                         :controls="false"
                         @blur="calculateTotal" />
         </td>
         <td>
             <!-- <el-input v-model="item.total" type="text" placeholder="Total" disabled style="color: #000000" /> -->
-            <el-input-number v-model="item.total" type="text" placeholder="Total" disabled 
-                        :style="{ 'width': '100%', 'text-align': 'left' }"
+            <el-input-number v-model="item.total" type="text" placeholder="Total" disabled
+                        :className="text-start"
                         :controls="false"
                         :precision="2" />
         </td>
@@ -124,6 +126,16 @@ export default {
             });
         },
     },
+    computed: {
+        formattedRate: {
+            get() {
+                return this.item.rate.toFixed(2); // Apply precision formatting when retrieving the value
+            },
+            set(value) {
+                this.item.rate = Number(value); // Convert the input value back to a number
+            },
+        },
+    }
 };
 </script>
 
@@ -157,4 +169,8 @@ td{
     padding-top: 0 !important;
 }
 
+/* .el-input__inner {
+    text-align: 'left';
+    width: '100%';
+} */
 </style>

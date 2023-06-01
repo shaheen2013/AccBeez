@@ -17,15 +17,15 @@
             </el-autocomplete>
         </td>
         <td>
-            <el-input v-model="item.rate" type="text" placeholder="Rate" :disabled="operation === 'view'"
-                        @blur="calculateTotal"  />
-        </td>
-        <td>
-            <el-input v-model="item.quantity" type="text" placeholder="Quantity" :disabled="operation === 'view'"
+            <el-input v-model="formattedRate" type="number" placeholder="Rate" :disabled="operation === 'view'"
                         @blur="calculateTotal" />
         </td>
         <td>
-            <el-input v-model="item.total" type="text" placeholder="Total" disabled style="color: #000000" />
+            <el-input v-model="item.quantity" type="number" placeholder="Quantity" :disabled="operation === 'view'"
+                        @blur="calculateTotal" />
+        </td>
+        <td>
+            <el-input v-model="formattedTotal" type="text" placeholder="Total" disabled style="color: #000000" />
         </td>
         <td v-if="operation !== 'view'">
             <el-button type="danger" @click="getDeletedItemsId(index, item.id)" style="width:100%; padding-right:0;">
@@ -91,6 +91,7 @@ export default {
                 });
             } else {
                 this.item.sku = product.sku;
+                this.item.rate = product.rate;
             }
         },
         itemExist(product) {
@@ -100,6 +101,19 @@ export default {
             });
         },
     },
+    computed: {
+        formattedRate: {
+            get() {
+                return this.item.rate.toFixed(2); // Apply precision formatting when retrieving the value
+            },
+            set(value) {
+                this.item.rate = Number(value); // Convert the input value back to a number
+            },
+        },
+        formattedTotal() {
+            return this.item.total.toFixed(2); // Apply precision formatting
+        },
+    }
 };
 </script>
 

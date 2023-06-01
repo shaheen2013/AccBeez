@@ -10,6 +10,7 @@
 
         <el-table :data="boms">
             <el-table-column prop="name" label="Name" />
+            <el-table-column prop="invoice_total" label="Invoice Total" />
             <el-table-column prop="id" label="Operations" >
 
                 <template  #default="scope">
@@ -60,6 +61,10 @@ export default {
                     then((res) => {
                         console.log('res:', res);
                         this.boms = res.data;
+                        this.boms.forEach(element => {
+                            element.invoice_total = element.invoice_total.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+                            return element;
+                        });
                     });
             await axios.get(`/logged_in_user`).
                     then((res) => {
