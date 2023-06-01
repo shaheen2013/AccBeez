@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\BillRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class BillController extends Controller
 {
@@ -108,4 +109,41 @@ class BillController extends Controller
             $item->delete();
         }
     }
+
+    public function downloadPdf($id)
+    {
+
+        $bill = Bill::with('billItems')->find($id);
+        $user = Auth::user()->toArray();
+        // dd($bill);
+        $data = [
+            'bill' => $bill,
+            'name' => 'John',
+            'data' => 'hello',
+        ];
+        $pdf = Pdf::loadView('bills.invoice', ['bill' => $bill]);
+        // dd($pdf);
+        return $pdf->download('invoice.pdf');
+        return 'success';
+
+        // $dompdf = new Dompdf();
+
+        // // Generate the HTML content for your table
+        // // $html = '<table>...</table>'; // Replace with your actual table HTML
+        // $html = '<h1>strong</h1>'; // Replace with your actual table HTML
+
+        // // Load the HTML into Dompdf
+        // $dompdf->loadHtml($html);
+
+        // // (Optional) Set Dompdf options, such as font path or paper size
+        // // $dompdf->setOption('...');
+
+        // // Render the HTML content to PDF
+        // $dompdf->render();
+
+        // // Output the PDF as a download
+        // $dompdf->stream('table.pdf');
+    }
+
+
 }
