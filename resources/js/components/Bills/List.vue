@@ -85,6 +85,10 @@ export default {
                     then((res) => {
                         // console.log('res:', res);
                         this.bills = res.data;
+                        this.bills.forEach(element => {                            
+                            element.invoice_total = element.invoice_total.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+                            return element;
+                        });
                     });
             await axios.get(`/logged_in_user`).
                     then((res) => {

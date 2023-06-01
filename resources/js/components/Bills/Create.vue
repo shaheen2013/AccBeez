@@ -70,7 +70,7 @@
             </el-row>
 
             <el-form-item label="Invoice Total">
-                <el-input v-model="bill.invoice_total" type="text" placeholder="Invoice Total" disabled />
+                <el-input v-model="formattedTotal" type="number" placeholder="Invoice Total" disabled />
             </el-form-item>
 
             <el-row>
@@ -195,6 +195,11 @@ export default {
                 showErrors(error);
                 console.error(error);
             }
+        },
+    },
+    computed: {
+        formattedTotal() {
+            return this.bill.invoice_total.toFixed(2); // Apply precision formatting
         },
     },
 };
