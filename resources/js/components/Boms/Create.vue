@@ -9,7 +9,7 @@
 
 
         <el-card class="box-card">
-            <el-form-item label="Name" prop="name">
+            <el-form-item label="Name" prop="name" required>
                 <el-input v-model="bom.name" type="text" :disabled="operation === 'view'" />
             </el-form-item>
 
