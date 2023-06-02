@@ -48,7 +48,7 @@
 
                         <router-link to="/sales" style="text-decoration: none;"
                                      :style="[$route.path === '/sales' ? {color: 'royalblue'} : {color: 'black'}]">
-                            <el-menu-item index="4">
+                            <el-menu-item index="5">
                                 <!-- <el-icon><icon-menu /></el-icon> -->
                                 <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px">
                                     <List />
@@ -103,32 +103,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { Menu as IconMenu, Message, Setting } from '@element-plus/icons-vue'
-
-// export default {
-//     props:['logged_in_user'],
-//     data() {
-//         return {
-//             bills: [],
-//         };
-//     },
-//     mounted() {
-//         console.log(this.logged_in_user)
-//     },
-//     methods: {
-
-//     },
-// };
-// const props = defineProps({
-//     loggedInUser: {
-//         type: String,
-//         required: true
-//     }
-// });
-
-// // You can still use the created() lifecycle hook like this
-// const created = () => {
-//     console.log('user:', props.loggedInUser);
-// };
 
 </script>
 

@@ -1,6 +1,7 @@
 import { createWebHistory, createRouter } from "vue-router";
 import BillCreate from './components/Bills/Create.vue';
 import BillList from './components/Bills/List.vue';
+import BillShow from './components/Bills/Show.vue';
 import Register from './components/Register/List.vue';
 import BomCreate from './components/Boms/Create.vue';
 import BomList from './components/Boms/List.vue';
@@ -38,8 +39,8 @@ const routes = [
     },
     {
         path: '/bills/view/:id',
-        name: 'BillView',
-        component: BillCreate
+        name: 'BillShow',
+        component: BillShow
     },
     {
         path: '/boms',
