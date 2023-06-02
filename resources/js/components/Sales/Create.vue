@@ -196,7 +196,7 @@ export default {
                     this.bom.id = data.id;
                     this.bom.name = data.name;
                     this.sale.items = data.bom_items;
-                    this.sale.amount = data.invoice_total;
+                    // this.sale.amount = data.invoice_total;
                     console.log('changeBomId: ', this.bom, data, this.selectedBomId);
                     console.log('this.sale.items: ', this.sale.items);
                 });
