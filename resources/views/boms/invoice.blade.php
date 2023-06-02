@@ -15,8 +15,7 @@
 </head>
 <body>
     <h4>Invoice for AccBeez</h4>
-    <p><strong>Description:</strong> {{ $bill->description }}</p>
-    <p><strong>Date:</strong> {{ $bill->date }}</p>
+    <p><strong>Name:</strong> {{ $bom->name }}</p>
     <table>
         <thead>
             <tr>
@@ -27,7 +26,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($bill->billItems as $item)
+            @foreach ($bom->bomItems as $item)
                 <tr>
                     <td>{{ $item->sku }}</td>
                     <td>{{ $item->quantity }}</td>
@@ -39,7 +38,7 @@
             <tr>
                 <td style="border: none;" colspan="2"></td>
                 <td style="border: none;">Invoice Total</td>
-                <td style="text-align: right;">{{ number_format($bill->invoice_total, 2) }}</td>
+                <td style="text-align: right;">{{ number_format($bom->invoice_total, 2) }}</td>
             </tr>
         </tbody>
     </table>

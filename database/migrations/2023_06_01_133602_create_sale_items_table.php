@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Bom;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sales', function (Blueprint $table) {
+        Schema::create('sale_items', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('bom_id');
-            $table->date('date');
-            $table->unsignedDouble('amount');
+            $table->unsignedBigInteger('sale_id');
+            $table->text('sku');
+            $table->integer('quantity')->default(0);
+            $table->double('rate')->default(0);
+            $table->double('total')->default(0);
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sales');
+        Schema::dropIfExists('sale_items');
     }
 };

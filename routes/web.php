@@ -29,6 +29,7 @@ Route::post('/update_registration', [App\Http\Controllers\UserController::class,
 
 Route::get('/logged_in_user', [App\Http\Controllers\UserController::class, 'logged_in_user'])->name('logged_in_user');
 Route::get('/bills/download-pdf/{id}', [App\Http\Controllers\BillController::class, 'downloadPdf'])->name('bills.downloadPdf');
+Route::get('/boms/download-pdf/{id}', [App\Http\Controllers\BomController::class, 'downloadPdf'])->name('boms.downloadPdf');
 
 
 Route::get('/{any}', function () {

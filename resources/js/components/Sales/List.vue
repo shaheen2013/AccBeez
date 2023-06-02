@@ -1,45 +1,34 @@
-
 <template>
     <div style="padding: 10px;">
         <h1>
-            Bill List
-            <router-link to="/bills/create" style="text-decoration: none; color: inherit;">
+            Sale List
+            <router-link to="/sales/create" style="text-decoration: none; color: inherit;">
                 <el-button type="primary" v-if="logged_in_user && logged_in_user.role === 'admin'" style="float: right;">
                     Create
                 </el-button>
             </router-link>
         </h1>
 
-        <el-table :data="bills">
+        <el-table :data="sales">
             <el-table-column prop="date" label="Date" />
-            <el-table-column prop="description" label="Description" />
-            <el-table-column prop="invoice_total" label="Invoice Total" />
+            <!-- <el-table-column prop="bom_id" label="Bom" /> -->
+            <el-table-column prop="bom" label="Bom">
+                <template #default="scope">
+                    {{ scope.row.bom.name }}
+                </template>
+            </el-table-column>
+            <el-table-column prop="amount" label="Amount" />
             <el-table-column prop="id" label="Operations" >
-
                 <template  #default="scope">
-                    <router-link :to="'/bills/edit/'+scope.row.id"  v-if="logged_in_user && logged_in_user.role === 'admin'">
+                    <router-link :to="'/sales/edit/'+scope.row.id"  v-if="logged_in_user && logged_in_user.role === 'admin'">
                         <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px" >
                             <Edit />
                         </el-icon>
-                        <!-- <el-button
-                            type="primary"
-                            size="small"
-                            icon="el-icon-edit"
-                        >
-                            Edit
-                        </el-button> -->
                     </router-link>
-                    <router-link :to="'/bills/view/'+scope.row.id">
+                    <router-link :to="'/sales/view/'+scope.row.id">
                         <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px" >
                             <View />
                         </el-icon>
-                        <!-- <el-button
-                            type="warning"
-                            size="small"
-                            icon="el-icon-view"
-                        >
-                            View
-                        </el-button> -->
                     </router-link>
                     <el-icon :size="20" :color="'red'"
                             style="width: 1em; height: 1em; margin-right: 8px"
@@ -48,14 +37,6 @@
                     >
                         <Delete />
                     </el-icon>
-                    <!-- <el-button
-                        type="danger"
-                        size="small"
-                        icon="el-icon-delete"
-                        @click="handleDelete(scope.row.id);"
-                    >
-                        Delete
-                    </el-button> -->
                 </template>
             </el-table-column>
         </el-table>
@@ -66,29 +47,29 @@
 
 
 <script >
-import BillItem from "./Item.vue";
+import SaleItem from "./Item.vue";
 
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 export default {
-    name: 'BillList',
+    name: 'SaleList',
     data() {
         return {
-            bills: [],
+            sales: [],
             logged_in_user: null
         };
     },
     components:{
-        BillItem
+        SaleItem
     },
     async mounted() {
         try {
-            await axios.get(`/api/bills`).
+            await axios.get(`/api/sales`).
                     then((res) => {
                         // console.log('res:', res);
-                        this.bills = res.data;
-                        this.bills.forEach(element => {
-                            element.invoice_total = element.invoice_total.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+                        this.sales = res.data;
+                        this.sales.forEach(element => {
+                            element.amount = element.amount.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
                             return element;
                         });
                     });
@@ -106,7 +87,7 @@ export default {
             console.log(id);
 
             ElMessageBox.confirm(
-                'Are you sure you want to delete the Bill?',
+                'Are you sure you want to delete the Sale?',
                 'Warning',
                 {
                     confirmButtonText: 'OK',
@@ -114,12 +95,12 @@ export default {
                     type: 'warning',
                 }
             ).then(() => {
-                axios.delete(`/api/bills/`+id).
+                axios.delete(`/api/sales/`+id).
                     then((res) => {
                         console.log('res:', res);
-                        this.bills = res.data;
-                        this.bills.forEach(element => {
-                            element.invoice_total = element.invoice_total.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+                        this.sales = res.data;
+                        this.sales.forEach(element => {
+                            element.amount = element.amount.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
                             return element;
                         });
                         ElMessage({

@@ -8,12 +8,12 @@ use App\Models\BomItem;
 use Illuminate\Http\Request;
 use App\Http\Requests\BomRequest;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class BomController extends Controller
 {
     public function index()
     {
-        // dd('hi index');
         $boms = Bom::all();
 
         // Return the customers as a response
@@ -99,5 +99,18 @@ class BomController extends Controller
         if(isset($item)){
             $item->delete();
         }
+    }
+
+    public function downloadPdf($id)
+    {
+
+        $bom = Bom::with('bomItems')->find($id);
+        // dd($bom);
+        $data = [
+            'bom' => $bom,
+        ];
+        $pdf = Pdf::loadView('boms.invoice', ['bom' => $bom]);
+        // dd($pdf);
+        return $pdf->download('bom invoice.pdf');
     }
 }

@@ -1,15 +1,15 @@
 <template>
-    <el-form ref="ruleFormRef" :model="bill" class="demo-bill"
+    <el-form ref="ruleFormRef" :model="sale" class="demo-sale"
         label-position="top"
         status-icon
     >
-        <el-text tag="b" type="primary" size="large">View Bill</el-text>
+        <el-text tag="b" type="primary" size="large">View Sale</el-text>
 
 
         <el-card class="box-card">
             <h4>Invoice for AccBeez</h4>
-            <p><strong>Description:</strong> {{ bill.description }}</p>
-            <p><strong>Date:</strong> {{ bill.date }}</p>
+            <p><strong>Description:</strong> {{ sale.description }}</p>
+            <p><strong>Date:</strong> {{ sale.date }}</p>
 
 
             <el-row>
@@ -24,7 +24,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="item in bill.items" :key="item.id">
+                            <tr v-for="item in sale.items" :key="item.id">
                                 <td>{{ item.sku }}</td>
                                 <td>{{ item.quantity }}</td>
                                 <td>{{ formatCurrency(item.rate) }}</td>
@@ -33,7 +33,7 @@
                             <tr>
                                 <td style="border: none;" colspan="2"></td>
                                 <td style="border: none;">Invoice Total</td>
-                                <td colspan="2" style="text-align: right;">{{ formatCurrency(bill.invoice_total) }}</td>
+                                <td colspan="2" style="text-align: right;">{{ formatCurrency(sale.invoice_total) }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -43,7 +43,7 @@
 
             <el-row>
                 <el-col>
-                    <router-link :to="'/bills'">
+                    <router-link :to="'/sales'">
                         <el-button type="info" class="me-2">Back</el-button>
                     </router-link>
                     <el-button type="primary" @click="downloadPdf" class="me-2">Download PDF</el-button>
@@ -55,10 +55,10 @@
 
 <script>
 export default {
-    name: 'BillShow',
+    name: 'SaleShow',
     data() {
         return {
-            bill : {
+            sale : {
                 id: null,
                 description: '',
                 invoice_total: 0,
@@ -74,21 +74,21 @@ export default {
     },
     async created() {
         let paths = this.$route.path.split("/");
-        this.bill.id = paths[3];
+        this.sale.id = paths[3];
         console.log('Route Name: ', this.$route.name);
-        await axios.get(`/api/bills/edit/`+this.bill.id).
+        await axios.get(`/api/sales/edit/`+this.sale.id).
                 then((res) => {
                     console.log('res:', res);
-                    this.bill.id = res.data.id;
-                    this.bill.description = res.data.description;
-                    this.bill.invoice_total = res.data.invoice_total;
-                    this.bill.date = res.data.date;
-                    this.bill.items = res.data.bill_items;
+                    this.sale.id = res.data.id;
+                    this.sale.description = res.data.description;
+                    this.sale.invoice_total = res.data.invoice_total;
+                    this.sale.date = res.data.date;
+                    this.sale.items = res.data.sale_items;
                 });
     },
     methods: {
         downloadPdf(){
-            window.location.href = `/bills/download-pdf/`+this.bill.id;
+            window.location.href = `/sales/download-pdf/`+this.sale.id;
         },
         formatCurrency(value) {
             return parseFloat(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });

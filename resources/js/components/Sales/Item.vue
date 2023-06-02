@@ -1,0 +1,176 @@
+<template>
+    <tr>
+        <td>
+            <!-- <el-input v-model="item.sku" type="text" placeholder="SKU" :disabled="operation === 'view'" /> -->
+            <el-autocomplete
+                v-model="item.sku"
+                :fetch-suggestions="querySearch"
+                popper-class="my-autocomplete"
+                placeholder="SKU"
+                @select="handleSelect"
+                style="width:100%"
+                :disabled="operation === 'view'"
+            >
+                <template #default="{ item }">
+                    <div class="value">{{ item.sku }}</div>
+                </template>
+            </el-autocomplete>
+        </td>
+        <td>
+            <el-input v-model="formattedRate" type="number" placeholder="Rate" :disabled="operation === 'view'"
+                        @blur="calculateTotal" />
+            <!-- <el-input v-model="item.rate" type="number" placeholder="Rate" :disabled="operation === 'view'"
+                        @blur="calculateTotal"  /> -->
+            <!-- <el-input-number v-model="item.rate" type="text" placeholder="Rate" :disabled="operation === 'view'"
+                        :className="text-start"
+                        :controls="false"
+                        :precision="2"
+                        @blur="calculateTotal" /> -->
+        </td>
+        <td>
+            <!-- <el-input v-model="item.quantity" type="number" placeholder="Quantity" :disabled="operation === 'view'"
+                        @blur="calculateTotal" /> -->
+            <el-input-number v-model="item.quantity" type="text" placeholder="Quantity" :disabled="operation === 'view'"
+                        :className="text-start"
+                        :controls="false"
+                        @blur="calculateTotal" />
+        </td>
+        <td>
+            <!-- <el-input v-model="item.total" type="text" placeholder="Total" disabled style="color: #000000" /> -->
+            <el-input-number v-model="item.total" type="text" placeholder="Total" disabled
+                        :className="text-start"
+                        :controls="false"
+                        :precision="2" />
+        </td>
+        <td v-if="operation !== 'view'">
+            <el-button type="danger" @click="getDeletedItemsId(index, item.id)" style="width:100%; padding-right:0;">
+                Delete
+            </el-button>
+        </td>
+    </tr>
+</template>
+
+
+
+<script>
+
+export default {
+    name:'SaleItem',
+    props: ['item', 'sale', 'operation', 'deletedItemsID', 'index', 'saleItems', 'products'],
+    data() {
+        return {
+        };
+    },
+    mounted() {
+    },
+    created() {  },
+    methods: {
+        calculateTotal() {
+            this.item.total = parseFloat(this.item.rate) * parseFloat(this.item.quantity);
+            let summation = this.sale.items.reduce((total, element) => total + element.total, 0);
+            console.log('summation:', summation, this.item.total);
+            this.$emit('changeInvoiceTotal', summation);
+        },
+        getDeletedItemsId(index, id) {
+            if(id) {
+                this.deletedItemsID.push(id);
+            }
+            this.deleteRow(index);
+            this.calculateTotal();
+            // console.log('deletedItemsID', id, this.deletedItemsID);
+        },
+        deleteRow(index) {
+            this.saleItems.splice(index, 1);
+        },
+
+        querySearch(queryString, cb) {
+            // var productArray = Object.values(this.products)
+            const products = Object.values(this.products);
+            const results = queryString
+                ? products.filter(this.createFilter(queryString))
+                : products;
+            console.log('results', results, queryString);
+            // call callback function to return suggestions
+            cb(results);
+        },
+        createFilter(queryString) {
+            return (product) => {
+                return product.sku.toLowerCase().includes( queryString.toLowerCase());
+            };
+        },
+        handleSelect(product) {
+            // console.log('handleSelect:', product, this.saleItems);
+            if (this.saleItems &&  this.itemExist(product)) {
+                ElNotification({
+                    type: 'error',
+                    title: 'Error',
+                    message: 'Item already exists in the list',
+                });
+                // this.saleItems.forEach((item) => {
+                //     // console.log('item in forech', item)
+
+                //     if (item && item.sku === product.sku) {
+                //         item.quantity++;
+                //     }
+                // });
+            } else {
+                this.item.sku = product.sku;
+                this.item.rate = product.rate;
+            }
+            this.calculateTotal();
+        },
+        itemExist(product) {
+            // console.log('itemExist', product);
+            return this.saleItems.some(el => {
+                return el.sku === product.sku;
+            });
+        },
+    },
+    computed: {
+        formattedRate: {
+            get() {
+                return this.item.rate.toFixed(2); // Apply precision formatting when retrieving the value
+            },
+            set(value) {
+                this.item.rate = Number(value); // Convert the input value back to a number
+            },
+        },
+    }
+};
+</script>
+
+<style scoped>
+.el-autocomplete.inline-input {
+  width: 100;
+  width: 100%;
+}
+td {
+  vertical-align: top;
+}
+
+
+.my-autocomplete li {
+  line-height: normal;
+  padding: 7px;
+}
+.my-autocomplete li .name {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.my-autocomplete li .addr {
+  font-size: 12px;
+  color: #b4b4b4;
+}
+.my-autocomplete li .highlighted .addr {
+  color: #ddd;
+}
+td{
+    padding-left: 0 !important;
+    padding-top: 0 !important;
+}
+
+/* .el-input__inner {
+    text-align: 'left';
+    width: '100%';
+} */
+</style>

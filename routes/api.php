@@ -44,7 +44,12 @@ Route::get('/users/edit/{id}', [App\Http\Controllers\UserController::class, 'edi
 Route::post('/users/{id}', [App\Http\Controllers\UserController::class, 'update'])->name('users.update');
 Route::delete('/users/{id}', [App\Http\Controllers\UserController::class, 'delete'])->name('users.delete');
 
-Route::apiResource('sales', \App\Http\Controllers\SalesController::class);
+// Route::apiResource('sales', \App\Http\Controllers\SaleController::class);
+Route::get('/sales', [App\Http\Controllers\SaleController::class, 'index'])->name('sales.list');
+Route::post('/sales', [App\Http\Controllers\SaleController::class, 'store'])->name('sales.store');
+Route::get('/sales/edit/{id}', [App\Http\Controllers\SaleController::class, 'edit'])->name('sales.edit');
+Route::post('/sales/{id}', [App\Http\Controllers\SaleController::class, 'update'])->name('sales.update');
+Route::delete('/sales/{id}', [App\Http\Controllers\SaleController::class, 'delete'])->name('sales.delete');
 
 Route::get('/products', [App\Http\Controllers\ProductController::class, 'index'])->name('products.list');
 
