@@ -6,8 +6,6 @@
         $user = Auth::user();
     @endphp
     <div id="app">
-        <app
-        ></app>
     </div>
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </div>

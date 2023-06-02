@@ -21,7 +21,6 @@
     "dependencies": {
         "element-plus": "^2.3.5",
         "vue-router": "^4.2.1",
-        "vuex": "^4.1.0",
-        "vuex-persistedstate": "^4.1.0"
+        "vuex": "^4.1.0"
     }
 }

@@ -73,6 +73,8 @@
                 <el-input v-model="formattedTotal" type="number" placeholder="Invoice Total" disabled />
             </el-form-item>
 
+
+
             <el-row>
                 <el-col>
                     <el-button v-if="operation === 'create'" type="primary" @click="createBill" class="me-2">Create</el-button>
@@ -80,16 +82,51 @@
                     <router-link :to="'/bills'">
                         <el-button type="info" class="me-2">Back</el-button>
                     </router-link>
+
+                    <el-button v-if="operation === 'view'" type="primary" @click="downloadPdf" class="me-2">Download PDF</el-button>
+                    <!-- <button @click="exportToPDF">Export to PDF</button> -->
                 </el-col>
             </el-row>
         </el-card>
 
+
+            <!-- <div ref="testHtml">
+                    <Show
+                        :bill="bill"
+                    />
+            </div> -->
+
+            <!-- <div ref="testHtml">
+                <h1>Test heading </h1>
+                <div class="card">
+                    <div class="card-header">
+                    Featured
+                    </div>
+                    <div class="card-body">
+                    <h5 class="card-title">Special title treatment</h5>
+                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                    Featured
+                    </div>
+                    <div class="card-body">
+                    <h5 class="card-title">Special title treatment</h5>
+                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+                <button class="btn btn-danger" @click="generatePdf">generate PDF</button>
+            </div> -->
     </el-form>
 </template>
 
 <script >
 
 import BillItem from "./Item.vue";
+import Show from "./Show.vue";
 import { showErrors } from '@/utils/helper.js'
 
 export default {
@@ -121,7 +158,8 @@ export default {
         };
     },
     components:{
-        BillItem
+        BillItem,
+        Show
     },
     async created() {
         if(this.$route.name == 'BillCreate'){
@@ -195,6 +233,10 @@ export default {
                 showErrors(error);
                 console.error(error);
             }
+        },
+
+        downloadPdf(){
+            window.location.href = `/bills/download-pdf/`+this.bill.id;
         },
     },
     computed: {
