@@ -45,6 +45,17 @@
                                     Users
                             </router-link>
                         </el-menu-item>
+
+                        <el-menu-item index="4">
+                            <!-- <el-icon><icon-menu /></el-icon> -->
+                            <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px">
+                                <List />
+                            </el-icon>
+                            <router-link to="/sales" style="text-decoration: none;"
+                                        :style="[$route.path === '/sales' ? {color: 'royalblue'} : {color: 'black'}]">
+                                    Sales
+                            </router-link>
+                        </el-menu-item>
                     </el-menu>
 
 

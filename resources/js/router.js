@@ -8,6 +8,7 @@ import UserCreate from './components/Users/Create.vue';
 import UserList from './components/Users/List.vue';
 import NotFoundPage from './components/NotFoundPage.vue';
 import Dashboard from './components/Dashboard.vue';
+import SalesList from "@/components/Sales/SalesList.vue";
 
 const routes = [
     {
@@ -79,6 +80,11 @@ const routes = [
         path: '/users/view/:id',
         name: 'UserView',
         component: UserCreate
+    },
+    {
+        path: '/sales',
+        name: 'SalesList',
+        component: SalesList
     },
     {
         path: '/:pathMatch(.*)*',
