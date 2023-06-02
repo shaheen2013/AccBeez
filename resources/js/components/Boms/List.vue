@@ -3,9 +3,11 @@
     <div style="padding: 10px;">
         <h1>
             Bom List
-            <el-button type="primary" v-if="logged_in_user && logged_in_user.role === 'admin'" style="float: right;">
-                <router-link to="/boms/create" style="text-decoration: none; color: inherit;">Create</router-link>
-            </el-button>
+            <router-link to="/boms/create" style="text-decoration: none; color: inherit;">
+                <el-button type="primary" v-if="logged_in_user && logged_in_user.role === 'admin'" style="float: right;">
+                    Create
+                </el-button>
+            </router-link>
         </h1>
 
         <el-table :data="boms">

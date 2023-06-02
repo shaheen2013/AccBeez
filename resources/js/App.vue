@@ -5,46 +5,46 @@
                 <el-scrollbar>
 
                     <el-menu>
-                        <el-menu-item index="1">
-                            <!-- <el-icon><icon-menu /></el-icon> -->
-                            <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px">
-                                <List />
-                            </el-icon>
-                            <router-link to="/bills" style="text-decoration: none;"
-                                        :style="[$route.path === '/bills' ? {color: 'royalblue'} : {color: 'black'}]">
-                                    Bills
-                            </router-link>
-                        </el-menu-item>
-                        <el-menu-item index="2">
-                            <!-- <el-icon><icon-menu /></el-icon> -->
-                            <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px">
-                                <List />
-                            </el-icon>
-                            <router-link to="/register" style="text-decoration: none;"
-                                        :style="[$route.path === '/register' ? {color: 'royalblue'} : {color: 'black'}]">
-                                    Register
-                            </router-link>
-                        </el-menu-item>
-                        <el-menu-item index="3">
-                            <!-- <el-icon><icon-menu /></el-icon> -->
-                            <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px">
-                                <List />
-                            </el-icon>
-                            <router-link to="/boms" style="text-decoration: none;"
-                                        :style="[$route.path === '/boms' ? {color: 'royalblue'} : {color: 'black'}]">
-                                    BOM
-                            </router-link>
-                        </el-menu-item>
-                        <el-menu-item index="4">
-                            <!-- <el-icon><icon-menu /></el-icon> -->
-                            <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px">
-                                <List />
-                            </el-icon>
-                            <router-link to="/users" style="text-decoration: none;"
-                                        :style="[$route.path === '/users' ? {color: 'royalblue'} : {color: 'black'}]">
-                                    Users
-                            </router-link>
-                        </el-menu-item>
+                        <router-link to="/bills" style="text-decoration: none;"
+                                    :style="[$route.path === '/bills' ? {color: 'royalblue'} : {color: 'black'}]">
+                            <el-menu-item index="1">
+                                <!-- <el-icon><icon-menu /></el-icon> -->
+                                <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px">
+                                    <List />
+                                </el-icon>
+                                Bills
+                            </el-menu-item>
+                        </router-link>
+                        <router-link to="/register" style="text-decoration: none;"
+                                    :style="[$route.path === '/register' ? {color: 'royalblue'} : {color: 'black'}]">
+                            <el-menu-item index="2">
+                                <!-- <el-icon><icon-menu /></el-icon> -->
+                                <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px">
+                                    <List />
+                                </el-icon>
+                                Register
+                            </el-menu-item>
+                        </router-link>
+                        <router-link to="/boms" style="text-decoration: none;"
+                                    :style="[$route.path === '/boms' ? {color: 'royalblue'} : {color: 'black'}]">
+                            <el-menu-item index="3">
+                                <!-- <el-icon><icon-menu /></el-icon> -->
+                                <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px">
+                                    <List />
+                                </el-icon>
+                                BOM
+                            </el-menu-item>
+                        </router-link>
+                        <router-link to="/users" style="text-decoration: none;"
+                                    :style="[$route.path === '/users' ? {color: 'royalblue'} : {color: 'black'}]">
+                            <el-menu-item index="4">
+                                <!-- <el-icon><icon-menu /></el-icon> -->
+                                <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px">
+                                    <List />
+                                </el-icon>
+                                Users
+                            </el-menu-item>
+                        </router-link>
                     </el-menu>
 
 
