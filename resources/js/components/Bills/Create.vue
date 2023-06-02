@@ -128,7 +128,6 @@
 import BillItem from "./Item.vue";
 import Show from "./Show.vue";
 import { showErrors } from '@/utils/helper.js'
-import jsPDF from 'jspdf';
 
 export default {
     name: 'BillCreate',
@@ -236,32 +235,9 @@ export default {
             }
         },
 
-        // exportToPDF() {
-        //     const doc = new jsPDF();
-        //     doc.text(Show, 10, 10); // Add your desired content or modify as needed
-        //     // doc.text('Hello, World!', 10, 10); // Add your desired content or modify as needed
-        //     doc.save('my-component.pdf');
-        // },
-
         downloadPdf(){
             window.location.href = `/bills/download-pdf/`+this.bill.id;
         },
-        // exportToPDF(){
-        //     var doc = new jsPDF('p', 'pt', 'A4');
-        //         margins = {
-        //             top: 80,
-        //             bottom: 60,
-        //             left: 40,
-        //             width: 522
-        //         };
-        //     console.log('doc', doc);
-
-        //     doc.fromHTML(this.$refs.testHtml, margins.left, margins.top,{
-        //         'width' : margins.width
-        //     });
-
-        //     doc.save('test.pdf');
-        // }
     },
     computed: {
         formattedTotal() {
