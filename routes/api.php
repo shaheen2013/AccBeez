@@ -27,6 +27,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('/bills', [App\Http\Controllers\BillController::class, 'index'])->name('bills.list');
 Route::post('/bills', [App\Http\Controllers\BillController::class, 'store'])->name('bills.store');
 Route::get('/bills/edit/{id}', [App\Http\Controllers\BillController::class, 'edit'])->name('bills.edit');
+Route::post('/bills/bulkdelete', [App\Http\Controllers\BillController::class, 'bulkdelete'])->name('bills.bulkdelete');
 Route::post('/bills/{id}', [App\Http\Controllers\BillController::class, 'update'])->name('bills.update');
 Route::delete('/bills/{id}', [App\Http\Controllers\BillController::class, 'delete'])->name('bills.delete');
 

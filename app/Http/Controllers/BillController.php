@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Arr;
+use Illuminate\Database\Query\Builder;
 
 class BillController extends Controller
 {
@@ -21,17 +22,16 @@ class BillController extends Controller
 
     public function index(Request $request)
     {
-        $bills = Bill::all();
         $searchParams = $request->all();
         // dd('hi index', $searchParams);
-        $bills = DB::table('bills');
         $limit = Arr::get($searchParams, 'limit', 5);
         $keyword = Arr::get($searchParams, 'keyword', '');
-        // dd($bills->paginate($limit));
+        $billsQuery = DB::table('bills')
+                        ->when(!empty($keyword), function (Builder $query) use ($keyword) {
+                            return $query->where('description', 'LIKE', '%' . $keyword . '%');
+                        });
 
-
-        // Return the customers as a response
-        return response()->json($bills->paginate($limit));
+        return response()->json($billsQuery->paginate($limit));
     }
 
     public function store(BillRequest $request)
@@ -132,5 +132,20 @@ class BillController extends Controller
         return $pdf->download('invoice.pdf');
     }
 
+
+    public function bulkdelete(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $billItems = BillItem::whereIn('bill_id', $request->all())->delete();
+            Bill::whereIn('id', $request->all())->delete();
+            DB::commit();
+
+            return 'Bulk Deleted Bills';
+        } catch (Exception $ex) {
+            DB::rollBack();
+            return 'Delete Failed';
+        }
+    }
 
 }

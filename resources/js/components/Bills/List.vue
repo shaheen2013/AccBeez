@@ -16,8 +16,6 @@
                 v-model="query.keyword"
                 placeholder="Keyword"
                 style="width: 200px;"
-                class="filter-item"
-                @keyup.enter.native="handleFilter"
             />
             <el-button type="primary" @click="handleFilter">
                 <el-icon style="vertical-align: middle">
@@ -25,21 +23,34 @@
                 </el-icon>
                 <span style="vertical-align: middle"> Search </span>
             </el-button>
-            <el-button
+            <el-button type="danger" @click="handleBulkDelete">
+                <el-icon style="vertical-align: middle">
+                    <Delete />
+                </el-icon>
+                <span style="vertical-align: middle">Delete Selecteds</span>
+            </el-button>
+            <!-- <el-button
                 :loading="downloading"
                 class="filter-item"
                 type="primary"
                 @click="handleDownload"
             >
                 <el-icon><Download /></el-icon>Export
-            </el-button>
+            </el-button> -->
         </div>
 
 
-        <el-table :data="bills">
+        <el-table :data="bills"
+                @selection-change="handleSelectionChange"
+        >
+            <el-table-column type="selection" width="55" />
             <el-table-column prop="date" label="Date" />
             <el-table-column prop="description" label="Description" />
-            <el-table-column prop="invoice_total" label="Invoice Total" />
+            <el-table-column prop="invoice_total" label="Invoice Total">
+                <template #default="scope">
+                    {{ formattedInvoiceTotal(scope.row.invoice_total) }}
+                </template>
+            </el-table-column>
             <el-table-column prop="id" label="Operations" >
                 <template  #default="scope">
                     <router-link :to="'/bills/edit/'+scope.row.id"  v-if="logged_in_user && logged_in_user.role === 'admin'">
@@ -102,7 +113,9 @@ export default {
             },
             total: 10,
             totalPages: null,
-            pageSize: 10
+            pageSize: 5,
+            multipleSelection: [],
+            bulkDeleteIds: [],
         };
     },
     components:{
@@ -123,7 +136,6 @@ export default {
     methods: {
         handleDelete(id){
             console.log(id);
-
             ElMessageBox.confirm(
                 'Are you sure you want to delete the Bill?',
                 'Warning',
@@ -152,9 +164,44 @@ export default {
                     message: 'Delete canceled',
                 })
             })
-
         },
-        
+        handleBulkDelete(){
+                // var multipleSelectionRaw = { ...this.multipleSelection }
+            // const multipleSelectionRaw = Object.values(this.multipleSelection);
+            const multipleSelectionArray =  Array.from(this.multipleSelection, obj => ({ ...obj }))
+            console.log('multipleSelectionArray:', multipleSelectionArray);
+            ElMessageBox.confirm(
+                'Are you sure you want to bulkdelete the selected Bills?',
+                'Warning',
+                {
+                    confirmButtonText: 'OK',
+                    cancelButtonText: 'Cancel',
+                    type: 'warning',
+                }
+            ).then(() => {
+                multipleSelectionArray.forEach(element => {
+                    this.bulkDeleteIds.push(element.id);
+                    console.log(element.id, this.bulkDeleteIds);
+                });
+                axios.post(`/api/bills/bulkdelete`, this.bulkDeleteIds).
+                    then((res) => {
+                        console.log('res:', res);
+                        this.bulkDeleteIds = [];
+                        this.getList();
+                        ElMessage({
+                            type: 'success',
+                            message: 'Delete completed',
+                        })
+                    });
+            }).catch(() => {
+                ElMessage({
+                    type: 'info',
+                    message: 'Delete canceled',
+                })
+                this.bulkDeleteIds = [];
+            })
+        },
+
         handleFilter() {
             this.query.page = 1;
             this.getList();
@@ -174,10 +221,6 @@ export default {
                         this.query.page = res.data.current_page;
                         this.total = res.data.total;
                         this.totalPages = Math.ceil(res.data.total / this.pageSize); // Calculate the total number of pages
-                        this.bills.forEach(element => {
-                            element.invoice_total = element.invoice_total.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
-                            return element;
-                        });
                     });
             this.loading = false;
         },
@@ -193,8 +236,17 @@ export default {
             this.query.page = currentPage;
             this.getList();
         },
-
+        handleSelectionChange(val) {
+            this.multipleSelection = val;
+        },
     },
+    computed: {
+        formattedInvoiceTotal() {
+            return (val) => {
+                return val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            };
+        },
+    }
 };
 </script>
 
