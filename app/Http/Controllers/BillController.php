@@ -10,6 +10,7 @@ use App\Http\Requests\BillRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Arr;
 
 class BillController extends Controller
 {
@@ -18,14 +19,19 @@ class BillController extends Controller
     //    $this->middleware('auth');
     // }
 
-    public function index()
+    public function index(Request $request)
     {
-        // dd('hi index');
         $bills = Bill::all();
-        // dd(Auth::check(), auth());
+        $searchParams = $request->all();
+        // dd('hi index', $searchParams);
+        $bills = DB::table('bills');
+        $limit = Arr::get($searchParams, 'limit', 5);
+        $keyword = Arr::get($searchParams, 'keyword', '');
+        // dd($bills->paginate($limit));
+
 
         // Return the customers as a response
-        return response()->json($bills);
+        return response()->json($bills->paginate($limit));
     }
 
     public function store(BillRequest $request)
