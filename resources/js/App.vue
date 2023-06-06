@@ -10,7 +10,7 @@
                             <el-menu-item index="1">
                                 <!-- <el-icon><icon-menu /></el-icon> -->
                                 <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px">
-                                    <List />
+                                    <Suitcase />
                                 </el-icon>
                                 Bills
                             </el-menu-item>
@@ -30,7 +30,7 @@
                             <el-menu-item index="3">
                                 <!-- <el-icon><icon-menu /></el-icon> -->
                                 <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px">
-                                    <List />
+                                    <Money />
                                 </el-icon>
                                 BOM
                             </el-menu-item>
@@ -40,7 +40,7 @@
                             <el-menu-item index="4">
                                 <!-- <el-icon><icon-menu /></el-icon> -->
                                 <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px">
-                                    <List />
+                                    <User />
                                 </el-icon>
                                 Users
                             </el-menu-item>
@@ -51,7 +51,7 @@
                             <el-menu-item index="5">
                                 <!-- <el-icon><icon-menu /></el-icon> -->
                                 <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px">
-                                    <List />
+                                    <CreditCard />
                                 </el-icon>
                                 Sales
                             </el-menu-item>

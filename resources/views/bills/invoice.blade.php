@@ -14,7 +14,7 @@
     </style>
 </head>
 <body>
-    <h4>Invoice for AccBeez</h4>
+    <h4>Bill Invoice</h4>
     <p><strong>Description:</strong> {{ $bill->description }}</p>
     <p><strong>Date:</strong> {{ $bill->date }}</p>
     <table>

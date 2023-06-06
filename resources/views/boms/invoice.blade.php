@@ -14,7 +14,6 @@
     </style>
 </head>
 <body>
-    <h4>Invoice for AccBeez</h4>
     <p><strong>Name:</strong> {{ $bom->name }}</p>
     <table>
         <thead>
