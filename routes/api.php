@@ -35,6 +35,7 @@ Route::delete('/bills/{id}', [App\Http\Controllers\BillController::class, 'delet
 Route::get('/boms', [App\Http\Controllers\BomController::class, 'index'])->name('boms.list');
 Route::post('/boms', [App\Http\Controllers\BomController::class, 'store'])->name('boms.store');
 Route::get('/boms/edit/{id}', [App\Http\Controllers\BomController::class, 'edit'])->name('boms.edit');
+Route::post('/boms/bulkdelete', [App\Http\Controllers\BomController::class, 'bulkdelete'])->name('boms.bulkdelete');
 Route::post('/boms/{id}', [App\Http\Controllers\BomController::class, 'update'])->name('boms.update');
 Route::delete('/boms/{id}', [App\Http\Controllers\BomController::class, 'delete'])->name('boms.delete');
 

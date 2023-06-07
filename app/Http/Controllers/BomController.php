@@ -9,15 +9,23 @@ use Illuminate\Http\Request;
 use App\Http\Requests\BomRequest;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Arr;
+use Illuminate\Database\Query\Builder;
 
 class BomController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $boms = Bom::all();
+        $searchParams = $request->all();
+        // dd('hi index', $searchParams);
+        $limit = Arr::get($searchParams, 'limit', 5);
+        $keyword = Arr::get($searchParams, 'keyword', '');
+        $bomsQuery = DB::table('boms')
+                        ->when(!empty($keyword), function (Builder $query) use ($keyword) {
+                            return $query->where('name', 'LIKE', '%' . $keyword . '%');
+                        });
 
-        // Return the customers as a response
-        return response()->json($boms);
+        return response()->json($bomsQuery->paginate($limit));
     }
 
     public function store(BomRequest $request)
@@ -112,5 +120,21 @@ class BomController extends Controller
         $pdf = Pdf::loadView('boms.invoice', ['bom' => $bom]);
         // dd($pdf);
         return $pdf->download('bom invoice.pdf');
+    }
+
+
+    public function bulkdelete(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $bomItems = BomItem::whereIn('bom_id', $request->all())->delete();
+            Bom::whereIn('id', $request->all())->delete();
+            DB::commit();
+
+            return 'Bulk Deleted Boms';
+        } catch (Exception $ex) {
+            DB::rollBack();
+            return 'Delete Failed';
+        }
     }
 }

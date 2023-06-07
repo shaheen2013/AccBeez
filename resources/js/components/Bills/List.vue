@@ -179,7 +179,7 @@ export default {
                     type: 'warning',
                 }
             ).then(() => {
-                multipleSelectionArray.forEach(element => {
+                this.multipleSelection.forEach(element => {
                     this.bulkDeleteIds.push(element.id);
                     console.log(element.id, this.bulkDeleteIds);
                 });
@@ -225,7 +225,7 @@ export default {
             this.loading = false;
         },
         handleDownload(){
-            
+
         },
 
         handleSizeChange(val) {
