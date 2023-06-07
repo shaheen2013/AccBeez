@@ -32,13 +32,21 @@
                                 </th>
                                 <th width="20%">
                                     <span class="required-indicator" v-if="operation !== 'view'">*</span>
+                                    <span>Name</span>
+                                </th>
+                                <th width="10%">
+                                    <span class="required-indicator" v-if="operation !== 'view'">*</span>
                                     <span>Rate</span>
                                 </th>
-                                <th width="20%">
+                                <th width="10%">
+                                    <span class="required-indicator" v-if="operation !== 'view'">*</span>
+                                    <span>Unit</span>
+                                </th>
+                                <th width="10%">
                                     <span class="required-indicator" v-if="operation !== 'view'">*</span>
                                     <span>Quantity</span>
                                 </th>
-                                <th width="20%">
+                                <th width="10%">
                                     <span class="required-indicator" v-if="operation !== 'view'">*</span>
                                     <span>Item Total</span>
                                 </th>
@@ -84,42 +92,9 @@
                     </router-link>
 
                     <el-button v-if="operation === 'view'" type="primary" @click="downloadPdf" class="me-2">Download PDF</el-button>
-                    <!-- <button @click="exportToPDF">Export to PDF</button> -->
                 </el-col>
             </el-row>
         </el-card>
-
-
-            <!-- <div ref="testHtml">
-                    <Show
-                        :bill="bill"
-                    />
-            </div> -->
-
-            <!-- <div ref="testHtml">
-                <h1>Test heading </h1>
-                <div class="card">
-                    <div class="card-header">
-                    Featured
-                    </div>
-                    <div class="card-body">
-                    <h5 class="card-title">Special title treatment</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                    Featured
-                    </div>
-                    <div class="card-body">
-                    <h5 class="card-title">Special title treatment</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
-                    </div>
-                </div>
-                <button class="btn btn-danger" @click="generatePdf">generate PDF</button>
-            </div> -->
     </el-form>
 </template>
 

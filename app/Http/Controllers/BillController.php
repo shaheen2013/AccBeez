@@ -40,6 +40,8 @@ class BillController extends Controller
             $billData = $request->only('description', 'date', 'invoice_total');
             DB::beginTransaction();
             $bill = Bill::create($billData);
+            $bill->invoice_number = $bill->id;
+            $bill->save();
             // dd('store', $request->all(), $billData);
             foreach($request->items as $item){
                 $item['bill_id'] = $bill->id;
@@ -124,8 +126,6 @@ class BillController extends Controller
         // dd($bill);
         $data = [
             'bill' => $bill,
-            'name' => 'John',
-            'data' => 'hello',
         ];
         $pdf = Pdf::loadView('bills.invoice', ['bill' => $bill]);
         // dd($pdf);

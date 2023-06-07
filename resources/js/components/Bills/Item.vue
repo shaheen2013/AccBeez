@@ -17,8 +17,15 @@
             </el-autocomplete>
         </td>
         <td>
+            <el-input v-model="item.name" type="text" placeholder="Name" :disabled="operation === 'view'"/>
+        </td>
+        <td>
             <el-input v-model="formattedRate" type="number" placeholder="Rate" :disabled="operation === 'view'"
                         @blur="calculateTotal" />
+            <!-- <el-input :value="item.rate"
+                        @input="updateRate" @keyup="updateRate"
+                        type="number" placeholder="Rate" :disabled="operation === 'view'"
+                        @blur="calculateTotal"  /> -->
             <!-- <el-input v-model="item.rate" type="number" placeholder="Rate" :disabled="operation === 'view'"
                         @blur="calculateTotal"  /> -->
             <!-- <el-input-number v-model="item.rate" type="text" placeholder="Rate" :disabled="operation === 'view'"
@@ -26,6 +33,13 @@
                         :controls="false"
                         :precision="2"
                         @blur="calculateTotal" /> -->
+            <!-- <el-input v-model="item.rate" type="number" placeholder="Rate"
+                        :disabled="operation === 'view'"
+                        @keyup="formatRate"
+                        @blur="calculateTotal" /> -->
+        </td>
+        <td>
+            <el-input v-model="item.unit" type="text" placeholder="Unit" :disabled="operation === 'view'"/>
         </td>
         <td>
             <!-- <el-input v-model="item.quantity" type="number" placeholder="Quantity" :disabled="operation === 'view'"
@@ -59,12 +73,16 @@ export default {
     props: ['item', 'bill', 'operation', 'deletedItemsID', 'index', 'billItems', 'products'],
     data() {
         return {
+            // formattedRate: null,
         };
     },
     mounted() {
     },
     created() {  },
     methods: {
+        // updateRate(value) {
+        //     this.item.rate = value; // Update the item.rate property with the new value
+        // },
         calculateTotal() {
             this.item.total = parseFloat(this.item.rate) * parseFloat(this.item.quantity);
             let summation = this.bill.items.reduce((total, element) => total + element.total, 0);
@@ -125,7 +143,18 @@ export default {
                 return el.sku === product.sku;
             });
         },
+        // formatRate(value) {
+        //     this.formattedRate = value.toFixed(2); // Apply precision formatting
+        // },
+        // formatRate() {
+        //     this.item.rate = this.item.rate.toFixed(2); // Apply precision formatting
+        // },
     },
+    // watch: {
+    //     'item.rate'(newRate) {
+    //         this.formatRate(newRate);
+    //     },
+    // },
     computed: {
         formattedRate: {
             get() {
