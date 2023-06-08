@@ -1,7 +1,6 @@
 <template>
     <tr>
         <td>
-            <!-- <el-input v-model="item.sku" type="text" placeholder="SKU" :disabled="operation === 'view'" /> -->
             <el-autocomplete
                 v-model="item.sku"
                 :fetch-suggestions="querySearch"
@@ -22,21 +21,11 @@
         <td>
             <!-- <el-input v-model="formattedRate" type="number" placeholder="Rate" :disabled="operation === 'view'"
                         @blur="calculateTotal" /> -->
-            <!-- <el-input :value="item.rate"
-                        @input="updateRate" @keyup="updateRate"
-                        type="number" placeholder="Rate" :disabled="operation === 'view'"
-                        @blur="calculateTotal"  /> -->
-            <!-- <el-input v-model="item.rate" type="number" placeholder="Rate" :disabled="operation === 'view'"
-                        @blur="calculateTotal"  /> -->
             <el-input-number v-model="item.rate" type="text" placeholder="Rate" :disabled="operation === 'view'"
                         :className="text-start"
                         :controls="false"
                         :precision="2"
                         @blur="calculateTotal" />
-            <!-- <el-input v-model="item.rate" type="number" placeholder="Rate"
-                        :disabled="operation === 'view'"
-                        @keyup="formatRate"
-                        @blur="calculateTotal" /> -->
         </td>
         <td>
             <el-input v-model="item.unit" type="text" placeholder="Unit" :disabled="operation === 'view'"/>
@@ -44,13 +33,8 @@
         <td>
             <el-input v-model="item.quantity" type="number" placeholder="Quantity" :disabled="operation === 'view'"
                         @blur="calculateTotal" />
-            <!-- <el-input-number v-model="item.quantity" type="text" placeholder="Quantity" :disabled="operation === 'view'"
-                        :className="text-start"
-                        :controls="false"
-                        @blur="calculateTotal" /> -->
         </td>
         <td>
-            <!-- <el-input v-model="item.total" type="text" placeholder="Total" disabled style="color: #000000" /> -->
             <el-input-number v-model="item.total" type="text" placeholder="Total" disabled
                         :className="text-start"
                         :controls="false"
@@ -73,7 +57,6 @@ export default {
     props: ['item', 'bill', 'operation', 'deletedItemsID', 'index', 'billItems', 'products'],
     data() {
         return {
-            // formattedRate: null,
             myCustomClass: 'text-start',
         };
     },
@@ -82,16 +65,8 @@ export default {
     },
     created() {  },
     methods: {
-        // updateRate(value) {
-        //     this.item.rate = value; // Update the item.rate property with the new value
-        // },
         calculateTotal() {
             this.item.total = parseFloat(this.item.rate) * parseFloat(this.item.quantity);
-            // let multipliedValue = parseFloat(this.item.rate) * parseFloat(this.item.quantity);
-            // this.item.total = multipliedValue.toFixed(2);
-
-            // this.item.total = Number((parseFloat(this.item.rate) * parseFloat(this.item.quantity)).toFixed(2));
-            // this.item.total = parseFloat(parseFloat(this.item.rate) * parseFloat(this.item.quantity)).toFixed(2);
             let summation = this.bill.items.reduce((total, element) => total + element.total, 0);
             console.log('summation:', summation, this.item.total);
             this.$emit('changeInvoiceTotal', summation);
@@ -150,18 +125,7 @@ export default {
                 return el.sku === product.sku;
             });
         },
-        // formatRate(value) {
-        //     this.formattedRate = value.toFixed(2); // Apply precision formatting
-        // },
-        // formatRate() {
-        //     this.item.rate = this.item.rate.toFixed(2); // Apply precision formatting
-        // },
     },
-    // watch: {
-    //     'item.rate'(newRate) {
-    //         this.formatRate(newRate);
-    //     },
-    // },
     computed: {
         formattedRate: {
             get() {

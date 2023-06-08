@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::table('bill_items', function (Blueprint $table) {
             $table->string('unit')->nullable()->after('sku');
             $table->string('name')->nullable()->after('sku');
+            $table->unsignedBigInteger('client_id')->nullable();
         });
     }
 
@@ -23,7 +24,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('bill_items', function (Blueprint $table) {
-            $table->dropColumn('unit', 'name');
+            $table->dropColumn('unit', 'name', 'client_id');
         });
     }
 };

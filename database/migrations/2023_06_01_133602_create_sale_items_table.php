@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('sale_items', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('bill_id');
+            $table->unsignedBigInteger('sale_id');
             $table->text('sku');
             $table->string('name')->nullable();
             $table->double('rate')->default(0);
