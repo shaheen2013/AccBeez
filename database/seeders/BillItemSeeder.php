@@ -50,9 +50,9 @@ class BillItemSeeder extends Seeder
         foreach ($billIds as $billId) {
             $numItems = rand(1, 4); // Randomly determine the number of items per bill
 
-            $item = $groceryItems[rand(0,29)];
             $bill_total = 0;
             for ($i = 1; $i <= $numItems; $i++) {
+                $item = $groceryItems[rand(0,29)];
                 $rate = rand(10, 100);
                 $unit = 'pcs';
                 $quantity = rand(1, 10);
