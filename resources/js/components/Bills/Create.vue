@@ -26,27 +26,27 @@
                     <table class="table table-borderless">
                         <thead>
                             <tr>
-                                <th :style="operation === 'view' ? { 'width': '40%' } : { 'width': '30%' }">
+                                <th :style="operation === 'view' ? { 'width': '25%' } : { 'width': '15%' }">
                                     <span class="required-indicator" v-if="operation !== 'view'">*</span>
                                     <span>SKU</span>
                                 </th>
-                                <th width="20%">
+                                <th width="15%">
                                     <span class="required-indicator" v-if="operation !== 'view'">*</span>
                                     <span>Name</span>
                                 </th>
-                                <th width="10%">
+                                <th width="15%">
                                     <span class="required-indicator" v-if="operation !== 'view'">*</span>
                                     <span>Rate</span>
                                 </th>
-                                <th width="10%">
+                                <th width="15%">
                                     <span class="required-indicator" v-if="operation !== 'view'">*</span>
                                     <span>Unit</span>
                                 </th>
-                                <th width="10%">
+                                <th width="15%">
                                     <span class="required-indicator" v-if="operation !== 'view'">*</span>
                                     <span>Quantity</span>
                                 </th>
-                                <th width="10%">
+                                <th width="15%">
                                     <span class="required-indicator" v-if="operation !== 'view'">*</span>
                                     <span>Item Total</span>
                                 </th>
@@ -111,21 +111,26 @@ export default {
             routeName: '',
             operation: 'create',
             singleItem: {
-                'sku': null,
-                'quantity': 0,
-                'rate': 0,
-                'total': 0,
+                sku: null,
+                name: '',
+                rate: 0,
+                unit: '',
+                quantity: 0,
+                total: 0,
             },
             bill : {
                 id: null,
                 description: '',
                 invoice_total: 0,
+                invoice_number: 0,
                 date: '',
                 items: [{
-                    'sku': null,
-                    'quantity': 0,
-                    'rate': 0,
-                    'total': 0,
+                    sku: null,
+                    name: '',
+                    rate: 0,
+                    unit: '',
+                    quantity: 0,
+                    total: 0,
                 }]
             },
             deletedItemsID: [],

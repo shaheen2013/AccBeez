@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('sale_items', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('sale_id');
+            $table->unsignedBigInteger('bill_id');
             $table->text('sku');
-            $table->integer('quantity')->default(0);
+            $table->string('name')->nullable();
             $table->double('rate')->default(0);
+            $table->string('unit');
+            $table->integer('quantity')->default(0);
             $table->double('total')->default(0);
             $table->timestamps();
         });

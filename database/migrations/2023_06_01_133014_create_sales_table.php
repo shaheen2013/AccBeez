@@ -14,9 +14,11 @@ return new class extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('bom_id');
-            $table->date('date');
-            $table->unsignedDouble('amount');
+            $table->string('description')->nullable();
+            $table->string('date');
+            $table->double('invoice_total')->default(0);
+            $table->double('invoice_number')->nullable();
+            $table->double('client_id')->nullable();
             $table->timestamps();
         });
     }

@@ -20,19 +20,19 @@
             <el-input v-model="item.name" type="text" placeholder="Name" :disabled="operation === 'view'"/>
         </td>
         <td>
-            <el-input v-model="formattedRate" type="number" placeholder="Rate" :disabled="operation === 'view'"
-                        @blur="calculateTotal" />
+            <!-- <el-input v-model="formattedRate" type="number" placeholder="Rate" :disabled="operation === 'view'"
+                        @blur="calculateTotal" /> -->
             <!-- <el-input :value="item.rate"
                         @input="updateRate" @keyup="updateRate"
                         type="number" placeholder="Rate" :disabled="operation === 'view'"
                         @blur="calculateTotal"  /> -->
             <!-- <el-input v-model="item.rate" type="number" placeholder="Rate" :disabled="operation === 'view'"
                         @blur="calculateTotal"  /> -->
-            <!-- <el-input-number v-model="item.rate" type="text" placeholder="Rate" :disabled="operation === 'view'"
+            <el-input-number v-model="item.rate" type="text" placeholder="Rate" :disabled="operation === 'view'"
                         :className="text-start"
                         :controls="false"
                         :precision="2"
-                        @blur="calculateTotal" /> -->
+                        @blur="calculateTotal" />
             <!-- <el-input v-model="item.rate" type="number" placeholder="Rate"
                         :disabled="operation === 'view'"
                         @keyup="formatRate"
@@ -42,12 +42,12 @@
             <el-input v-model="item.unit" type="text" placeholder="Unit" :disabled="operation === 'view'"/>
         </td>
         <td>
-            <!-- <el-input v-model="item.quantity" type="number" placeholder="Quantity" :disabled="operation === 'view'"
-                        @blur="calculateTotal" /> -->
-            <el-input-number v-model="item.quantity" type="text" placeholder="Quantity" :disabled="operation === 'view'"
+            <el-input v-model="item.quantity" type="number" placeholder="Quantity" :disabled="operation === 'view'"
+                        @blur="calculateTotal" />
+            <!-- <el-input-number v-model="item.quantity" type="text" placeholder="Quantity" :disabled="operation === 'view'"
                         :className="text-start"
                         :controls="false"
-                        @blur="calculateTotal" />
+                        @blur="calculateTotal" /> -->
         </td>
         <td>
             <!-- <el-input v-model="item.total" type="text" placeholder="Total" disabled style="color: #000000" /> -->
@@ -74,9 +74,11 @@ export default {
     data() {
         return {
             // formattedRate: null,
+            myCustomClass: 'text-start',
         };
     },
     mounted() {
+        this.item.total = this.item.total.toFixed(2);
     },
     created() {  },
     methods: {
@@ -85,6 +87,11 @@ export default {
         // },
         calculateTotal() {
             this.item.total = parseFloat(this.item.rate) * parseFloat(this.item.quantity);
+            // let multipliedValue = parseFloat(this.item.rate) * parseFloat(this.item.quantity);
+            // this.item.total = multipliedValue.toFixed(2);
+
+            // this.item.total = Number((parseFloat(this.item.rate) * parseFloat(this.item.quantity)).toFixed(2));
+            // this.item.total = parseFloat(parseFloat(this.item.rate) * parseFloat(this.item.quantity)).toFixed(2);
             let summation = this.bill.items.reduce((total, element) => total + element.total, 0);
             console.log('summation:', summation, this.item.total);
             this.$emit('changeInvoiceTotal', summation);
@@ -197,9 +204,19 @@ td{
     padding-left: 0 !important;
     padding-top: 0 !important;
 }
+.myCustomClass {
+    text-align: 'left';
+}
 
-/* .el-input__inner {
+/* input {
     text-align: 'left';
     width: '100%';
 } */
+.el-input-number .el-input__inner {
+    text-align: left !important;
+}
+
+.input-group-text {
+    text-align:  left !important;
+}
 </style>
