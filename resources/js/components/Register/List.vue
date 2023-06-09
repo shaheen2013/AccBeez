@@ -43,6 +43,20 @@
             </el-table-column>
         </el-table>
 
+
+        <div class="demo-pagination-block">
+            <el-pagination
+                v-show="total>0"
+                :page-size="query.limit"
+                layout="total, sizes, prev, pager, next"
+                :total="total"
+                :page-count="totalPages"
+                :page-sizes="[1, 2, 5, 10, 20, 50]"
+                @size-change="handleSizeChange"
+                @current-change="handlePageChange"
+            />
+        </div>
+
     </div>
 </template>
 
@@ -65,7 +79,7 @@ export default {
                 limit: 5,
                 keyword: '',
             },
-            total: 10,
+            total: null,
             totalPages: null,
             pageSize: 5,
         };
@@ -87,16 +101,24 @@ export default {
             console.log('params', params);
             await axios.get(`/api/registers`, {params}).
                     then((res) => {
-                        console.log('response in register list:', res.data);
+                        console.log('response in register list:', res);
                         this.registers = res.data.register_list;
                         this.months = res.data.distinct_months;
                         // this.query.page = res.data.current_page;
-                        // this.total = res.data.total;
-                        // this.totalPages = Math.ceil(res.data.total / this.pageSize);
+                        this.total = res.data.total;
+                        this.totalPages = Math.ceil(res.data.total / this.pageSize);
                     });
         },
         handleFilter() {
             this.query.page = 1;
+            this.getList();
+        },
+        handleSizeChange(val) {
+            this.pageSize = val;
+            this.getList();
+        },
+        handlePageChange(currentPage) {
+            this.query.page = currentPage;
             this.getList();
         },
 
