@@ -85,7 +85,7 @@ class RegisterController extends Controller
             'registers' => $registers,
             'grouped' => $grouped,
             'groupedWithNulls' => $groupedWithNulls,
-            'simpleList' => $simpleList,
+            'register_list' => array_values($simpleList->toArray()),
         ];
         return response()->json($data);
     }
