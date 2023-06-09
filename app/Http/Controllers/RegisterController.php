@@ -3,90 +3,91 @@
 namespace App\Http\Controllers;
 
 use App\Models\BillItem;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Query\Builder;
 
 class RegisterController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $registers = DB::table('bill_items')
-                        ->leftJoin('bills', 'bill_items.bill_id', '=', 'bills.id')
-                        ->select('sku', DB::raw('SUM(quantity) as total_items'),
-                                            DB::raw('SUM(total) as total_cost'),
-                                            DB::raw('round(SUM(total) / SUM(quantity),2) as avg_cost'),
-                                            DB::raw('MONTH(bills.date) as month')
-                                    )
-                        ->groupBy(['sku', 'month'])
-                        ->orderBy('sku')
-                        ->orderBy('month')
-                        ->get();
+        $searchParams = $request->all();
+        $limit = Arr::get($searchParams, 'limit', 5);
+        $keyword = Arr::get($searchParams, 'keyword', '');
+        $perPage = $request->input('limit') ?? 10;
+        $page = $request->input('page') ?? 1;
+        $startAt = ($perPage * $page)-1;
+
         $distinctMonths = DB::table('bills')
                             ->select(DB::raw('MONTH(bills.date) as month'))
                             ->orderBy('month')
                             ->pluck('month', 'month')
-                            ->unique()->toArray();
+                            ->unique()
+                            ->toArray();
+
+        $registers = DB::table('bill_items')
+                        ->leftJoin('bills', 'bill_items.bill_id', '=', 'bills.id')
+                        ->select('sku', 'name', 'bill_items.id as bill_item_id', DB::raw('SUM(quantity) as total_items'),
+                                            DB::raw('SUM(total) as total_cost'),
+                                            DB::raw('round(SUM(total) / SUM(quantity),2) as avg_cost'),
+                                            DB::raw('YEAR(bills.date) as year'),
+                                            DB::raw('MONTH(bills.date) as month')
+                        )
+                        ->when(!empty($keyword), function (Builder $query) use ($keyword) {
+                            return $query->where('sku', 'LIKE', '%' . $keyword . '%');
+                        })
+                        ->groupBy(['sku', 'month', 'year', 'name', 'bill_item_id'])
+                        ->orderBy('sku')
+                        ->orderBy('year')
+                        ->orderBy('month')
+                        ->get();
+
+        // $registers = $registerQuery->paginate($limit);
+
 
 
         $grouped = $registers->mapToGroups(function ($item) {
             return [$item->sku => [
+                "bill_item_id" => $item->bill_item_id,
                 "sku" => $item->sku,
+                "name" => $item->name,
                 "avg_cost" => $item->avg_cost,
                 "month" => $item->month,
+                "year" => $item->year,
             ]];
         });
-
-        $groupedWithNulls = $grouped->map(function ($items) use ($distinctMonths) {
-            $groupedItemsByMonth = $items->keyBy('month');
-            // dd($groupedItemsByMonth, $items);
-
-            $filledItems = [];
-            foreach ($distinctMonths as $month) {
-                if ($groupedItemsByMonth->has($month)) {
-                    $filledItems[] = $groupedItemsByMonth[$month];
-                } else {
-                    $filledItems[] = [
-                        "total_items" => null,
-                        "total_cost" => null,
-                        "avg_cost" => null,
-                        "month" => $month,
-                    ];
-                }
-            }
-            return $filledItems;
-        });
-
 
 
         $simpleList = $grouped->map(function ($items) use ($distinctMonths) {
             $groupedItemsByMonth = $items->keyBy('month');
-            // dd($groupedItemsByMonth, $items);
+            $outputItem['sku'] = $items[0]['sku'];
+            $outputItem['name'] = $items[0]['name'];
+            $outputItem['bill_item_id'] = $items[0]['bill_item_id'];
 
             foreach ($distinctMonths as $month) {
                 if ($groupedItemsByMonth->has($month)) {
-                    $outputItem['sku'] = $groupedItemsByMonth[$distinctMonths[$month]]['sku'];
                     $outputItem['month-'.$month] = $groupedItemsByMonth[$month]['avg_cost'];
                 } else {
                     $outputItem['month-'.$month] = null;
                 }
             }
             return $outputItem;
-        });
+        })->toArray();
 
-        // dd($distinctMonths);
-        // dd($distinctMonths, $registers, $grouped);
-        // dd($distinctMonths, $grouped);
-        // dd($groupedWithNulls);
-
-        // dd($registers, $grouped);
 
         $data = [
             'distinct_months' => $distinctMonths,
-            'registers' => $registers,
             'grouped' => $grouped,
-            'groupedWithNulls' => $groupedWithNulls,
-            'register_list' => array_values($simpleList->toArray()),
+            // 'register_list' => array_values(array_splice($simpleList,$startAt,$perPage)),
+            'register_list' => array_values($simpleList),
+            // 'current_page' => $simpleList->currentPage(),
+            // 'per_page' => $simpleList->perPage(),
+            // 'total' => $simpleList->total(),
         ];
+
+
         return response()->json($data);
     }
+
 }

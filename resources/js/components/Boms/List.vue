@@ -114,7 +114,6 @@ export default {
             await axios.get(`/logged_in_user`).
                     then((res) => {
                         this.logged_in_user = res.data;
-                        console.log('logged_in_user:', this.logged_in_user);
                     });
         } catch (error) {
             console.error(error);
@@ -134,7 +133,6 @@ export default {
             ).then(() => {
                 axios.delete(`/api/boms/`+id).
                     then((res) => {
-                        console.log('res:', res);
                         this.boms = res.data;
                         this.boms.forEach(element => {
                             element.invoice_total = element.invoice_total.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
@@ -199,10 +197,10 @@ export default {
                 keyword: this.query.keyword,
                 page: this.query.page,
             }
-            console.log('params', params);
+            // console.log('params', params);
             await axios.get(`/api/boms`, {params}).
                     then((res) => {
-                        console.log('res:', res);
+                        // console.log('res:', res);
                         this.boms = res.data.data;
                         this.query.page = res.data.current_page;
                         this.total = res.data.total;
