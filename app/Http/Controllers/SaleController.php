@@ -10,6 +10,8 @@ use App\Http\Requests\SaleRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Arr;
+use Illuminate\Database\Query\Builder;
 
 class SaleController extends Controller
 {
@@ -18,22 +20,33 @@ class SaleController extends Controller
     //    $this->middleware('auth');
     // }
 
-    public function index()
+    public function index(Request $request)
     {
-        $sales = Sale::with('bom')->get();
-        return response()->json($sales);
+        $searchParams = $request->all();
+        // dd('hi index', $searchParams);
+        $limit = Arr::get($searchParams, 'limit', 5);
+        $keyword = Arr::get($searchParams, 'keyword', '');
+        $salesQuery = DB::table('sales')
+                        ->when(!empty($keyword), function (Builder $query) use ($keyword) {
+                            return $query->where('description', 'LIKE', '%' . $keyword . '%');
+                        });
+
+        return response()->json($salesQuery->paginate($limit));
     }
 
     public function store(SaleRequest $request)
     {
         try {
-            $saleData = $request->only('date', 'amount', 'bom_id');
+            $saleData = $request->only('description', 'date', 'invoice_total');
             DB::beginTransaction();
             $sale = Sale::create($saleData);
-            // foreach($request->items as $item){
-            //     $item['sale_id'] = $sale->id;
-            //     SaleItem::create($item);
-            // }
+            $sale->invoice_number = $sale->id;
+            $sale->save();
+            // dd('store', $request->all(), $saleData);
+            foreach($request->items as $item){
+                $item['sale_id'] = $sale->id;
+                SaleItem::create($item);
+            }
             DB::commit();
             return $sale;
         } catch (Exception $ex) {
@@ -56,22 +69,22 @@ class SaleController extends Controller
     public function update(SaleRequest $request, $id)
     {
         try {
-            $saleData = $request->only('date', 'amount', 'bom_id');
+            $saleData = $request->only('description', 'date', 'invoice_total');
             $sale = Sale::find($id);
             DB::beginTransaction();
             $sale->update($saleData);
-            // foreach($request->deletedItemsID as $deletedID){
-            //     $this->deleteItem($deletedID);
-            // }
-            // // dd('update', $request->all(), $saleData, $sale);
-            // foreach($request->items as $item){
-            //     $item['sale_id'] = $sale->id;
-            //     if(isset($item['id'])){
-            //         SaleItem::find($item['id'])->update($item);
-            //     } else {
-            //         SaleItem::create($item);
-            //     }
-            // }
+            foreach($request->deletedItemsID as $deletedID){
+                $this->deleteItem($deletedID);
+            }
+            // dd('update', $request->all(), $saleData, $sale);
+            foreach($request->items as $item){
+                $item['sale_id'] = $sale->id;
+                if(isset($item['id'])){
+                    SaleItem::find($item['id'])->update($item);
+                } else {
+                    SaleItem::create($item);
+                }
+            }
             DB::commit();
             return $sale;
         } catch (Exception $ex) {
@@ -89,7 +102,7 @@ class SaleController extends Controller
             $sale->delete();
             DB::commit();
 
-            $sales = Sale::with('bom')->get();
+            $sales = Sale::all();
             return response()->json($sales);
         } catch (Exception $ex) {
             DB::rollBack();
@@ -113,13 +126,26 @@ class SaleController extends Controller
         // dd($sale);
         $data = [
             'sale' => $sale,
-            'name' => 'John',
-            'data' => 'hello',
         ];
         $pdf = Pdf::loadView('sales.invoice', ['sale' => $sale]);
         // dd($pdf);
         return $pdf->download('invoice.pdf');
     }
 
+
+    public function bulkdelete(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $saleItems = SaleItem::whereIn('sale_id', $request->all())->delete();
+            Sale::whereIn('id', $request->all())->delete();
+            DB::commit();
+
+            return 'Bulk Deleted Sales';
+        } catch (Exception $ex) {
+            DB::rollBack();
+            return 'Delete Failed';
+        }
+    }
 
 }

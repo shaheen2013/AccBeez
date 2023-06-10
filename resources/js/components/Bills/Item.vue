@@ -115,6 +115,7 @@ export default {
                 // });
             } else {
                 this.item.sku = product.sku;
+                this.item.name = product.name;
                 this.item.rate = product.rate;
             }
             this.calculateTotal();

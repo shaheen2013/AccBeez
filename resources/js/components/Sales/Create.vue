@@ -1,8 +1,9 @@
 <template>
-    <el-form :model="sale" class="demo-sale"
+    <el-form ref="ruleFormRef" :model="sale" class="demo-sale"
         label-position="top"
         status-icon
     >
+        <el-text tag="b" v-if="operation === 'view'" type="primary" size="large">View Sale</el-text>
         <el-text tag="b" v-if="operation === 'edit'" type="primary" size="large">Edit Sale</el-text>
         <el-text tag="b" v-if="operation === 'create'" type="primary" size="large">Create Sale</el-text>
 
@@ -12,47 +13,44 @@
                 <el-date-picker v-model="sale.date" type="date" label="Pick a date" placeholder="Pick a date"
                     format="YYYY-MM-DD"
                     value-format="YYYY-MM-DD"
-                    style="width: 100%" />
+                    style="width: 100%"
+                    :disabled="operation === 'view'" />
+            </el-form-item>
+            <el-form-item label="Description" prop="description">
+                <el-input v-model="sale.description" type="textarea" :disabled="operation === 'view'" />
             </el-form-item>
 
-            <el-form-item label="Bom" required>
-                <el-select v-model="selectedBomId"
-                    class="m-2"
-                    placeholder="Select BOM"
-                    style="width:100%;"
-                    @change="changeBomId"
-                >
-                    <el-option
-                        v-for="_bom in boms"
-                        :key="_bom.id"
-                        :label="_bom.name"
-                        :value="_bom.id"
-                    />
-                </el-select>
-            </el-form-item>
 
-            <!-- <el-row>
+            <el-row>
                 <el-col :span="24">
                     <table class="table table-borderless">
                         <thead>
                             <tr>
-                                <th width="30%">
-                                    <span class="required-indicator">*</span>
+                                <th :style="operation === 'view' ? { 'width': '25%' } : { 'width': '15%' }">
+                                    <span class="required-indicator" v-if="operation !== 'view'">*</span>
                                     <span>SKU</span>
                                 </th>
-                                <th width="20%">
-                                    <span class="required-indicator">*</span>
+                                <th width="15%">
+                                    <span class="required-indicator" v-if="operation !== 'view'">*</span>
+                                    <span>Name</span>
+                                </th>
+                                <th width="15%">
+                                    <span class="required-indicator" v-if="operation !== 'view'">*</span>
                                     <span>Rate</span>
                                 </th>
-                                <th width="20%">
-                                    <span class="required-indicator">*</span>
+                                <th width="15%">
+                                    <span class="required-indicator" v-if="operation !== 'view'">*</span>
+                                    <span>Unit</span>
+                                </th>
+                                <th width="15%">
+                                    <span class="required-indicator" v-if="operation !== 'view'">*</span>
                                     <span>Quantity</span>
                                 </th>
-                                <th width="20%">
-                                    <span class="required-indicator">*</span>
+                                <th width="15%">
+                                    <span class="required-indicator" v-if="operation !== 'view'">*</span>
                                     <span>Item Total</span>
                                 </th>
-                                <th width="10%">Actions</th>
+                                <th v-if="operation !== 'view'" width="10%">Actions</th>
                             </tr>
                         </thead>
 
@@ -76,11 +74,13 @@
                         Add
                     </el-button>
                 </el-col>
-            </el-row> -->
 
-            <el-form-item label="Amount">
-                <el-input v-model="formattedAmount" type="number" placeholder="Amount" />
+            </el-row>
+
+            <el-form-item label="Invoice Total">
+                <el-input v-model="formattedTotal" type="number" placeholder="Invoice Total" disabled />
             </el-form-item>
+
 
 
             <el-row>
@@ -95,7 +95,6 @@
                 </el-col>
             </el-row>
         </el-card>
-
     </el-form>
 </template>
 
@@ -111,27 +110,28 @@ export default {
         return {
             routeName: '',
             operation: 'create',
-            selectedBomId: null,
-            // singleItem: {
-            //     'sku': null,
-            //     'quantity': 0,
-            //     'rate': 0,
-            //     'total': 0,
-            // },
-            boms: [],
-            bom: {},
+            singleItem: {
+                sku: null,
+                name: '',
+                rate: 0,
+                unit: '',
+                quantity: 0,
+                total: 0,
+            },
             sale : {
                 id: null,
-                name: '',
-                amount: 0,
-                bom_id: null,
+                description: '',
+                invoice_total: 0,
+                invoice_number: 0,
                 date: '',
-                // items: [{
-                //     'sku': null,
-                //     'quantity': 0,
-                //     'rate': 0,
-                //     'total': 0,
-                // }]
+                items: [{
+                    sku: null,
+                    name: '',
+                    rate: 0,
+                    unit: '',
+                    quantity: 0,
+                    total: 0,
+                }]
             },
             deletedItemsID: [],
             products: [],
@@ -159,8 +159,8 @@ export default {
                     then((res) => {
                         console.log('res:', res);
                         this.sale.id = res.data.id;
-                        this.sale.amount = res.data.amount;
-                        this.selectedBomId = res.data.bom_id;
+                        this.sale.description = res.data.description;
+                        this.sale.invoice_total = res.data.invoice_total;
                         this.sale.date = res.data.date;
                         this.sale.items = res.data.sale_items;
                     });
@@ -168,41 +168,27 @@ export default {
         }
 
 
-        // await axios.get(`/api/products`).
-        //         then((res) => {
-        //             this.products = res.data;
-        //             console.log('products:', this.products);
-        //         });
-        await axios.get(`/api/boms`).
+        await axios.get(`/api/products`).
                 then((res) => {
-                    this.boms = res.data;
-                    console.log('boms:', this.boms);
+                    this.products = res.data;
+                    console.log('products:', this.products);
                 });
     },
     methods: {
+
         addItem(){
             var obj = {...this.singleItem};
             this.sale.items.push(obj);
         },
         changeInvoiceTotal(val){
             console.log('changeInvoiceTotal:', val);
-            this.sale.amount = val;
+            this.sale.invoice_total = val;
         },
-        async changeBomId(){
-            await axios.get('/api/boms/edit/' + this.selectedBomId)
-                .then(response => {
-                    var data = response.data;
-                    this.bom = data;
-                    this.bom.id = data.id;
-                    this.bom.name = data.name;
-                    this.sale.items = data.bom_items;
-                    // this.sale.amount = data.invoice_total;
-                    console.log('changeBomId: ', this.bom, data, this.selectedBomId);
-                    console.log('this.sale.items: ', this.sale.items);
-                });
+        submitForm(){
+            console.log(this.sale)
         },
         async createSale() {
-            this.sale.bom_id = this.selectedBomId;
+            console.log('createSale:', this.sale)
             try {
                 await axios.post(`/api/sales`, this.sale).
                         then((res) => {
@@ -215,7 +201,6 @@ export default {
             }
         },
         async updateSale() {
-            this.sale.bom_id = this.selectedBomId;
             this.sale.deletedItemsID = this.deletedItemsID;
             console.log('updateSale:', this.sale)
             try {
@@ -235,13 +220,8 @@ export default {
         },
     },
     computed: {
-        formattedAmount: {
-            get() {
-                return this.sale.amount.toFixed(2); // Apply precision formatting when retrieving the value
-            },
-            set(value) {
-                this.sale.amount = Number(value); // Convert the input value back to a number
-            },
+        formattedTotal() {
+            return this.sale.invoice_total.toFixed(2); // Apply precision formatting
         },
     },
 };

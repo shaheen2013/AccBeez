@@ -8,12 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Sale extends Model
 {
     use HasFactory;
-
-    protected $fillable = ['bom_id', 'amount', 'date'];
-
-    public function bom(){
-        return $this->belongsTo(Bom::class, 'bom_id', 'id');
-    }
+    protected $fillable = ['description', 'date', 'invoice_total', 'invoice_number'];
     public function saleItems(){
         return $this->hasMany(SaleItem::class);
     }

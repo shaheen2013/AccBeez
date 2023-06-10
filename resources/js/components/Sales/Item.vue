@@ -1,7 +1,6 @@
 <template>
     <tr>
         <td>
-            <!-- <el-input v-model="item.sku" type="text" placeholder="SKU" :disabled="operation === 'view'" /> -->
             <el-autocomplete
                 v-model="item.sku"
                 :fetch-suggestions="querySearch"
@@ -17,26 +16,25 @@
             </el-autocomplete>
         </td>
         <td>
-            <el-input v-model="formattedRate" type="number" placeholder="Rate" :disabled="operation === 'view'"
-                        @blur="calculateTotal" />
-            <!-- <el-input v-model="item.rate" type="number" placeholder="Rate" :disabled="operation === 'view'"
-                        @blur="calculateTotal"  /> -->
-            <!-- <el-input-number v-model="item.rate" type="text" placeholder="Rate" :disabled="operation === 'view'"
+            <el-input v-model="item.name" type="text" placeholder="Name" :disabled="operation === 'view'"/>
+        </td>
+        <td>
+            <!-- <el-input v-model="formattedRate" type="number" placeholder="Rate" :disabled="operation === 'view'"
+                        @blur="calculateTotal" /> -->
+            <el-input-number v-model="item.rate" type="text" placeholder="Rate" :disabled="operation === 'view'"
                         :className="text-start"
                         :controls="false"
                         :precision="2"
-                        @blur="calculateTotal" /> -->
-        </td>
-        <td>
-            <!-- <el-input v-model="item.quantity" type="number" placeholder="Quantity" :disabled="operation === 'view'"
-                        @blur="calculateTotal" /> -->
-            <el-input-number v-model="item.quantity" type="text" placeholder="Quantity" :disabled="operation === 'view'"
-                        :className="text-start"
-                        :controls="false"
                         @blur="calculateTotal" />
         </td>
         <td>
-            <!-- <el-input v-model="item.total" type="text" placeholder="Total" disabled style="color: #000000" /> -->
+            <el-input v-model="item.unit" type="text" placeholder="Unit" :disabled="operation === 'view'"/>
+        </td>
+        <td>
+            <el-input v-model="item.quantity" type="number" placeholder="Quantity" :disabled="operation === 'view'"
+                        @blur="calculateTotal" />
+        </td>
+        <td>
             <el-input-number v-model="item.total" type="text" placeholder="Total" disabled
                         :className="text-start"
                         :controls="false"
@@ -59,9 +57,11 @@ export default {
     props: ['item', 'sale', 'operation', 'deletedItemsID', 'index', 'saleItems', 'products'],
     data() {
         return {
+            myCustomClass: 'text-start',
         };
     },
     mounted() {
+        this.item.total = this.item.total.toFixed(2);
     },
     created() {  },
     methods: {
@@ -115,6 +115,7 @@ export default {
                 // });
             } else {
                 this.item.sku = product.sku;
+                this.item.name = product.name;
                 this.item.rate = product.rate;
             }
             this.calculateTotal();
@@ -168,9 +169,19 @@ td{
     padding-left: 0 !important;
     padding-top: 0 !important;
 }
+.myCustomClass {
+    text-align: 'left';
+}
 
-/* .el-input__inner {
+/* input {
     text-align: 'left';
     width: '100%';
 } */
+.el-input-number .el-input__inner {
+    text-align: left !important;
+}
+
+.input-group-text {
+    text-align:  left !important;
+}
 </style>

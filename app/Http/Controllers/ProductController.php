@@ -12,12 +12,12 @@ class ProductController extends Controller
     public function index()
     {
         // $products = DB::table('bill_items')->get()->toArray();
-        $products = DB::table('bill_items')->get()->unique('sku')->toArray();
+        // $products = DB::table('bill_items')->get()->unique('sku')->toArray();
         // $products = DB::table('bill_items')->get()->unique('sku')->map(function ($item) {
         //     return (array) $item;
         // })->toArray();
         $products = DB::table('bill_items')
-                    ->select('sku', 'rate', 'id')
+                    ->select('sku', 'name', 'rate', 'id')
                     ->orderBy('sku', 'asc')
                     ->orderBy('id', 'desc')
                     ->get()

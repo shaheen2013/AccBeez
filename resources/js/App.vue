@@ -15,8 +15,8 @@
                                 Bills
                             </el-menu-item>
                         </router-link>
-                        <router-link to="/register" style="text-decoration: none;"
-                                     :style="[$route.path === '/register' ? {color: 'royalblue'} : {color: 'black'}]">
+                        <router-link to="/registers" style="text-decoration: none;"
+                                     :style="[$route.path === '/registers' ? {color: 'royalblue'} : {color: 'black'}]">
                             <el-menu-item index="2">
                                 <!-- <el-icon><icon-menu /></el-icon> -->
                                 <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px">
@@ -83,7 +83,7 @@
                                     <router-link to="/bills">Bills</router-link>
                                 </el-menu-item>
                                 <el-menu-item index="2-3">
-                                    <router-link to="/register">Register</router-link>
+                                    <router-link to="/registers">Register</router-link>
                                 </el-menu-item>
                             </el-menu-item-group>
                         </el-sub-menu>

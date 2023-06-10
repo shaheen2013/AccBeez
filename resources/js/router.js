@@ -3,6 +3,7 @@ import BillList from './components/Bills/List.vue';
 import BillCreate from './components/Bills/Create.vue';
 import BillShow from './components/Bills/Show.vue';
 import Register from './components/Register/List.vue';
+import RegisterShow from './components/Register/Show.vue';
 import BomList from './components/Boms/List.vue';
 import BomCreate from './components/Boms/Create.vue';
 import BomShow from './components/Boms/Show.vue';
@@ -21,8 +22,8 @@ const routes = [
         component: Dashboard,
     },
     {
-        path: '/register',
-        name: 'register',
+        path: '/registers',
+        name: 'registers',
         component: Register,
     },
     {
