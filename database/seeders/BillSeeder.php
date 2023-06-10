@@ -19,23 +19,20 @@ class BillSeeder extends Seeder
     public function run(): void
     {
         // Create 10 bills
-        $startDate = Carbon::now()->subDays(120);
+        $startDate = Carbon::now()->subDays(150);
+        $bills = count(Bill::all());
 
-        for ($i = 1; $i <= 30; $i++) {
-            $date = $startDate->copy()->addDays(rand(0, 120))->format('Y-m-d');
-            $description = 'Bill description ' . $i;
-            // $invoiceTotal = rand(100, 1000);
-            // $invoiceNumber = 'INV-' . rand(1000, 9999);
-            // dd($date, $startDate, $startDate->copy(),$startDate->copy()->addDays(rand(0, 30))->format('H:i:s'));
+        for ($i = $bills+1; $i <= $bills+30; $i++) {
+            $date = $startDate->copy()->addDays(rand(0, 150))->format('Y-m-d');
 
             DB::table('bills')->insert([
                 'description' => 'Bill description ' . $i,
                 'date' => $date,
-                'invoice_total' => rand(1000, 100000),
+                'invoice_total' => 0,
                 'invoice_number' => 'INV# ' . rand(1000, 9999),
                 'client_id' => rand(1, 3),
-                'created_at' => $date . ' ' . $startDate->copy()->addDays(rand(0, 120))->format('H:i:s'),
-                'updated_at' => $date . ' ' . $startDate->copy()->addDays(rand(0, 120))->format('H:i:s'),
+                'created_at' => $date . ' ' . $startDate->copy()->addDays(rand(0, 150))->format('H:i:s'),
+                'updated_at' => $date . ' ' . $startDate->copy()->addDays(rand(0, 150))->format('H:i:s'),
             ]);
         }
     }

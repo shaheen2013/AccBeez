@@ -21,7 +21,7 @@ class RegisterController extends Controller
         // dd($perPage, $page, $startAt);
 
         $distinctMonths = DB::table('bills')
-                            ->select(DB::raw('MONTH(bills.date) as month'))
+                            ->select(DB::raw("DATE_FORMAT(bills.date, '%m-%Y') as month"))
                             ->orderBy('month')
                             ->pluck('month', 'month')
                             ->unique()
@@ -33,7 +33,9 @@ class RegisterController extends Controller
                                             DB::raw('SUM(total) as total_cost'),
                                             DB::raw('round(SUM(total) / SUM(quantity),2) as avg_cost'),
                                             DB::raw('YEAR(bills.date) as year'),
-                                            DB::raw('MONTH(bills.date) as month')
+                                            // DB::raw('MONTH(bills.date) as month')
+                                            DB::raw("DATE_FORMAT(bills.date, '%m-%Y') as month")
+                                            
                         )
                         ->when(!empty($keyword), function (Builder $query) use ($keyword) {
                             return $query->where('sku', 'LIKE', '%' . $keyword . '%');

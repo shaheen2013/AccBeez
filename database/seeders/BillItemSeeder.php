@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Bill;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -48,9 +49,11 @@ class BillItemSeeder extends Seeder
         ];
 
         foreach ($billIds as $billId) {
-            $numItems = rand(1, 4); // Randomly determine the number of items per bill
+            $numItems = rand(2, 5); // Randomly determine the number of items per bill
 
-            $bill_total = 0;
+            $bill_total = Bill::find($billId)->invoice_total;
+            // dd($bill_total);
+            
             for ($i = 1; $i <= $numItems; $i++) {
                 $item = $groceryItems[rand(0,29)];
                 $rate = rand(10, 100);
