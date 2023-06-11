@@ -56,9 +56,9 @@ class BillItemSeeder extends Seeder
             
             for ($i = 1; $i <= $numItems; $i++) {
                 $item = $groceryItems[rand(0,29)];
-                $rate = rand(10, 100);
+                $rate = rand(10, 1000);
                 $unit = 'pcs';
-                $quantity = rand(1, 10);
+                $quantity = rand(1, 50);
                 $total = $rate * $quantity;
                 $bill_total += $total;
 

@@ -135,7 +135,6 @@ export default {
 </script>
 
 <style>
-
 .small-font-table .el-table__header,
 .small-font-table .el-table__body {
   font-size: 10px; /* Adjust the font size as needed */

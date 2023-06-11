@@ -45,10 +45,7 @@ class RegisterController extends Controller
                         ->orderBy('year')
                         ->orderBy('month')
                         ->get();
-
         // $registers = $registerQuery->paginate($limit);
-
-
 
         $grouped = $registers->mapToGroups(function ($item) {
             return [$item->sku => [
@@ -60,7 +57,6 @@ class RegisterController extends Controller
                 "year" => $item->year,
             ]];
         });
-
 
         $simpleList = $grouped->map(function ($items) use ($distinctMonths) {
             $groupedItemsByMonth = $items->keyBy('month');
@@ -86,11 +82,7 @@ class RegisterController extends Controller
             'total' => count($simpleList),
             'register_list' => array_values(array_splice($simpleList, $startAt, $perPage)),
             // 'register_list' => array_values($simpleList),
-            // 'current_page' => $simpleList->currentPage(),
-            // 'per_page' => $simpleList->perPage(),
-            // 'total' => $simpleList->total(),
         ];
-
 
         return response()->json($data);
     }
@@ -98,7 +90,73 @@ class RegisterController extends Controller
 
 
 
+    public function view($id)
+    {
+        $item = BillItem::find($id);
+        $sku = $item->sku;
+        $billItems = DB::table('bill_items')
+                        ->leftJoin('bills', 'bill_items.bill_id', '=', 'bills.id')
+                        ->select('bill_items.quantity as bill_item_quantity', 'bill_items.rate as bill_item_rate',
+                                'bill_items.total as bill_item_total', 'bills.date'
+                        )
+                        ->where('sku', $sku)
+                        ->orderBy('date')
+                        ->get();
+        $saleItems = DB::table('sale_items')
+                        ->leftJoin('sales', 'sale_items.sale_id', '=', 'sales.id')
+                        ->select('sale_items.quantity as sale_item_quantity', 'sale_items.rate as sale_item_rate',
+                                'sale_items.total as sale_item_total', 'sales.date'
+                        )
+                        ->where('sku', $sku)
+                        ->orderBy('date')
+                        ->get();
 
+        $mergedItems = [];
+        $singleSaleItem = [
+            "sale_item_quantity" => null,
+            "sale_item_rate" => null,
+            "sale_item_total" => null,
+        ];
+        // dd($saleItems);
+        foreach ($billItems as $billItem) {
+            $date = $billItem->date;
+            $matchingSaleItem = collect($saleItems)->where('date', $date)->first() ??  [];
+            $billItemArray = get_object_vars($billItem);
+            // dd($billItemArray, $matchingSaleItem, $singleSaleItem);
+            if($matchingSaleItem){
+                $matchingSaleItemArray = get_object_vars($matchingSaleItem);
+                $mergedItem = array_merge($billItemArray, $matchingSaleItemArray);
+                $mergedItems[] = $mergedItem;
+            }else{
+                $mergedItem = array_merge($billItemArray, $singleSaleItem);
+                $mergedItems[] = $mergedItem;
+            }
+        }
+
+        // dd($mergedItems);
+        $singleBillItem = [
+            "bill_item_quantity" => null,
+            "bill_item_rate" => null,
+            "bill_item_total" => null,
+        ];
+        foreach ($saleItems as $saleItem) {
+            $date = $saleItem->date;
+            $matchingBillItem = collect($billItems)->where('date', $date)->first() ??  [];
+            $saleItemArray = get_object_vars($saleItem);
+            // dd($saleItem, $matchingBillItem);
+            if(!$matchingBillItem){
+                $mergedItem = array_merge($saleItemArray, $singleBillItem);
+                $mergedItems[] = $mergedItem;
+            }
+        }
+        // dd($mergedItems);
+        $mergedItems = collect($mergedItems)->sortBy('date')->values()->all();
+        $data = [
+            'mergedItems' => $mergedItems,
+            'bill_item' => $item,
+        ];
+        return $data;
+    }
 
 
 

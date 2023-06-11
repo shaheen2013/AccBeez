@@ -14,12 +14,13 @@ return new class extends Migration
         Schema::create('sale_items', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('sale_id');
-            $table->text('sku');
+            $table->string('sku');
             $table->string('name')->nullable();
             $table->double('rate')->default(0);
-            $table->string('unit');
+            $table->string('unit')->nullable();
             $table->integer('quantity')->default(0);
             $table->double('total')->default(0);
+            $table->unsignedBigInteger('client_id')->nullable();
             $table->timestamps();
         });
     }

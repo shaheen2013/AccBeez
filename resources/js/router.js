@@ -27,6 +27,11 @@ const routes = [
         component: Register,
     },
     {
+        path: '/registers/view/:id',
+        name: 'RegisterShow',
+        component: RegisterShow,
+    },
+    {
         path: '/bills',
         name: 'BillList',
         component: BillList
