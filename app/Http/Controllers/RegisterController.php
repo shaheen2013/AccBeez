@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\BillItem;
+use App\Models\ClosingDate;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -35,7 +37,6 @@ class RegisterController extends Controller
                                             DB::raw('YEAR(bills.date) as year'),
                                             // DB::raw('MONTH(bills.date) as month')
                                             DB::raw("DATE_FORMAT(bills.date, '%m-%Y') as month")
-                                            
                         )
                         ->when(!empty($keyword), function (Builder $query) use ($keyword) {
                             return $query->where('sku', 'LIKE', '%' . $keyword . '%');
@@ -92,7 +93,8 @@ class RegisterController extends Controller
 
     public function view($id)
     {
-        $item = BillItem::find($id);
+        $item = BillItem::with('closingDates')->find($id);
+        $closingDates = $item->closingDates;
         $sku = $item->sku;
         $billItems = DB::table('bill_items')
                         ->leftJoin('bills', 'bill_items.bill_id', '=', 'bills.id')
@@ -106,13 +108,19 @@ class RegisterController extends Controller
         $saleItems = DB::table('sale_items')
                         ->leftJoin('sales', 'sale_items.sale_id', '=', 'sales.id')
                         ->select(
-                            'sale_items.quantity as sale_item_quantity', 
+                            'sale_items.quantity as sale_item_quantity',
                             'sale_items.rate as sale_item_rate',
-                                // DB::raw('SUM(quantity) as sale_item_quantity'), 
+                                // DB::raw('SUM(quantity) as sale_item_quantity'),
                                 // DB::raw('round(SUM(quantity) * SUM(rate),2) as sale_item_total'),
-                                'sale_items.total as sale_item_total', 
+                                'sale_items.total as sale_item_total',
                                 'sales.date'
                         )
+                        ->where('sku', $sku)
+                        // ->groupBy('date')
+                        ->orderBy('date')
+                        ->get();
+        $closingDates = DB::table('closing_dates')
+                        ->select('date', 'sku')
                         ->where('sku', $sku)
                         ->orderBy('date')
                         ->get();
@@ -123,7 +131,17 @@ class RegisterController extends Controller
             "sale_item_rate" => null,
             "sale_item_total" => null,
         ];
-        // dd($saleItems);
+        $singleBillItem = [
+            "bill_item_quantity" => null,
+            "bill_item_rate" => null,
+            "bill_item_total" => null,
+        ];
+        $singleClosingDate = [
+            "closing_date_quantity" => null,
+            "closing_date_rate" => null,
+            "closing_date_total" => null,
+        ];
+
         foreach ($billItems as $billItem) {
             $date = $billItem->date;
             $matchingSaleItem = collect($saleItems)->where('date', $date)->first() ??  [];
@@ -140,11 +158,6 @@ class RegisterController extends Controller
         }
 
         // dd($mergedItems);
-        $singleBillItem = [
-            "bill_item_quantity" => null,
-            "bill_item_rate" => null,
-            "bill_item_total" => null,
-        ];
         foreach ($saleItems as $saleItem) {
             $date = $saleItem->date;
             $matchingBillItem = collect($billItems)->where('date', $date)->first() ??  [];
@@ -162,6 +175,27 @@ class RegisterController extends Controller
             'bill_item' => $item,
         ];
         return $data;
+    }
+
+
+    public function close(Request $request)
+    {
+        // $request['date'] = Carbon::now()->format('Y-m-d');
+        $input = $request->all();
+        $input['date'] = '2023-02-07';
+        $input['status'] = 0;
+        $closingDate = ClosingDate::updateOrCreate(
+            ['date' => $input['date'], 'sku' => $input['sku']],
+            ['status' => 0]
+        );
+    }
+
+    public function undo(Request $request)
+    {
+        // $request['date'] = Carbon::now()->format('Y-m-d');
+        $input = $request->all();
+        $closingDate = ClosingDate::where('sku', $input['sku'])->orderBy('created_at', 'desc')->first()->delete();
+        // dd($closingDate, $input);
     }
 
 

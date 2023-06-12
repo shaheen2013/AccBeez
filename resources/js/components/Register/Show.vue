@@ -5,13 +5,26 @@
     >
         <el-text tag="b" type="primary" size="large">View Register</el-text>
 
-
         <el-card class="box-card" v-if="isMounted">
-            <h4>Raw Material Register</h4>
+            <h4>
+                Raw Material Register
+                <div style="float:right">
+                    <el-button type="info" size="small" class="me-1" @click="closeDate">Close Register</el-button>
+                    <el-button v-if="bill_item.closing_dates.length>0" type="info" size="small" class="me-1" @click="undoDate">
+                        Undo Register
+                    </el-button>
+                </div>
+
+        <!-- <el-row>
+            <el-col>
+            </el-col>
+        </el-row> -->
+
+            </h4>
 
 
             <el-table :data="register_rows" style="width: 100%">
-                <el-table-column :label="bill_item.name">
+                <el-table-column :label="bill_item.sku">
                     <el-table-column prop="date" label="Date" width="120" />
                     <!-- <el-table-column label="Opening Inventory">
                         <el-table-column prop="state" label="State" width="100" />
@@ -91,6 +104,44 @@ export default {
         formatCurrency(value) {
             return parseFloat(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         },
+        async closeDate(){
+            try {
+                await axios.post(`/api/registers/close`, {sku: this.bill_item.sku}).
+                        then((res) => {
+                            console.log('res:', res, this.$router);
+                            this.$router.push('/registers');
+                        });
+            } catch (error) {
+                console.error('error in response:', error.response.data);
+            }
+        },
+        undoDate(){
+            ElMessageBox.confirm(
+                'Are you sure you want to undo Closing Register for the date '+this.bill_item.closing_dates[0].date+'?',
+                'Warning',
+                {
+                    confirmButtonText: 'OK',
+                    cancelButtonText: 'Cancel',
+                    type: 'warning',
+                }
+            ).then(() => {
+                axios.post(`/api/registers/undo`, {sku: this.bill_item.sku}).
+                    then((res) => {
+                        console.log('res:', res, this.$router);
+                        this.$router.push('/registers');
+                        ElMessage({
+                            type: 'success',
+                            message: 'Undo completed',
+                        })
+                    });
+            }).catch(() => {
+                ElMessage({
+                    type: 'info',
+                    message: 'Undo canceled',
+                })
+            })
+        }
+
     },
 };
 </script>

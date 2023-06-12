@@ -22,7 +22,7 @@ class BillSeeder extends Seeder
         $startDate = Carbon::now()->subDays(150);
         $bills = count(Bill::all());
 
-        for ($i = $bills+1; $i <= $bills+30; $i++) {
+        for ($i = $bills+1; $i <= $bills+60; $i++) {
             $date = $startDate->copy()->addDays(rand(0, 150))->format('Y-m-d');
 
             DB::table('bills')->insert([
