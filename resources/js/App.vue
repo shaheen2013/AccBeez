@@ -1,9 +1,8 @@
 <template>
     <div class="common-layout">
-        <el-container class="layout-container-demo">
+        <el-container class="full-width-container">
             <el-aside width="200px">
                 <el-scrollbar>
-
                     <el-menu>
                         <router-link to="/bills" style="text-decoration: none;"
                                      :style="[$route.path === '/bills' ? {color: 'royalblue'} : {color: 'black'}]">
