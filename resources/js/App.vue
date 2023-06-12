@@ -55,6 +55,14 @@
                                 Sales
                             </el-menu-item>
                         </router-link>
+                        <router-link to="/exl-table" style="text-decoration: none;"
+                                     :style="[$route.path === '/exl-table' ? {color: 'royalblue'} : {color: 'black'}]">
+                            <el-menu-item index="5">
+
+
+                                Xl Table
+                            </el-menu-item>
+                        </router-link>
                     </el-menu>
 
 

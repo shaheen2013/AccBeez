@@ -14,6 +14,7 @@ import Dashboard from './components/Dashboard.vue';
 import SaleCreate from './components/Sales/Create.vue';
 import SaleList from './components/Sales/List.vue';
 import SaleShow from './components/Sales/Show.vue';
+import ExlTable from "@/components/ExlTable/ExlTable.vue";
 
 const routes = [
     {
@@ -97,6 +98,10 @@ const routes = [
         path: '/sales',
         name: 'SaleList',
         component: SaleList
+    },  {
+        path: '/exl-table',
+        name: 'ExlTable',
+        component: ExlTable
     },
     {
         path: '/sales/create',
