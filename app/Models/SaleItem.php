@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class SaleItem extends Model
 {
     use HasFactory;
-    protected $fillable = ['sale_id', 'quantity', 'rate', 'total', 'sku', 'name', 'unit'];
+    protected $fillable = ['sale_id', 'quantity', 'rate', 'total', 'sku', 'name', 'unit', 'client_id'];
     public function sale(){
         return $this->belongsTo(Sale::class);
     }

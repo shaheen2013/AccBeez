@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class BillItem extends Model
 {
     use HasFactory;
-    protected $fillable = ['bill_id', 'quantity', 'rate', 'total', 'sku', 'name', 'unit'];
+    protected $fillable = ['bill_id', 'quantity', 'rate', 'total', 'sku', 'name', 'unit', 'client_id'];
     public function bill(){
         return $this->belongsTo(Bill::class);
     }

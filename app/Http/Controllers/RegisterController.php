@@ -100,12 +100,18 @@ class RegisterController extends Controller
                                 'bill_items.total as bill_item_total', 'bills.date'
                         )
                         ->where('sku', $sku)
+                        // ->groupBy('date')
                         ->orderBy('date')
                         ->get();
         $saleItems = DB::table('sale_items')
                         ->leftJoin('sales', 'sale_items.sale_id', '=', 'sales.id')
-                        ->select('sale_items.quantity as sale_item_quantity', 'sale_items.rate as sale_item_rate',
-                                'sale_items.total as sale_item_total', 'sales.date'
+                        ->select(
+                            'sale_items.quantity as sale_item_quantity', 
+                            'sale_items.rate as sale_item_rate',
+                                // DB::raw('SUM(quantity) as sale_item_quantity'), 
+                                // DB::raw('round(SUM(quantity) * SUM(rate),2) as sale_item_total'),
+                                'sale_items.total as sale_item_total', 
+                                'sales.date'
                         )
                         ->where('sku', $sku)
                         ->orderBy('date')
@@ -124,7 +130,7 @@ class RegisterController extends Controller
             $billItemArray = get_object_vars($billItem);
             // dd($billItemArray, $matchingSaleItem, $singleSaleItem);
             if($matchingSaleItem){
-                $matchingSaleItemArray = get_object_vars($matchingSaleItem);
+                $matchingSaleItemArray = (array)$matchingSaleItem;
                 $mergedItem = array_merge($billItemArray, $matchingSaleItemArray);
                 $mergedItems[] = $mergedItem;
             }else{
