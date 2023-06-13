@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ExportController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -71,3 +72,7 @@ Route::get('/products', [App\Http\Controllers\ProductController::class, 'index']
 
 Route::get('/registers', [App\Http\Controllers\RegisterController::class, 'index'])->name('registers');
 Route::get('/registers/view/{id}', [App\Http\Controllers\RegisterController::class, 'view'])->name('registers.view');
+
+// export routes 
+
+Route::get('/bill/{billId}/export/{fileName}',[ExportController::class,'exportBillXls']);

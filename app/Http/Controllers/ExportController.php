@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\BillExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
@@ -32,9 +33,10 @@ class ExportController extends Controller
     //     }
     // }
 
-    public function exportXls(){
-        $file_name = 'tasks_'.date('U').'.xls';
-        return Excel::download(new TaskExport, $file_name);    
+    public function exportBillXls($invoiceId,$fileName){
+        $exporter = new BillExport($invoiceId);
+        $file_name = $fileName.'_'.date('U').'.xls';
+        return Excel::download($exporter, $file_name);    
     }
 
     public function exportCsv(){
