@@ -26,11 +26,11 @@
             <el-table :data="register_rows" style="width: 100%">
                 <el-table-column :label="bill_item.sku">
                     <el-table-column prop="date" label="Date" width="120" />
-                    <!-- <el-table-column label="Opening Inventory">
-                        <el-table-column prop="state" label="State" width="100" />
-                        <el-table-column prop="city" label="City" width="120" />
-                        <el-table-column prop="address" label="Address" width="250" />
-                    </el-table-column> -->
+                    <el-table-column label="Opening Inventory">
+                        <el-table-column prop="opening_date_rate" label="Rate"  />
+                        <el-table-column prop="opening_date_quantity" label="Quantity"  />
+                        <el-table-column prop="opening_date_total" label="Value" />
+                    </el-table-column>
                     <el-table-column label="Purchase">
                         <el-table-column prop="bill_item_rate" label="Rate" />
                         <el-table-column prop="bill_item_quantity" label="Quantity" />

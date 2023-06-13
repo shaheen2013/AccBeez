@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
+use DateTime;
 
 class RegisterController extends Controller
 {
@@ -250,6 +251,25 @@ class RegisterController extends Controller
 
         // Convert the merged collection back to an array
         // $mergedArray = $mergedCollection->toArray();
+        $mergedArray = array_merge($billItemDates, $saleItemDates, $closingDates);
+        $uniqueKeys = array_keys($mergedArray);
+        sort($uniqueKeys);
+        // dump($uniqueKeys, $mergedArray);
+
+        $startDate = min($uniqueKeys);
+        $endDate = max($uniqueKeys);
+        $currentDate = new DateTime($startDate);
+        $endDate = new DateTime($endDate);
+        while ($currentDate < $endDate) {
+            $yearMonth = $currentDate->format('Y-m');
+            $yearMonths[$yearMonth] = $yearMonth.'-01';
+            $currentDate->modify('+1 month');
+        }
+        $yearMonths = array_values($yearMonths);
+        $uniqueKeys = array_unique(array_merge($uniqueKeys, $yearMonths));
+        sort($uniqueKeys);
+        // dd($yearMonths, $uniqueKeys);
+
         $singleBillItem = [
             "bill_item_quantity" => null,
             "bill_item_rate" => null,
@@ -268,11 +288,13 @@ class RegisterController extends Controller
             "closing_date_total" => null,
             "closing_date_avg_rate" => null,
         ];
-        $mergedArray = array_merge($billItemDates, $saleItemDates, $closingDates);
-        $uniqueKeys = array_keys($mergedArray);
-        // dump($uniqueKeys);
-        sort($uniqueKeys);
-
+        $singleOpeningDate = [
+            "opening_date_quantity" => null,
+            "opening_date_rate" => null,
+            "opening_date_total" => null,
+            "opening_date_avg_rate" => null,
+            "opening_date" => false,
+        ];
         $mergedArray = [];
         foreach($uniqueKeys as $key){
             $mergedItem = null;
@@ -281,7 +303,7 @@ class RegisterController extends Controller
             } else {
                 $mergedItem = $singleBillItem;
             }
-            
+
             if( isset($saleItemDates[$key]) ){
                 $mergedItem = array_merge($mergedItem, $saleItemDates[$key]);
             } else {
@@ -293,27 +315,52 @@ class RegisterController extends Controller
             } else {
                 $mergedItem = array_merge($mergedItem, $singleClosingDate);
             }
+
+            $mergedItem = array_merge($mergedItem, $singleOpeningDate);
+            $date = DateTime::createFromFormat("Y-m-d", $key);
+            $day = $date->format("d");
+            if($day == '01'){
+                $mergedItem['date'] = $date->format("Y-m-d");
+                $mergedItem['opening_date'] = true;
+            }
             // dd($mergedItem);
             $mergedArray[] = $mergedItem;
         }
 
 
         $closingQuantity = 0;
+        $bill_item_avg_rate = 0;
+        $bill_item_sum_quantity = 0;
+        $bill_item_sum_total = 0;
+        $sale_item_avg_rate = 0;
+        $sale_item_sum_quantity = 0;
+        $sale_item_sum_total = 0;
+
+
+
+
 
         foreach ($mergedArray as &$item) {
-            if (isset($item['bill_item_quantity'])) {
+            if ( isset($item['bill_item_quantity']) && isset($item['sale_item_quantity']) ) {
                 $billQuantity = (float) $item['bill_item_quantity'];
-                $item['closing_date_quantity'] = $closingQuantity + $billQuantity;
-                $closingQuantity += $billQuantity;
+                $closingQuantity = $closingQuantity + $billQuantity - $saleQuantity;
+                $item['closing_date_quantity'] = $closingQuantity;
             }
-            if (isset($item['sale_item_quantity'])) {
+            elseif ( isset($item['bill_item_quantity']) ) {
+                $billQuantity = (float) $item['bill_item_quantity'];
+                $closingQuantity = $closingQuantity + $billQuantity;
+                $item['closing_date_quantity'] = $closingQuantity;
+            }
+            elseif (isset($item['sale_item_quantity'])) {
                 $saleQuantity = (float) $item['sale_item_quantity'];
-                $item['closing_date_quantity'] = $closingQuantity - $saleQuantity;
-                $closingQuantity -= $saleQuantity;
+                $closingQuantity = $closingQuantity - $saleQuantity;
+                $item['closing_date_quantity'] = $closingQuantity;
             }
-            // if (isset($item['closing_date_quantity'])) {
-            //     $closingQuantity = (float) $item['closing_date_quantity'];
-            // }
+            else {
+                // dd('$item', $item);
+                // $closingQuantity = (float) $item['closing_date_quantity'];
+                $item['closing_date_quantity'] = $closingQuantity;
+            }
         }
         // dd($mergedArray);
         // dump($billItemDates, $saleItemDates, $closingDates, $mergedArray);
@@ -323,6 +370,7 @@ class RegisterController extends Controller
         $data = [
             'mergedItems' => $mergedArray,
             'bill_item' => $bill_item,
+            'uniqueKeys' => $uniqueKeys
         ];
         return $data;
     }
