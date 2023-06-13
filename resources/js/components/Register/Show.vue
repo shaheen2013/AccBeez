@@ -14,10 +14,10 @@
 
         <!-- <el-card class="box-card" v-if="isMounted"> -->
         <div class="el-table-wrapper">
-          <h3 class="text-center mb-3 font-weight-bold">{{bill_item.name}} ({{bill_item.sku}})</h3>
-          <div class="table-body" style="max-height: 75vh;">
-            <el-table :data="register_rows" style="width: 100%">
-                    <el-table-column prop="date" label="Date" width="100%" />
+            <h3 class="text-center mb-3 font-weight-bold">{{bill_item.name}} ({{bill_item.sku}})</h3>
+            <div class="table-body" style="max-height: 75vh;">
+                <el-table :data="register_rows" style="width: 100%">
+                    <el-table-column prop="date" label="Date" width="120" />
                     <el-table-column label="Opening Inventory">
                         <!-- <el-table-column prop="opening_date_rate" label="Rate" width="100%" /> -->
                         <el-table-column prop="opening_date_rate" label="Rate">
@@ -58,17 +58,23 @@
                         <el-table-column prop="closing_date_quantity" label="Quantity" width="100%" />
                         <el-table-column prop="closing_date_total" label="Value" />
                     </el-table-column>
-            </el-table>
+                    <el-table-column  label="Invoice Number">
+                        <el-table-column prop="value"  />
+                    </el-table-column>
+                    <el-table-column  label="Remarks">
+                        <el-table-column prop="value" />
+                    </el-table-column>
+                </el-table>
 
-            <el-row>
-                <el-col>
-                    <router-link :to="'/registers'">
-                        <el-button type="info" class="me-2">Back</el-button>
-                    </router-link>
-                    <el-button type="primary" @click="downloadPdf" class="me-2">Download PDF</el-button>
-                </el-col>
-            </el-row>
-          </div>
+                <el-row>
+                    <el-col>
+                        <router-link :to="'/registers'">
+                            <el-button type="info" class="me-2">Back</el-button>
+                        </router-link>
+                        <el-button type="primary" @click="downloadPdf" class="me-2">Download PDF</el-button>
+                    </el-col>
+                </el-row>
+            </div>
 
         </div>
         <!-- </el-card> -->

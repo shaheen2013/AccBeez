@@ -213,7 +213,6 @@ class RegisterController extends Controller
         $sku = $bill_item->sku;
 
         // Find unique dates in BillItem
-        $uniqueDates = [];
         $billItemDates = Bill::leftJoin('bill_items', 'bills.id', '=', 'bill_items.bill_id')
                                 ->groupBy('date')
                                 ->select('bills.date', 'bill_items.sku', DB::raw("'billItem' as model"),
@@ -252,12 +251,12 @@ class RegisterController extends Controller
         // Convert the merged collection back to an array
         // $mergedArray = $mergedCollection->toArray();
         $mergedArray = array_merge($billItemDates, $saleItemDates, $closingDates);
-        $uniqueKeys = array_keys($mergedArray);
-        sort($uniqueKeys);
-        // dump($uniqueKeys, $mergedArray);
+        $uniqueDates = array_keys($mergedArray);
+        sort($uniqueDates);
+        // dump($uniqueDates, $mergedArray);
 
-        $startDate = min($uniqueKeys);
-        $endDate = max($uniqueKeys);
+        $startDate = min($uniqueDates);
+        $endDate = max($uniqueDates);
         $currentDate = new DateTime($startDate);
         $endDate = new DateTime($endDate);
         while ($currentDate < $endDate) {
@@ -266,9 +265,9 @@ class RegisterController extends Controller
             $currentDate->modify('+1 month');
         }
         $yearMonths = array_values($yearMonths);
-        $uniqueKeys = array_unique(array_merge($uniqueKeys, $yearMonths));
-        sort($uniqueKeys);
-        // dd($yearMonths, $uniqueKeys);
+        $uniqueDates = array_unique(array_merge($uniqueDates, $yearMonths));
+        sort($uniqueDates);
+        // dd($yearMonths, $uniqueDates);
 
         $singleBillItem = [
             "bill_item_quantity" => null,
@@ -296,7 +295,7 @@ class RegisterController extends Controller
             "opening_date" => false,
         ];
         $mergedArray = [];
-        foreach($uniqueKeys as $key){
+        foreach($uniqueDates as $key){
             $mergedItem = null;
             if( isset($billItemDates[$key]) ){
                 $mergedItem = $billItemDates[$key];
@@ -349,6 +348,7 @@ class RegisterController extends Controller
             }
 
             if ( isset($item['bill_item_quantity']) && isset($item['sale_item_quantity']) ) {
+                // $item['sale_item_rate'] = $closingRate;
                 $billQuantity = (float) $item['bill_item_quantity'];
                 $saleQuantity = (float) $item['sale_item_quantity'];
                 $billTotal = (float) $item['bill_item_total'];
@@ -372,6 +372,7 @@ class RegisterController extends Controller
                 // dump($item);
             }
             elseif (isset($item['sale_item_quantity'])) {
+                // $item['sale_item_rate'] = $closingRate;
                 $saleQuantity = (float) $item['sale_item_quantity'];
                 $saleTotal = (float) $item['sale_item_total'];
                 $closingQuantity = $closingQuantity - $saleQuantity;
@@ -380,10 +381,8 @@ class RegisterController extends Controller
                 $item['closing_date_rate'] = $closingRate;
                 $item['closing_date_quantity'] = $closingQuantity;
                 $item['closing_date_total'] = $closingTotal;
-            }
-            else {
+            } else {
                 // dd('$item', $item);
-                // $closingQuantity = (float) $item['closing_date_quantity'];
                 $item['closing_date_rate'] = $closingRate;
                 $item['closing_date_quantity'] = $closingQuantity;
                 $item['closing_date_total'] = $closingTotal;
@@ -391,13 +390,11 @@ class RegisterController extends Controller
         }
         // dd($mergedArray);
         // dump($billItemDates, $saleItemDates, $closingDates, $mergedArray);
-        // dump($uniqueKeys);
-
-        // return $uniqueDates;
+        // dump($uniqueDates);
         $data = [
             'mergedItems' => $mergedArray,
             'bill_item' => $bill_item,
-            'uniqueKeys' => $uniqueKeys
+            'uniqueDates' => $uniqueDates
         ];
         return $data;
     }
