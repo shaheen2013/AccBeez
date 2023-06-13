@@ -374,10 +374,9 @@ class RegisterController extends Controller
             elseif (isset($item['sale_item_quantity'])) {
                 $saleQuantity = (float) $item['sale_item_quantity'];
                 $saleTotal = (float) $item['sale_item_total'];
-                $closingQuantity = $closingQuantity + $saleQuantity;
-                $closingTotal = $closingTotal + $saleTotal;
-                $closingRate = $closingTotal / $closingQuantity;
                 $closingQuantity = $closingQuantity - $saleQuantity;
+                $closingTotal = $closingTotal - $saleTotal;
+                $closingRate = $closingTotal / $closingQuantity;
                 $item['closing_date_rate'] = $closingRate;
                 $item['closing_date_quantity'] = $closingQuantity;
                 $item['closing_date_total'] = $closingTotal;
@@ -385,7 +384,9 @@ class RegisterController extends Controller
             else {
                 // dd('$item', $item);
                 // $closingQuantity = (float) $item['closing_date_quantity'];
+                $item['closing_date_rate'] = $closingRate;
                 $item['closing_date_quantity'] = $closingQuantity;
+                $item['closing_date_total'] = $closingTotal;
             }
         }
         // dd($mergedArray);

@@ -1,72 +1,63 @@
 <template>
-    <el-form ref="ruleFormRef" :model="register" class="demo-register"
-        label-position="top"
-        status-icon
-    >
+    <div>
         <el-text tag="b" type="primary" size="large">View Register</el-text>
 
-        <el-card class="box-card" v-if="isMounted">
-            <h4>
-                Raw Material Register
-                <div style="float:right">
-                    <el-button type="info" size="small" class="me-1" @click="closeDate">Close Register</el-button>
-                    <el-button v-if="bill_item.closing_dates.length>0" type="info" size="small" class="me-1" @click="undoDate">
-                        Undo Register
-                    </el-button>
-                </div>
+        <h4>
+            <!-- Raw Material Register -->
+            <div style="float:right">
+                <el-button type="info" class="me-1" @click="closeDate">Close Register</el-button>
+                <el-button v-if="bill_item.closing_dates.length>0" type="info" class="me-1" @click="undoDate">
+                    Undo Register
+                </el-button>
+            </div>
+        </h4>
 
-        <!-- <el-row>
-            <el-col>
-            </el-col>
-        </el-row> -->
-
-            </h4>
-
-
+        <!-- <el-card class="box-card" v-if="isMounted"> -->
+        <div class="el-table-wrapper">
+          <h3 class="text-center mb-3 font-weight-bold">{{bill_item.name}} ({{bill_item.sku}})</h3>
+          <div class="table-body" style="max-height: 75vh;">
             <el-table :data="register_rows" style="width: 100%">
-                <el-table-column :label="bill_item.sku">
-                    <el-table-column prop="date" label="Date" width="120" />
+                    <el-table-column prop="date" label="Date" width="100%" />
                     <el-table-column label="Opening Inventory">
-                        <el-table-column prop="opening_date_rate" label="Rate"  />
-                        <!-- <el-table-column prop="opening_date_rate" label="Rate">
+                        <!-- <el-table-column prop="opening_date_rate" label="Rate" width="100%" /> -->
+                        <el-table-column prop="opening_date_rate" label="Rate">
                             <template #default="scope">
                                 {{ formattedData(scope.row.opening_date_rate) }}
                             </template>
-                        </el-table-column> -->
-                        <el-table-column prop="opening_date_quantity" label="Quantity"  />
+                        </el-table-column>
+                        <el-table-column prop="opening_date_quantity" label="Quantity" width="100%" />
                         <el-table-column prop="opening_date_total" label="Value" />
                     </el-table-column>
                     <el-table-column label="Purchase">
-                        <el-table-column prop="bill_item_rate" label="Rate" />
-                        <!-- <el-table-column prop="bill_date_rate" label="Rate">
+                        <!-- <el-table-column prop="bill_item_rate" label="Rate" /> -->
+                        <el-table-column prop="bill_item_rate" label="Rate">
                             <template #default="scope">
-                                {{ formattedData(scope.row.bill_date_rate) }}
+                                {{ formattedData(scope.row.bill_item_rate) }}
                             </template>
-                        </el-table-column> -->
+                        </el-table-column>
                         <el-table-column prop="bill_item_quantity" label="Quantity" />
                         <el-table-column prop="bill_item_total" label="Value" />
                     </el-table-column>
                     <el-table-column label="Sale">
-                        <el-table-column prop="sale_item_rate" label="Rate"  />
-                        <!-- <el-table-column prop="sale_date_rate" label="Rate">
+                        <!-- <el-table-column prop="sale_item_rate" label="Rate" width="100%" /> -->
+                        <el-table-column prop="sale_item_rate" label="Rate">
                             <template #default="scope">
-                                {{ formattedData(scope.row.sale_date_rate) }}
+                                {{ formattedData(scope.row.sale_item_rate) }}
                             </template>
-                        </el-table-column> -->
-                        <el-table-column prop="sale_item_quantity" label="Quantity"  />
+                        </el-table-column>
+                        <el-table-column prop="sale_item_quantity" label="Quantity" width="100%" />
                         <el-table-column prop="sale_item_total" label="Value" />
                     </el-table-column>
                     <el-table-column label="Closing Inventory">
-                        <!-- <el-table-column prop="closing_date_rate" label="Rate"  /> -->
+                        <!-- <el-table-column prop="closing_date_rate" label="Rate" width="100%" /> -->
                         <el-table-column prop="closing_date_rate" label="Rate">
                             <template #default="scope">
                                 {{ formattedData(scope.row.closing_date_rate) }}
                             </template>
                         </el-table-column>
-                        <el-table-column prop="closing_date_quantity" label="Quantity"  />
+                        <el-table-column prop="closing_date_quantity" label="Quantity" width="100%" />
                         <el-table-column prop="closing_date_total" label="Value" />
                     </el-table-column>
-                </el-table-column>
             </el-table>
 
             <el-row>
@@ -77,8 +68,11 @@
                     <el-button type="primary" @click="downloadPdf" class="me-2">Download PDF</el-button>
                 </el-col>
             </el-row>
-        </el-card>
-    </el-form>
+          </div>
+
+        </div>
+        <!-- </el-card> -->
+    </div>
 </template>
 
 <script>
@@ -172,18 +166,21 @@ export default {
 
 
 <style scoped>
-    table {
-        border-collapse: collapse;
-        width: 100%;
-    }
-    th, td {
-        border: 1px solid #ccc;
-        padding: 8px;
-    }
-    /* .small-font-table .el-table__body {
-        font-size: 10px;
-    } */
-    .el-table thead.is-group th.el-table__cell {
-        text-align: center;
-    }
+.el-table-wrapper .cell{
+  text-align: center;
+  overflow: auto;
+}
+.el-table-wrapper .el-table__cell{
+ padding: 0;
+}
+
+.table-body {
+  overflow-y: auto;
+}
+.el-table-wrapper .el-table__header th{
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 1;
+  /*background-color: green !important;*/
+}
 </style>>
