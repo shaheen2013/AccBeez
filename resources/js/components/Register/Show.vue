@@ -28,21 +28,41 @@
                     <el-table-column prop="date" label="Date" width="120" />
                     <el-table-column label="Opening Inventory">
                         <el-table-column prop="opening_date_rate" label="Rate"  />
+                        <!-- <el-table-column prop="opening_date_rate" label="Rate">
+                            <template #default="scope">
+                                {{ formattedData(scope.row.opening_date_rate) }}
+                            </template>
+                        </el-table-column> -->
                         <el-table-column prop="opening_date_quantity" label="Quantity"  />
                         <el-table-column prop="opening_date_total" label="Value" />
                     </el-table-column>
                     <el-table-column label="Purchase">
                         <el-table-column prop="bill_item_rate" label="Rate" />
+                        <!-- <el-table-column prop="bill_date_rate" label="Rate">
+                            <template #default="scope">
+                                {{ formattedData(scope.row.bill_date_rate) }}
+                            </template>
+                        </el-table-column> -->
                         <el-table-column prop="bill_item_quantity" label="Quantity" />
                         <el-table-column prop="bill_item_total" label="Value" />
                     </el-table-column>
                     <el-table-column label="Sale">
                         <el-table-column prop="sale_item_rate" label="Rate"  />
+                        <!-- <el-table-column prop="sale_date_rate" label="Rate">
+                            <template #default="scope">
+                                {{ formattedData(scope.row.sale_date_rate) }}
+                            </template>
+                        </el-table-column> -->
                         <el-table-column prop="sale_item_quantity" label="Quantity"  />
                         <el-table-column prop="sale_item_total" label="Value" />
                     </el-table-column>
                     <el-table-column label="Closing Inventory">
-                        <el-table-column prop="closing_date_rate" label="Rate"  />
+                        <!-- <el-table-column prop="closing_date_rate" label="Rate"  /> -->
+                        <el-table-column prop="closing_date_rate" label="Rate">
+                            <template #default="scope">
+                                {{ formattedData(scope.row.closing_date_rate) }}
+                            </template>
+                        </el-table-column>
                         <el-table-column prop="closing_date_quantity" label="Quantity"  />
                         <el-table-column prop="closing_date_total" label="Value" />
                     </el-table-column>
@@ -140,8 +160,12 @@ export default {
                     message: 'Undo canceled',
                 })
             })
-        }
-
+        },
+        formattedData(value) {
+            if (value !== null && value !== undefined) {
+                return value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            }
+        },
     },
 };
 </script>

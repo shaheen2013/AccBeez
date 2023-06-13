@@ -328,33 +328,59 @@ class RegisterController extends Controller
         }
 
 
+        $closingRate = 0;
         $closingQuantity = 0;
+        $closingTotal = 0;
         $bill_item_avg_rate = 0;
         $bill_item_sum_quantity = 0;
         $bill_item_sum_total = 0;
         $sale_item_avg_rate = 0;
         $sale_item_sum_quantity = 0;
         $sale_item_sum_total = 0;
-
-
-
+        // dump($mergedArray);
 
 
         foreach ($mergedArray as &$item) {
+            if( $item['opening_date'] ){
+                // dump($item['opening_date']);
+                $item['opening_date_rate'] = $closingRate;
+                $item['opening_date_quantity'] = $closingQuantity;
+                $item['opening_date_total'] = $closingTotal;
+            }
+
             if ( isset($item['bill_item_quantity']) && isset($item['sale_item_quantity']) ) {
                 $billQuantity = (float) $item['bill_item_quantity'];
+                $saleQuantity = (float) $item['sale_item_quantity'];
+                $billTotal = (float) $item['bill_item_total'];
+                $saleTotal = (float) $item['sale_item_total'];
+                $closingTotal = $closingQuantity + $billTotal - $saleTotal;
                 $closingQuantity = $closingQuantity + $billQuantity - $saleQuantity;
+                $closingRate = $closingTotal / $closingQuantity;
+                $item['closing_date_rate'] = $closingRate;
                 $item['closing_date_quantity'] = $closingQuantity;
+                $item['closing_date_total'] = $closingTotal;
             }
             elseif ( isset($item['bill_item_quantity']) ) {
                 $billQuantity = (float) $item['bill_item_quantity'];
+                $billTotal = (float) $item['bill_item_total'];
                 $closingQuantity = $closingQuantity + $billQuantity;
+                $closingTotal = $closingTotal + $billTotal;
+                $closingRate = $closingTotal / $closingQuantity;
+                $item['closing_date_rate'] = $closingRate;
                 $item['closing_date_quantity'] = $closingQuantity;
+                $item['closing_date_total'] = $closingTotal;
+                // dump($item);
             }
             elseif (isset($item['sale_item_quantity'])) {
                 $saleQuantity = (float) $item['sale_item_quantity'];
+                $saleTotal = (float) $item['sale_item_total'];
+                $closingQuantity = $closingQuantity + $saleQuantity;
+                $closingTotal = $closingTotal + $saleTotal;
+                $closingRate = $closingTotal / $closingQuantity;
                 $closingQuantity = $closingQuantity - $saleQuantity;
+                $item['closing_date_rate'] = $closingRate;
                 $item['closing_date_quantity'] = $closingQuantity;
+                $item['closing_date_total'] = $closingTotal;
             }
             else {
                 // dd('$item', $item);
