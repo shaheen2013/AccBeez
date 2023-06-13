@@ -76,3 +76,4 @@ Route::get('/registers/view/{id}', [App\Http\Controllers\RegisterController::cla
 // export routes 
 
 Route::get('/bill/{billId}/export/{fileName}',[ExportController::class,'exportBillXls']);
+Route::get('/bill/blade/{billId}/export/{fileName}',[ExportController::class,'exportBillBladeXls']);

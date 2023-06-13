@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\BillBladeExport;
 use App\Exports\BillExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -38,14 +39,16 @@ class ExportController extends Controller
         $file_name = $fileName.'_'.date('U').'.xls';
         return Excel::download($exporter, $file_name);    
     }
+    
+    // public function exportCsv(){
+        //     $file_name = 'tasks_'.date('U').'.csv';
+        //     return Excel::download(new TaskExport, $file_name);    
+        // }
+        
+        public function exportBillBladeXls($invoiceId,$fileName){
+        $exporter = new BillBladeExport($invoiceId);
+        $file_name = $fileName.'_'.date('U').'.xls';
 
-    public function exportCsv(){
-        $file_name = 'tasks_'.date('U').'.csv';
-        return Excel::download(new TaskExport, $file_name);    
-    }
-
-    public function bladeToFile(){
-
-        return Excel::download(new TaskBladeExport, 'bladeexport.xls');
+        return Excel::download($exporter, $file_name);
     }
 }

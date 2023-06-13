@@ -2,6 +2,9 @@
 
 namespace App\Exports;
 
+use App\Models\Bill;
+use App\Models\BillItem;
+use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
@@ -16,7 +19,7 @@ class BillBladeExport implements FromView,ShouldAutoSize
     }
     public function view(): View
     {
-        $tasks = Task::all();
-        return view('Templates.task', ['tasks'=>$tasks]);
-    }
+        $bill = Bill::with('billItems')->find($this->bill_id);
+        return view('bills.invoice', ['bill'=>$bill]);
+    }   
 }
