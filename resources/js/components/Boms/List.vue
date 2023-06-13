@@ -4,7 +4,7 @@
         <h1>
             Bom List
             <router-link to="/boms/create" style="text-decoration: none; color: inherit;">
-                <el-button type="primary" v-if="logged_in_user && logged_in_user.role === 'admin'" style="float: right;">
+                <el-button type="primary" v-if="logged_in_user && logged_in_user.role === 'Super-Admin'" style="float: right;">
                     Create
                 </el-button>
             </router-link>
@@ -44,7 +44,7 @@
 
                 <template  #default="scope">
                     <router-link :to="'/boms/edit/'+scope.row.id">
-                        <el-icon :size="20" :color="color" style="width: 1em; height: 1em; margin-right: 8px"  v-if="logged_in_user && logged_in_user.role === 'admin'">
+                        <el-icon :size="20" :color="color" style="width: 1em; height: 1em; margin-right: 8px"  v-if="logged_in_user && logged_in_user.role === 'Super-Admin'">
                             <Edit />
                         </el-icon>
                     </router-link>
@@ -56,7 +56,7 @@
                     <el-icon :size="20" :color="'red'"
                             style="width: 1em; height: 1em; margin-right: 8px"
                             @click="handleDelete(scope.row.id);"
-                             v-if="logged_in_user && logged_in_user.role === 'admin'"
+                             v-if="logged_in_user && logged_in_user.role === 'Super-Admin'"
                     >
                         <Delete />
                     </el-icon>

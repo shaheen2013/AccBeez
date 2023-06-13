@@ -24,6 +24,9 @@ class UserController extends Controller
     {
         // dd('hi index');
         $users = User::all();
+        foreach($users as $user){
+            $user->role = $user->getRoleNames()[0];
+        }
         // dd(Auth::check(), auth());
 
         // Return the users as a response
