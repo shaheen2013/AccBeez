@@ -41,11 +41,11 @@
                         <el-table-column prop="sale_item_quantity" label="Quantity"  />
                         <el-table-column prop="sale_item_total" label="Value" />
                     </el-table-column>
-                    <!-- <el-table-column label="Closing Inventory">
-                        <el-table-column prop="state" label="State" width="100" />
-                        <el-table-column prop="city" label="City" width="120" />
-                        <el-table-column prop="address" label="Address" width="250" />
-                    </el-table-column> -->
+                    <el-table-column label="Closing Inventory">
+                        <el-table-column prop="closing_date_rate" label="Rate"  />
+                        <el-table-column prop="closing_date_quantity" label="Quantity"  />
+                        <el-table-column prop="closing_date_total" label="Value" />
+                    </el-table-column>
                 </el-table-column>
             </el-table>
 
@@ -109,7 +109,7 @@ export default {
                 await axios.post(`/api/registers/close`, {sku: this.bill_item.sku}).
                         then((res) => {
                             console.log('res:', res, this.$router);
-                            this.$router.push('/registers');
+                            // this.$router.push('/registers');
                         });
             } catch (error) {
                 console.error('error in response:', error.response.data);

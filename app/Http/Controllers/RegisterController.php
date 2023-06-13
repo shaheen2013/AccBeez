@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bill;
 use Carbon\Carbon;
 use App\Models\BillItem;
 use App\Models\ClosingDate;
+use App\Models\Sale;
+use App\Models\SaleItem;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Collection;
 
 class RegisterController extends Controller
 {
@@ -91,7 +95,7 @@ class RegisterController extends Controller
 
 
 
-    public function view($id)
+    public function view1($id)
     {
         $item = BillItem::with('closingDates')->find($id);
         $closingDates = $item->closingDates;
@@ -182,7 +186,7 @@ class RegisterController extends Controller
     {
         // $request['date'] = Carbon::now()->format('Y-m-d');
         $input = $request->all();
-        $input['date'] = '2023-02-07';
+        $input['date'] = '2023-02-10';
         $input['status'] = 0;
         $closingDate = ClosingDate::updateOrCreate(
             ['date' => $input['date'], 'sku' => $input['sku']],
@@ -197,6 +201,138 @@ class RegisterController extends Controller
         $closingDate = ClosingDate::where('sku', $input['sku'])->orderBy('created_at', 'desc')->first()->delete();
         // dd($closingDate, $input);
     }
+
+
+
+
+    public function view($id)
+    {
+        $bill_item = BillItem::with('closingDates')->find($id);
+        $closingDates = $bill_item->closingDates;
+        $sku = $bill_item->sku;
+
+        // Find unique dates in BillItem
+        $uniqueDates = [];
+        $billItemDates = Bill::leftJoin('bill_items', 'bills.id', '=', 'bill_items.bill_id')
+                                ->groupBy('date')
+                                ->select('bills.date', 'bill_items.sku', DB::raw("'billItem' as model"),
+                                        DB::raw('SUM(quantity) as bill_item_quantity'),
+                                        DB::raw('SUM(total) as bill_item_total'),
+                                        DB::raw('SUM(total) / SUM(quantity) as bill_item_rate'),
+                                        DB::raw('0 as bill_item_avg_rate'),
+                                )
+                                ->where('sku', $sku)
+                                ->distinct('date')
+                                ->get()
+                                ->keyBy('date')
+                                ->toArray();
+        $saleItemDates = Sale::leftJoin('sale_items', 'sales.id', '=', 'sale_items.sale_id')
+                                ->groupBy('date')
+                                ->select('sales.date', 'sale_items.sku', DB::raw("'saleItem' as model"),
+                                        DB::raw('SUM(quantity) as sale_item_quantity'),
+                                        DB::raw('SUM(total) as sale_item_total'),
+                                        DB::raw('SUM(total) / SUM(quantity) as sale_item_rate'),
+                                        DB::raw('0 as sale_item_avg_rate'),
+                                )
+                                ->where('sku', $sku)
+                                ->distinct('date')
+                                ->get()
+                                ->keyBy('date')
+                                ->toArray();
+        $closingDates = ClosingDate::select('date', 'sku', DB::raw("'closingDate' as model"),
+                                                DB::raw('0 as closing_date_avg_rate')
+                                        )
+                                        ->where('sku', $sku)
+                                        ->distinct('date')
+                                        ->get()
+                                        ->keyBy('date')
+                                        ->toArray();
+
+        // Convert the merged collection back to an array
+        // $mergedArray = $mergedCollection->toArray();
+        $singleBillItem = [
+            "bill_item_quantity" => null,
+            "bill_item_rate" => null,
+            "bill_item_total" => null,
+            "bill_item_avg_rate" => null,
+        ];
+        $singleSaleItem = [
+            "sale_item_quantity" => null,
+            "sale_item_rate" => null,
+            "sale_item_total" => null,
+            "sale_item_avg_rate" => null,
+        ];
+        $singleClosingDate = [
+            "closing_date_quantity" => null,
+            "closing_date_rate" => null,
+            "closing_date_total" => null,
+            "closing_date_avg_rate" => null,
+        ];
+        $mergedArray = array_merge($billItemDates, $saleItemDates, $closingDates);
+        $uniqueKeys = array_keys($mergedArray);
+        // dump($uniqueKeys);
+        sort($uniqueKeys);
+
+        $mergedArray = [];
+        foreach($uniqueKeys as $key){
+            $mergedItem = null;
+            if( isset($billItemDates[$key]) ){
+                $mergedItem = $billItemDates[$key];
+            } else {
+                $mergedItem = $singleBillItem;
+            }
+            
+            if( isset($saleItemDates[$key]) ){
+                $mergedItem = array_merge($mergedItem, $saleItemDates[$key]);
+            } else {
+                $mergedItem = array_merge($mergedItem, $singleSaleItem);
+            }
+
+            if( isset($closingDates[$key]) ){
+                $mergedItem = array_merge($mergedItem, $closingDates[$key]);
+            } else {
+                $mergedItem = array_merge($mergedItem, $singleClosingDate);
+            }
+            // dd($mergedItem);
+            $mergedArray[] = $mergedItem;
+        }
+
+
+        $closingQuantity = 0;
+
+        foreach ($mergedArray as &$item) {
+            if (isset($item['bill_item_quantity'])) {
+                $billQuantity = (float) $item['bill_item_quantity'];
+                $item['closing_date_quantity'] = $closingQuantity + $billQuantity;
+                $closingQuantity += $billQuantity;
+            }
+            if (isset($item['sale_item_quantity'])) {
+                $saleQuantity = (float) $item['sale_item_quantity'];
+                $item['closing_date_quantity'] = $closingQuantity - $saleQuantity;
+                $closingQuantity -= $saleQuantity;
+            }
+            // if (isset($item['closing_date_quantity'])) {
+            //     $closingQuantity = (float) $item['closing_date_quantity'];
+            // }
+        }
+        // dd($mergedArray);
+        // dump($billItemDates, $saleItemDates, $closingDates, $mergedArray);
+        // dump($uniqueKeys);
+
+        // return $uniqueDates;
+        $data = [
+            'mergedItems' => $mergedArray,
+            'bill_item' => $bill_item,
+        ];
+        return $data;
+    }
+
+
+
+
+
+
+
 
 
 
