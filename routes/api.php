@@ -31,7 +31,7 @@ Route::middleware('role:Super-Admin')->group(function(){
 });
 
 Route::middleware('role:Admin')->group(function(){
-    
+
 });
 
 
@@ -83,10 +83,10 @@ Route::get('/bill/blade/{billId}/export/{format}',[ExportController::class,'expo
 Route::get('/bom/blade/{bomId}/export/{format}',[ExportController::class,'exportBomBladeXls']);
 Route::get('/sale/blade/{saleId}/export/{format}',[ExportController::class,'exportSaleBladeXls']);
 
-// cogs routes 
+// cogs routes
 Route::get('/cogs/boms',[COGSController::class,'getAll']);
 
-//bom sales routes 
+//bom sales routes
 Route::get('/bomsales', [App\Http\Controllers\BomSaleController::class, 'index'])->name('bomsales.list');
 Route::post('/bomsales', [App\Http\Controllers\BomSaleController::class, 'store'])->name('bomsales.store');
 Route::get('/bomsales/edit/{id}', [App\Http\Controllers\BomSaleController::class, 'edit'])->name('bomsales.edit');

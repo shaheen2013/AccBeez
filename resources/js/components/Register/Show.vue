@@ -59,11 +59,21 @@
                         <el-table-column prop="closing_date_quantity" label="Quantity" width="100%" />
                         <el-table-column prop="closing_date_total" label="Value" />
                     </el-table-column>
-                    <el-table-column  label="Invoice Number">
-                        <el-table-column prop="value"  />
+                    <!-- <el-table-column  label="Invoice Number">
+                    </el-table-column> -->
+                    <el-table-column label="Invoice Number" width="150">
+                        <template v-slot="{ row }">
+                            <div v-if="row && row.invoices">
+                                <div v-for="invoice in row.invoices.split(',')">
+                                    <a href="#" class="router-link-styling" @click="handleInvoiceClick(invoice)">
+                                        {{ invoice }}
+                                    </a>
+                                </div>
+                            </div>
+                        </template>
                     </el-table-column>
                     <el-table-column  label="Remarks">
-                        <el-table-column prop="value" />
+                        <!-- <el-table-column prop="value" /> -->
                     </el-table-column>
                 </el-table>
 
@@ -72,7 +82,7 @@
                         <router-link :to="'/registers'">
                             <el-button type="info" class="me-2">Back</el-button>
                         </router-link>
-                        <el-button type="primary" @click="downloadPdf" class="me-2">Download PDF</el-button>
+                        <!-- <el-button type="primary" @click="downloadPdf" class="me-2">Download PDF</el-button> -->
                     </el-col>
                 </el-row>
             </div>
@@ -167,6 +177,10 @@ export default {
                 return value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             }
         },
+        handleInvoiceClick(invoice){
+            window.location.href = `/bills/download-pdf/`+invoice.split('-')[1];
+        },
+
     },
 };
 </script>
