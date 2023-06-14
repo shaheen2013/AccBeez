@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Exports\BillBladeExport;
+use App\Exports\BomBladeExport;
+use App\Exports\SaleBladeExport;
 use App\Exports\BillExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -45,10 +47,28 @@ class ExportController extends Controller
         //     return Excel::download(new TaskExport, $file_name);
         // }
 
-        public function exportBillBladeXls($invoiceId,$fileName){
+    public function exportBillBladeXls($invoiceId, $format){
         $exporter = new BillBladeExport($invoiceId);
-        $file_name = $fileName.'_'.date('U').'.xls';
+        $file_name = 'Bill_'.date('U').'.'.$format;
 
         return Excel::download($exporter, $file_name);
     }
+
+
+    public function exportSaleBladeXls($invoiceId, $format){
+        $exporter = new SaleBladeExport($invoiceId);
+        $file_name = 'Sale_'.date('U').'.'.$format;
+
+        return Excel::download($exporter, $file_name);
+    }
+
+
+    public function exportBomBladeXls($invoiceId, $format){
+        $exporter = new BomBladeExport($invoiceId);
+        $file_name = 'Bom_'.date('U').'.'.$format;
+
+        return Excel::download($exporter, $file_name);
+    }
+
+
 }

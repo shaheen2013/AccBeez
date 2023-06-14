@@ -21,5 +21,5 @@ class BillBladeExport implements FromView,ShouldAutoSize
     {
         $bill = Bill::with('billItems')->find($this->bill_id);
         return view('bills.invoice', ['bill'=>$bill]);
-    }   
+    }
 }
