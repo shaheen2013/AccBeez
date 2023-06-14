@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ExportController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -28,7 +29,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::middleware('role:Super-Admin')->group(function(){
     Route::get('/bills', [App\Http\Controllers\BillController::class, 'index'])->name('bills.list');
     Route::get('/users', [App\Http\Controllers\UserController::class, 'index'])->name('users.list');
-    
 });
 
 Route::middleware('role:Admin')->group(function(){
@@ -74,3 +74,8 @@ Route::get('/registers/view/{id}', [App\Http\Controllers\RegisterController::cla
 Route::post('/registers/close/', [App\Http\Controllers\RegisterController::class, 'close'])->name('registers.close');
 Route::post('/registers/undo/', [App\Http\Controllers\RegisterController::class, 'undo'])->name('registers.undo');
 
+
+// export routes
+
+Route::get('/bill/{billId}/export/{fileName}',[ExportController::class,'exportBillXls']);
+Route::get('/bill/blade/{billId}/export/{fileName}',[ExportController::class,'exportBillBladeXls']);
