@@ -47,6 +47,8 @@
                         <el-button type="info" class="me-2">Back</el-button>
                     </router-link>
                     <el-button type="primary" @click="downloadPdf" class="me-2">Download PDF</el-button>
+                    <el-button type="primary" @click="exportBillXLS" class="me-2">Export Excel</el-button>
+                    <el-button type="primary" @click="exportBillCSV" class="me-2">Export CSV</el-button>
                 </el-col>
             </el-row>
         </el-card>
@@ -72,6 +74,7 @@ export default {
             },
         };
     },
+
     async created() {
         let paths = this.$route.path.split("/");
         this.bill.id = paths[3];
@@ -89,6 +92,16 @@ export default {
     methods: {
         downloadPdf(){
             window.location.href = `/bills/download-pdf/`+this.bill.id;
+        },
+        exportBillXLS(){
+            let format = 'xls';
+            window.location.href = `/api/bill/blade/`+this.bill.id+`/export/`+format;
+
+        },
+        exportBillCSV(){
+            let format = 'csv';
+            window.location.href = `/api/bill/blade/`+this.bill.id+`/export/`+format;
+
         },
         formatCurrency(value) {
             return parseFloat(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });

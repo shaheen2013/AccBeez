@@ -34,17 +34,17 @@ class ExportController extends Controller
     //     }
     // }
 
-    public function exportBillXls($invoiceId,$fileName){
+    public function exportBillXls($invoiceId,$format){
         $exporter = new BillExport($invoiceId);
-        $file_name = $fileName.'_'.date('U').'.xls';
-        return Excel::download($exporter, $file_name);    
+        $file_name = 'billinvoice_'.date('U').'.'.$format;
+        return Excel::download($exporter, $file_name);
     }
-    
+
     // public function exportCsv(){
         //     $file_name = 'tasks_'.date('U').'.csv';
-        //     return Excel::download(new TaskExport, $file_name);    
+        //     return Excel::download(new TaskExport, $file_name);
         // }
-        
+
         public function exportBillBladeXls($invoiceId,$fileName){
         $exporter = new BillBladeExport($invoiceId);
         $file_name = $fileName.'_'.date('U').'.xls';

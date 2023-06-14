@@ -15,12 +15,12 @@
                 </el-icon>
                 <span style="vertical-align: middle"> Search </span>
             </el-button>
-            <!-- <el-button type="primary" @click="exportToExcel">
+            <el-button type="primary" @click="exportToExcel">
                 <el-icon style="vertical-align: middle">
                     <Download />
                 </el-icon>
                 <span style="vertical-align: middle"> Export to Excel </span>
-            </el-button> -->
+            </el-button>
         </div>
 
 
