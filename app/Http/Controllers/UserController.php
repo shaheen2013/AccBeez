@@ -121,6 +121,8 @@ class UserController extends Controller
     public function logged_in_user(Request $request)
     {
         $logged_in_user = Auth::user();
+        $logged_in_user = User::find($logged_in_user->id);
+        $logged_in_user->role = $logged_in_user->getRoleNames()[0];
         return response()->json($logged_in_user);
     }
 
