@@ -13,4 +13,14 @@ class BomSale extends Model
     public function bomSaleItems(){
         return $this->hasMany(BomSaleItem::class);
     }
+
+    public function sales(){
+        return $this->hasMany(Sale::class,'bom_sale_id','id');
+    }
+
+
+    public function salesItems(){
+        return $this->hasManyThrough(SaleItem::class,Sale::class,'bom_sale_id','sale_id','id','id');
+    }
+
 }

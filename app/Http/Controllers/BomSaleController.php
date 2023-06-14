@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BomSaleRequest;
+use App\Models\Bom;
 use App\Models\BomSale;
 use App\Models\BomSaleItem;
+use App\Models\Sale;
+use App\Models\SaleItem;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
@@ -41,6 +44,7 @@ class BomSaleController extends Controller
             foreach($request->items as $item){
                 $item['bom_sale_id'] = $bomSale->id;
                 BomSaleItem::create($item);
+                $this->bomSales($item,$item['quantity'],$bomSale);
             }
             DB::commit();
             return $bomSale;
@@ -48,6 +52,57 @@ class BomSaleController extends Controller
             DB::rollBack();
             return response()->json( new \Illuminate\Support\MessageBag(['catch_exception'=>$ex->getMessage()]), 403);
         }
+    }
+
+    private function bomSales($item,$quantity=0,$bomSale){
+        $bom = Bom::with('bomItems')->where('name',$item['name'])->first();
+
+        foreach($bom->bomItems as $bomItem){
+            $data = [
+                'bom_sale_id'=> $bomSale->id,
+                'date'=>$bomSale->date,
+                'description'=>$bomSale->description,
+                'items'=>[
+                    [
+                        'sku'=>$bomItem->sku,
+                        'name'=>$bomItem->sku,
+                        'rate'=>$bomItem->rate,
+
+                    ],
+                ],
+            ];
+
+            $total_quantity = $bomItem->quantity * $quantity;
+            $total_price = $data['items'][0]['rate'] * $total_quantity;
+
+            $data['items'][0]['quantity'] = $total_quantity;
+            $data['items'][0]['total'] = $total_price;
+            $data['invoice_total'] = $total_price;
+
+            $request = new Request($data);
+            $this->salesEntry($request);
+            
+        }
+    }
+
+    private function salesEntry($request){
+        try {
+            $saleData = $request->only('description', 'date', 'invoice_total','bom_sale_id');
+            DB::beginTransaction();
+            $sale = Sale::create($saleData);
+            $sale->invoice_number = $sale->id;
+            $sale->save();
+            // dd('store', $request->all(), $saleData);
+            foreach($request->items as $item){
+                $item['sale_id'] = $sale->id;
+                SaleItem::create($item);
+            }
+            DB::commit();
+            // return $sale;
+        } catch (Exception $ex) {
+            DB::rollBack();
+            return response()->json( new \Illuminate\Support\MessageBag(['catch_exception'=>$ex->getMessage()]), 403);
+        }   
     }
 
 
@@ -142,4 +197,5 @@ class BomSaleController extends Controller
             return 'Delete Failed';
         }
     }
+
 }
