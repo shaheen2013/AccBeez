@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\COGSController;
 use App\Http\Controllers\ExportController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -27,19 +28,18 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::middleware('role:Super-Admin')->group(function(){
-    Route::get('/bills', [App\Http\Controllers\BillController::class, 'index'])->name('bills.list');
-    Route::get('/users', [App\Http\Controllers\UserController::class, 'index'])->name('users.list');
 });
 
 Route::middleware('role:Admin')->group(function(){
-    Route::post('/bills', [App\Http\Controllers\BillController::class, 'store'])->name('bills.store');
-
+    
 });
 
 
 
 
 
+Route::get('/bills', [App\Http\Controllers\BillController::class, 'index'])->name('bills.list');
+Route::post('/bills', [App\Http\Controllers\BillController::class, 'store'])->name('bills.store');
 Route::get('/bills/edit/{id}', [App\Http\Controllers\BillController::class, 'edit'])->name('bills.edit');
 Route::post('/bills/bulkdelete', [App\Http\Controllers\BillController::class, 'bulkdelete'])->name('bills.bulkdelete');
 Route::post('/bills/{id}', [App\Http\Controllers\BillController::class, 'update'])->name('bills.update');
@@ -54,6 +54,7 @@ Route::post('/boms/{id}', [App\Http\Controllers\BomController::class, 'update'])
 Route::delete('/boms/{id}', [App\Http\Controllers\BomController::class, 'delete'])->name('boms.delete');
 
 
+Route::get('/users', [App\Http\Controllers\UserController::class, 'index'])->name('users.list');
 Route::post('/users', [App\Http\Controllers\UserController::class, 'store'])->name('users.store');
 Route::get('/users/edit/{id}', [App\Http\Controllers\UserController::class, 'edit'])->name('users.edit');
 Route::post('/users/{id}', [App\Http\Controllers\UserController::class, 'update'])->name('users.update');
@@ -76,9 +77,18 @@ Route::post('/registers/undo/', [App\Http\Controllers\RegisterController::class,
 
 
 // export routes
-
 // Route::get('/bill/{billId}/export/{fileName}',[ExportController::class,'exportBillXls']);
 
 Route::get('/bill/blade/{billId}/export/{format}',[ExportController::class,'exportBillBladeXls']);
 Route::get('/bom/blade/{bomId}/export/{format}',[ExportController::class,'exportBomBladeXls']);
 Route::get('/sale/blade/{saleId}/export/{format}',[ExportController::class,'exportSaleBladeXls']);
+
+// cogs routes 
+Route::get('/cogs/boms',[COGSController::class,'getAll']);
+
+//bom sales routes 
+Route::get('/bomsales', [App\Http\Controllers\BomSaleController::class, 'index'])->name('bomsales.list');
+Route::post('/bomsales', [App\Http\Controllers\BomSaleController::class, 'store'])->name('bomsales.store');
+Route::get('/bomsales/edit/{id}', [App\Http\Controllers\BomSaleController::class, 'edit'])->name('bomsales.edit');
+Route::post('/bomsales/{id}', [App\Http\Controllers\BomSaleController::class, 'update'])->name('bomsales.update');
+Route::delete('/bomsales/{id}', [App\Http\Controllers\BomSaleController::class, 'delete'])->name('bomsales.delete');
