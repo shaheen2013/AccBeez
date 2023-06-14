@@ -94,12 +94,10 @@ export default {
         exportBomXLS(){
             let format = 'xls';
             window.location.href = `/api/bom/blade/`+this.bom.id+`/export/`+format;
-
         },
         exportBomCSV(){
             let format = 'csv';
             window.location.href = `/api/bom/blade/`+this.bom.id+`/export/`+format;
-
         },
     },
 };

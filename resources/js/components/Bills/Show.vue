@@ -96,12 +96,10 @@ export default {
         exportBillXLS(){
             let format = 'xls';
             window.location.href = `/api/bill/blade/`+this.bill.id+`/export/`+format;
-
         },
         exportBillCSV(){
             let format = 'csv';
             window.location.href = `/api/bill/blade/`+this.bill.id+`/export/`+format;
-
         },
         formatCurrency(value) {
             return parseFloat(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });

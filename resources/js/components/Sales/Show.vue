@@ -98,12 +98,10 @@ export default {
         exportSaleXLS(){
             let format = 'xls';
             window.location.href = `/api/sale/blade/`+this.sale.id+`/export/`+format;
-
         },
         exportSaleCSV(){
             let format = 'csv';
             window.location.href = `/api/sale/blade/`+this.sale.id+`/export/`+format;
-
         },
     },
 };

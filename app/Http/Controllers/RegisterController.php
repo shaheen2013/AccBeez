@@ -131,6 +131,7 @@ class RegisterController extends Controller
                                         DB::raw('SUM(total) as bill_item_total'),
                                         DB::raw('SUM(total) / SUM(quantity) as bill_item_rate'),
                                         DB::raw('0 as bill_item_avg_rate'),
+                                        DB::raw("GROUP_CONCAT(bills.invoice_number SEPARATOR ',') as `invoices`")
                                 )
                                 ->where('sku', $sku)
                                 ->distinct('date')
@@ -185,6 +186,7 @@ class RegisterController extends Controller
             "bill_item_rate" => null,
             "bill_item_total" => null,
             "bill_item_avg_rate" => null,
+            "invoices" => null,
         ];
         $singleSaleItem = [
             "sale_item_quantity" => null,

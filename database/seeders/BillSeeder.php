@@ -29,7 +29,7 @@ class BillSeeder extends Seeder
                 'description' => 'Bill description ' . $i,
                 'date' => $date,
                 'invoice_total' => 0,
-                'invoice_number' => 'INV# ' . rand(1000, 9999),
+                'invoice_number' => mt_rand(10000, 99999).'-'.$i,
                 'client_id' => rand(1, 3),
                 'created_at' => $date . ' ' . $startDate->copy()->addDays(rand(0, 150))->format('H:i:s'),
                 'updated_at' => $date . ' ' . $startDate->copy()->addDays(rand(0, 150))->format('H:i:s'),

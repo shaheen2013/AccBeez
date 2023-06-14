@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use Carbon\Carbon;
 use App\Models\Sale;
 use App\Models\SaleItem;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Requests\SaleRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Support\Arr;
 use Illuminate\Database\Query\Builder;
 
 class SaleController extends Controller
@@ -40,7 +41,10 @@ class SaleController extends Controller
             $saleData = $request->only('description', 'date', 'invoice_total');
             DB::beginTransaction();
             $sale = Sale::create($saleData);
-            $sale->invoice_number = $sale->id;
+            $now = Carbon::now();
+            $unique_code = $now->format('u');
+            // $unique_code = mt_rand(10000,99999);
+            $sale->invoice_number = $unique_code.'-'.$sale->id;
             $sale->save();
             // dd('store', $request->all(), $saleData);
             foreach($request->items as $item){
