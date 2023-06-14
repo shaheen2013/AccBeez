@@ -77,8 +77,11 @@ Route::post('/registers/undo/', [App\Http\Controllers\RegisterController::class,
 
 
 // export routes
-Route::get('/bill/{billId}/export/{fileName}',[ExportController::class,'exportBillXls']);
-Route::get('/bill/blade/{billId}/export/{fileName}',[ExportController::class,'exportBillBladeXls']);
+// Route::get('/bill/{billId}/export/{fileName}',[ExportController::class,'exportBillXls']);
+
+Route::get('/bill/blade/{billId}/export/{format}',[ExportController::class,'exportBillBladeXls']);
+Route::get('/bom/blade/{bomId}/export/{format}',[ExportController::class,'exportBomBladeXls']);
+Route::get('/sale/blade/{saleId}/export/{format}',[ExportController::class,'exportSaleBladeXls']);
 
 // cogs routes 
 Route::get('/cogs/boms',[COGSController::class,'getAll']);

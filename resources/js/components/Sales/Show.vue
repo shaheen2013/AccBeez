@@ -47,6 +47,8 @@
                         <el-button type="info" class="me-2">Back</el-button>
                     </router-link>
                     <el-button type="primary" @click="downloadPdf" class="me-2">Download PDF</el-button>
+                    <el-button type="primary" @click="exportSaleXLS" class="me-2">Export Excel</el-button>
+                    <el-button type="primary" @click="exportSaleCSV" class="me-2">Export CSV</el-button>
                 </el-col>
             </el-row>
         </el-card>
@@ -92,6 +94,16 @@ export default {
         },
         formatCurrency(value) {
             return parseFloat(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        },
+        exportSaleXLS(){
+            let format = 'xls';
+            window.location.href = `/api/sale/blade/`+this.sale.id+`/export/`+format;
+
+        },
+        exportSaleCSV(){
+            let format = 'csv';
+            window.location.href = `/api/sale/blade/`+this.sale.id+`/export/`+format;
+
         },
     },
 };

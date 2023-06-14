@@ -6,14 +6,15 @@
             <!-- Raw Material Register -->
             <div style="float:right">
                 <el-button type="info" class="me-1" @click="closeDate">Close Register</el-button>
-                <el-button v-if="bill_item.closing_dates.length>0" type="info" class="me-1" @click="undoDate">
+                <el-button v-if="isMounted && bill_item.closing_dates && bill_item.closing_dates.length>0"
+                        type="info" class="me-1" @click="undoDate">
                     Undo Register
                 </el-button>
             </div>
         </h4>
 
         <!-- <el-card class="box-card" v-if="isMounted"> -->
-        <div class="el-table-wrapper">
+        <div class="el-table-wrapper" v-if="isMounted">
             <h3 class="text-center mb-3 font-weight-bold">{{bill_item.name}} ({{bill_item.sku}})</h3>
             <div class="table-body" style="max-height: 75vh;">
                 <el-table :data="register_rows" style="width: 100%">
@@ -113,7 +114,7 @@ export default {
                     this.register.items = res.data.mergedItems;
                     this.register_rows = res.data.mergedItems;
                     this.bill_item = res.data.bill_item;
-                    console.log('res:', this.register_rows, res, this.bill_item);
+                    console.log('res:', res.data, this.bill_item);
                 });
                 this.isMounted = true;
     },

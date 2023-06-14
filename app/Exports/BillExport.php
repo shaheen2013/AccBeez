@@ -24,7 +24,6 @@ class BillExport implements FromCollection,WithHeadings,WithHeadingRow
             $bill_items = BillItem::where('bill_id',$this->bill_id)->get();
         }
         $data = $bill_items->map(function($bill_item,$key){
-
             return [
                 'sku'=>$bill_item->sku,
                 'quantity'=>$bill_item->quantity,

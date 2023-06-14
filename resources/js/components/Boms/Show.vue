@@ -45,6 +45,8 @@
                         <el-button type="info" class="me-2">Back</el-button>
                     </router-link>
                     <el-button type="primary" @click="downloadPdf" class="me-2">Download PDF</el-button>
+                    <el-button type="primary" @click="exportBomXLS" class="me-2">Export Excel</el-button>
+                    <el-button type="primary" @click="exportBomCSV" class="me-2">Export CSV</el-button>
                 </el-col>
             </el-row>
         </el-card>
@@ -88,6 +90,16 @@ export default {
         },
         formatCurrency(value) {
             return parseFloat(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        },
+        exportBomXLS(){
+            let format = 'xls';
+            window.location.href = `/api/bom/blade/`+this.bom.id+`/export/`+format;
+
+        },
+        exportBomCSV(){
+            let format = 'csv';
+            window.location.href = `/api/bom/blade/`+this.bom.id+`/export/`+format;
+
         },
     },
 };
