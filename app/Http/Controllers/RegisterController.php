@@ -36,7 +36,7 @@ class RegisterController extends Controller
 
         $registers = DB::table('bill_items')
                         ->leftJoin('bills', 'bill_items.bill_id', '=', 'bills.id')
-                        ->select('sku', 'name', 'bill_items.id as bill_item_id', DB::raw('SUM(quantity) as total_items'),
+                        ->select('name', 'sku', 'bill_items.id as bill_item_id', DB::raw('SUM(quantity) as total_items'),
                                             DB::raw('SUM(total) as total_cost'),
                                             DB::raw('round(SUM(total) / SUM(quantity),2) as avg_cost'),
                                             DB::raw('YEAR(bills.date) as year'),
@@ -56,8 +56,8 @@ class RegisterController extends Controller
         $grouped = $registers->mapToGroups(function ($item) {
             return [$item->sku => [
                 "bill_item_id" => $item->bill_item_id,
-                "sku" => $item->sku,
                 "name" => $item->name,
+                "sku" => $item->sku,
                 "avg_cost" => $item->avg_cost,
                 "month" => $item->month,
                 "year" => $item->year,
@@ -66,8 +66,8 @@ class RegisterController extends Controller
 
         $simpleList = $grouped->map(function ($items) use ($distinctMonths) {
             $groupedItemsByMonth = $items->keyBy('month');
-            $outputItem['sku'] = $items[0]['sku'];
             $outputItem['name'] = $items[0]['name'];
+            $outputItem['sku'] = $items[0]['sku'];
             $outputItem['bill_item_id'] = $items[0]['bill_item_id'];
 
             foreach ($distinctMonths as $month) {
@@ -84,7 +84,7 @@ class RegisterController extends Controller
 
         $data = [
             'distinct_months' => $distinctMonths,
-            'grouped' => $grouped,
+            // 'grouped' => $grouped,
             'total' => count($simpleList),
             'register_list' => array_values(array_splice($simpleList, $startAt, $perPage)),
             // 'register_list' => array_values($simpleList),

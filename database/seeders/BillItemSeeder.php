@@ -49,11 +49,11 @@ class BillItemSeeder extends Seeder
         ];
 
         foreach ($billIds as $billId) {
-            $numItems = rand(2, 5); // Randomly determine the number of items per bill
+            $numItems = rand(3, 7); // Randomly determine the number of items per bill
 
             $bill_total = Bill::find($billId)->invoice_total;
             // dd($bill_total);
-            
+
             for ($i = 1; $i <= $numItems; $i++) {
                 $item = $groceryItems[rand(0,29)];
                 $rate = rand(10, 1000);
