@@ -85,6 +85,7 @@ Route::get('/sale/blade/{saleId}/export/{format}',[ExportController::class,'expo
 
 // cogs routes 
 Route::get('/cogs/boms',[COGSController::class,'getAll']);
+Route::get('/cogs/boms/{id}',[COGSController::class,'getById']);
 
 //bom sales routes 
 Route::get('/bomsales', [App\Http\Controllers\BomSaleController::class, 'index'])->name('bomsales.list');

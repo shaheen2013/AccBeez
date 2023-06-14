@@ -19,6 +19,7 @@ return new class extends Migration
             $table->double('invoice_total')->default(0);
             $table->string('invoice_number')->nullable();
             $table->unsignedBigInteger('client_id')->nullable();
+            $table->unsignedBigInteger('bom_sale_id')->nullable();
             $table->timestamps();
         });
     }
