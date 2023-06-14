@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\COGSController;
 use App\Http\Controllers\ExportController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -76,6 +77,15 @@ Route::post('/registers/undo/', [App\Http\Controllers\RegisterController::class,
 
 
 // export routes
-
 Route::get('/bill/{billId}/export/{fileName}',[ExportController::class,'exportBillXls']);
 Route::get('/bill/blade/{billId}/export/{fileName}',[ExportController::class,'exportBillBladeXls']);
+
+// cogs routes 
+Route::get('/cogs/boms',[COGSController::class,'getAll']);
+
+//bom sales routes 
+Route::get('/bomsales', [App\Http\Controllers\BomSaleController::class, 'index'])->name('bomsales.list');
+Route::post('/bomsales', [App\Http\Controllers\BomSaleController::class, 'store'])->name('bomsales.store');
+Route::get('/bomsales/edit/{id}', [App\Http\Controllers\BomSaleController::class, 'edit'])->name('bomsales.edit');
+Route::post('/bomsales/{id}', [App\Http\Controllers\BomSaleController::class, 'update'])->name('bomsales.update');
+Route::delete('/bomsales/{id}', [App\Http\Controllers\BomSaleController::class, 'delete'])->name('bomsales.delete');
