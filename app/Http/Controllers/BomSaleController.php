@@ -32,19 +32,21 @@ class BomSaleController extends Controller
         return response()->json($bomSalesQuery->paginate($limit));
     }
 
-    public function store(BomSaleRequest $request)
+    public function store(Request $request)
     {
         try {
+            // dd($request->all());
             $bomSaleData = $request->only('description', 'date', 'invoice_total');
             DB::beginTransaction();
             $bomSale = BomSale::create($bomSaleData);
-            $bomSale->invoice_number = $bomSale->id;
+            $bomSale->invoice_number = mt_rand(10000, 99999).'-'.$bomSale->id;
             $bomSale->save();
             // dd('store', $request->all(), $bomSaleData);
             foreach($request->items as $item){
                 $item['bom_sale_id'] = $bomSale->id;
                 BomSaleItem::create($item);
                 $this->bomSales($item,$item['quantity'],$bomSale);
+                // $this->salesEntry($item);
             }
             DB::commit();
             return $bomSale;
@@ -54,8 +56,10 @@ class BomSaleController extends Controller
         }
     }
 
-    private function bomSales($item,$quantity=0,$bomSale){
+    private function bomSales($item, $quantity=0, $bomSale)
+    {
         $bom = Bom::with('bomItems')->where('name',$item['name'])->first();
+        // dump('bomSales', $item, $bom);
 
         foreach($bom->bomItems as $bomItem){
             $data = [
@@ -64,10 +68,9 @@ class BomSaleController extends Controller
                 'description'=>$bomSale->description,
                 'items'=>[
                     [
-                        'sku'=>$bomItem->sku,
-                        'name'=>$bomItem->sku,
+                        'sku'=>$bomItem->name,
+                        'name'=>$bomItem->name,
                         'rate'=>$bomItem->rate,
-
                     ],
                 ],
             ];
@@ -81,28 +84,20 @@ class BomSaleController extends Controller
 
             $request = new Request($data);
             $this->salesEntry($request);
-            
         }
     }
 
-    private function salesEntry($request){
-        try {
-            $saleData = $request->only('description', 'date', 'invoice_total','bom_sale_id');
-            DB::beginTransaction();
-            $sale = Sale::create($saleData);
-            $sale->invoice_number = $sale->id;
-            $sale->save();
-            // dd('store', $request->all(), $saleData);
-            foreach($request->items as $item){
-                $item['sale_id'] = $sale->id;
-                SaleItem::create($item);
-            }
-            DB::commit();
-            // return $sale;
-        } catch (Exception $ex) {
-            DB::rollBack();
-            return response()->json( new \Illuminate\Support\MessageBag(['catch_exception'=>$ex->getMessage()]), 403);
-        }   
+    private function salesEntry($request)
+    {
+        $saleData = $request->only('description', 'date', 'invoice_total', 'bom_sale_id');
+        $sale = Sale::create($saleData);
+        $sale->invoice_number = $sale->id;
+        $sale->save();
+        // dd('store', $request->all(), $saleData);
+        foreach($request->items as $item){
+            $item['sale_id'] = $sale->id;
+            SaleItem::create($item);
+        }
     }
 
 
