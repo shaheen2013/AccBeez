@@ -20,15 +20,19 @@ class RegisterController extends Controller
     public function index(Request $request)
     {
         $searchParams = $request->all();
-        $limit = Arr::get($searchParams, 'limit', 5);
+        $limit = Arr::get($searchParams, 'limit', 10);
         $keyword = Arr::get($searchParams, 'keyword', '');
+        $year = Arr::get($searchParams, 'year', '');
         $perPage = $request->input('limit') ?? 10;
         $page = $request->input('page') ?? 1;
         $startAt = ($perPage * ($page-1));
-        // dd($perPage, $page, $startAt);
+        // dd($searchParams, $perPage, $page, $startAt, $year);
 
         $distinctMonths = DB::table('bills')
-                            ->select(DB::raw("DATE_FORMAT(bills.date, '%m-%Y') as month"))
+                            ->select(DB::raw("DATE_FORMAT(bills.date, '%Y-%m') as month"))
+                            ->when(!empty($year), function (Builder $query) use ($year) {
+                                return $query->whereRaw('YEAR(bills.date) = ?', [$year]);
+                            })
                             ->orderBy('month')
                             ->pluck('month', 'month')
                             ->unique()
@@ -41,10 +45,13 @@ class RegisterController extends Controller
                                             DB::raw('round(SUM(total) / SUM(quantity),2) as avg_cost'),
                                             DB::raw('YEAR(bills.date) as year'),
                                             // DB::raw('MONTH(bills.date) as month')
-                                            DB::raw("DATE_FORMAT(bills.date, '%m-%Y') as month")
+                                            DB::raw("DATE_FORMAT(bills.date, '%Y-%m') as month")
                         )
                         ->when(!empty($keyword), function (Builder $query) use ($keyword) {
                             return $query->where('sku', 'LIKE', '%' . $keyword . '%');
+                        })
+                        ->when(!empty($year), function (Builder $query) use ($year) {
+                            return $query->whereRaw('YEAR(bills.date) = ?', [$year]);
                         })
                         ->groupBy(['sku', 'month', 'year'])
                         ->orderBy('sku')
@@ -96,9 +103,9 @@ class RegisterController extends Controller
 
     public function close(Request $request)
     {
-        // $request['date'] = Carbon::now()->format('Y-m-d');
         $input = $request->all();
-        $input['date'] = '2023-02-10';
+        $input['date'] = Carbon::now()->format('Y-m-d');
+        // $input['date'] = '2023-02-04';
         $input['status'] = 0;
         $closingDate = ClosingDate::updateOrCreate(
             ['date' => $input['date'], 'sku' => $input['sku']],
