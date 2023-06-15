@@ -197,10 +197,17 @@ class RegisterController extends Controller
         $endDate = max($uniqueDates);
         $currentDate = new DateTime($startDate);
         $endDate = new DateTime($endDate);
-        while ($currentDate < $endDate) {
+        // dump($currentDate, $endDate);
+        if($currentDate == $endDate){
             $yearMonth = $currentDate->format('Y-m');
             $yearMonths[$yearMonth] = $yearMonth.'-01';
             $currentDate->modify('+1 month');
+        } else {
+            while ($currentDate < $endDate) {
+                $yearMonth = $currentDate->format('Y-m');
+                $yearMonths[$yearMonth] = $yearMonth.'-01';
+                $currentDate->modify('+1 month');
+            }
         }
         $yearMonths = array_values($yearMonths);
         $uniqueDates = array_unique(array_merge($uniqueDates, $yearMonths));
