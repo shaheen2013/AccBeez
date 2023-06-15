@@ -134,10 +134,7 @@ export default {
                     });
         },
         handleYearFilter(){
-            // console.log('year: ', new Date(this.year).getFullYear());
             this.query.year = new Date(this.year).getFullYear();
-            console.log('selectedYear:', this.selectedYear);
-            console.log('year val:', this.year);
             this.getList();
         },
         handleFilter() {

@@ -124,8 +124,10 @@ class RegisterController extends Controller
 
 
 
-    public function view($id)
+    public function view(Request $request, $id)
     {
+        // dd($request->all(), $id);
+        $year = $request->year;
         $bill_item = BillItem::with('closingDates')->find($id);
         $closingDates = $bill_item->closingDates;
         $sku = $bill_item->sku;
@@ -141,6 +143,9 @@ class RegisterController extends Controller
                                         DB::raw("GROUP_CONCAT(bills.invoice_number SEPARATOR ',') as `invoices`")
                                 )
                                 ->where('sku', $sku)
+                                ->when(!empty($year), function ($query) use ($year) {
+                                    return $query->whereRaw('YEAR(bills.date) = ?', [$year]);
+                                })
                                 ->distinct('date')
                                 ->get()
                                 ->keyBy('date')
@@ -154,6 +159,9 @@ class RegisterController extends Controller
                                         DB::raw('0 as sale_item_avg_rate'),
                                 )
                                 ->where('sku', $sku)
+                                ->when(!empty($year), function ($query) use ($year) {
+                                    return $query->whereRaw('YEAR(sales.date) = ?', [$year]);
+                                })
                                 ->distinct('date')
                                 ->get()
                                 ->keyBy('date')
@@ -162,6 +170,9 @@ class RegisterController extends Controller
                                                 DB::raw('0 as closing_date_avg_rate')
                                         )
                                         ->where('sku', $sku)
+                                        ->when(!empty($year), function ($query) use ($year) {
+                                            return $query->whereRaw('YEAR(date) = ?', [$year]);
+                                        })
                                         ->distinct('date')
                                         ->get()
                                         ->keyBy('date')
@@ -173,6 +184,14 @@ class RegisterController extends Controller
         $uniqueDates = array_keys($mergedArray);
         sort($uniqueDates);
         // dump($uniqueDates, $mergedArray);
+        if(!$uniqueDates){
+            $data = [
+                'mergedItems' => $mergedArray,
+                'bill_item' => $bill_item,
+                'uniqueDates' => $uniqueDates
+            ];
+            return $data;
+        }
 
         $startDate = min($uniqueDates);
         $endDate = max($uniqueDates);
