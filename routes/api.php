@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\COGSController;
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\RolePermissionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -93,3 +94,14 @@ Route::post('/bomsales', [App\Http\Controllers\BomSaleController::class, 'store'
 Route::get('/bomsales/edit/{id}', [App\Http\Controllers\BomSaleController::class, 'edit'])->name('bomsales.edit');
 Route::post('/bomsales/{id}', [App\Http\Controllers\BomSaleController::class, 'update'])->name('bomsales.update');
 Route::delete('/bomsales/{id}', [App\Http\Controllers\BomSaleController::class, 'delete'])->name('bomsales.delete');
+
+// role permssion routes 
+Route::get('/roles/all',[RolePermissionController::class,'roleIndex']);
+Route::post('/roles/create',[RolePermissionController::class,'roleStore']);
+Route::get('/roles/edit/{id}',[RolePermissionController::class,'roleEdit']);
+Route::put('/roles/update/{id}',[RolePermissionController::class,'roleUpdate']);
+Route::delete('/roles/delete/{id}',[RolePermissionController::class,'roleDestroy']);
+
+Route::get('/permissions/all',[RolePermissionController::class,'permissionIndex']);
+Route::post('/permissions/create',[RolePermissionController::class,'permissionStore']);
+Route::delete('/permissions/delete/{id}',[RolePermissionController::class,'permissionDestroy']);
