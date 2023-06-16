@@ -20,6 +20,9 @@ import BomSaleList from './components/BomSales/List.vue';
 import BomSaleCreate from './components/BomSales/Create.vue';
 import BomSaleShow from './components/BomSales/Show.vue';
 
+import CogsList from './components/Cogs/List.vue';
+
+
 const routes = [
     {
         path: '/',
@@ -143,6 +146,12 @@ const routes = [
         name: 'BomSaleShow',
         component: BomSaleShow
     },
+    {
+        path: '/cogs',
+        name: 'CogsList',
+        component: CogsList
+    },
+
     {
         path: '/:pathMatch(.*)*',
         component: NotFoundPage

@@ -65,6 +65,16 @@
                                 Bom Sales
                             </el-menu-item>
                         </router-link>
+                        <router-link to="/cogs" style="text-decoration: none;"
+                                     :style="[$route.path === '/cogs' ? {color: 'royalblue'} : {color: 'black'}]">
+                            <el-menu-item index="7">
+                                <!-- <el-icon><icon-menu /></el-icon> -->
+                                <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px">
+                                    <CreditCard />
+                                </el-icon>
+                                Cogs
+                            </el-menu-item>
+                        </router-link>
                         <!-- <router-link to="/exl-table" style="text-decoration: none;"
                                      :style="[$route.path === '/exl-table' ? {color: 'royalblue'} : {color: 'black'}]">
                             <el-menu-item index="5">
