@@ -85,6 +85,10 @@ Route::get('/bill/blade/{billId}/export/{format}',[ExportController::class,'expo
 Route::get('/bom/blade/{bomId}/export/{format}',[ExportController::class,'exportBomBladeXls']);
 Route::get('/sale/blade/{saleId}/export/{format}',[ExportController::class,'exportSaleBladeXls']);
 
+Route::get('/bills/import',[ExportController::class,'importBillXls']);
+
+
+
 // cogs routes
 Route::get('/cogs/boms/{id}',[COGSController::class,'getById']);
 Route::get('/cogs/boms',[COGSController::class,'getAll']);
