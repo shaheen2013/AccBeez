@@ -24,7 +24,7 @@ class UserRequest extends FormRequest
         $rules = [
             'name' => 'required',
             'email' => 'required|email',
-            'role' => 'string | nullable'
+            'role' => 'string|nullable'
         ];
         return $rules;
     }

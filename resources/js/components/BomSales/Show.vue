@@ -17,7 +17,7 @@
                      <table>
                         <thead>
                             <tr>
-                                <th>SKU</th>
+                                <th>Name</th>
                                 <th>Quantity</th>
                                 <th>Price</th>
                                 <th>Total</th>
@@ -25,7 +25,7 @@
                         </thead>
                         <tbody>
                             <tr v-for="item in bomSale.items" :key="item.id">
-                                <td>{{ item.sku }}</td>
+                                <td>{{ item.name }}</td>
                                 <td>{{ item.quantity }}</td>
                                 <td>{{ formatCurrency(item.rate) }}</td>
                                 <td style="text-align: right;">{{ formatCurrency(item.total) }}</td>
@@ -46,9 +46,9 @@
                     <router-link :to="'/bomSales'">
                         <el-button type="info" class="me-2">Back</el-button>
                     </router-link>
-                    <el-button type="primary" @click="downloadPdf" class="me-2">Download PDF</el-button>
+                    <!-- <el-button type="primary" @click="downloadPdf" class="me-2">Download PDF</el-button>
                     <el-button type="primary" @click="exportBomSaleXLS" class="me-2">Export Excel</el-button>
-                    <el-button type="primary" @click="exportBomSaleCSV" class="me-2">Export CSV</el-button>
+                    <el-button type="primary" @click="exportBomSaleCSV" class="me-2">Export CSV</el-button> -->
                 </el-col>
             </el-row>
         </el-card>
@@ -86,7 +86,7 @@ export default {
                     this.bomSale.description = res.data.description;
                     this.bomSale.invoice_total = res.data.invoice_total;
                     this.bomSale.date = res.data.date;
-                    this.bomSale.items = res.data.bomSale_items;
+                    this.bomSale.items = res.data.bom_sale_items;
                 });
     },
     methods: {
