@@ -98,7 +98,7 @@ export default {
                 page: 1,
                 limit: 10,
                 keyword: '',
-                year: '',
+                year: new Date().getFullYear(),
             },
             total: null,
             totalPages: null,
@@ -122,7 +122,7 @@ export default {
                 page: this.query.page,
                 year: this.query.year,
             }
-            console.log('params', params);
+            console.log('params', params, this.query.year);
             await axios.get(`/api/registers`, {params}).
                     then((res) => {
                         console.log('response in register list:', res);

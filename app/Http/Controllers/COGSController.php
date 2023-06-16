@@ -22,8 +22,7 @@ class COGSController extends Controller
                     $sum += $saleItem['total'];
                 }
 
-                $bomSaleItem->cogs = $sum;
-                $cogs = $bomSaleItem->cogs;
+                $cogs = $sum;
                 $total = $bomSaleItem->total;
                 $margin = (1 - ($cogs/$total)) * 100;
                 $bomSaleItem->margin = (float)number_format($margin,2);

@@ -121,7 +121,7 @@ export default {
                 }]
             },
             query: {
-                year: '',
+                year: new Date().getFullYear(),
             },
             register_rows: [],
             bill_item: null,
