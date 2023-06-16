@@ -12,25 +12,46 @@ class COGSController extends Controller
         // $boms = Bom::with('bomItems')->get();
         // return response()->json($boms);
         
-        $bomSales = BomSale::with('bomSaleItems')->withSum('salesItems','total')->get();
+        $bomSales = BomSale::with('bomSaleItems.saleItems')->get();
+        $data = [];
 
         foreach($bomSales as $bomSale){
-            $bomSale->cogs = $bomSale->sales_items_sum_total;
-            $cogs = $bomSale->cogs;
-            $total = $bomSale->invoice_total;
-            $margin = (1 - ($cogs/$total)) * 100;
-            $bomSale->margin = (float)number_format($margin,2);
+            foreach($bomSale->bomSaleItems as $bomSaleItem){
+                $sum = 0;
+                foreach ($bomSaleItem->saleItems as $saleItem) {
+                    $sum += $saleItem['total'];
+                }
+
+                $bomSaleItem->cogs = $sum;
+                $cogs = $bomSaleItem->cogs;
+                $total = $bomSaleItem->total;
+                $margin = (1 - ($cogs/$total)) * 100;
+                $bomSaleItem->margin = (float)number_format($margin,2);
+                $data[] = [
+                    'id'=>$bomSale->id,
+                    'date'=>$bomSale->date,
+                    'description'=>$bomSale->description,
+                    'invoice_number'=>$bomSale->invoice_number,
+                    'name'=> $bomSaleItem->name,
+                    'rate'=> $bomSaleItem->rate,
+                    'unit'=> $bomSaleItem->unit,
+                    'quantity'=> $bomSaleItem->quantity,
+                    'total'=> $bomSaleItem->total,
+                    'cogs'=>$cogs,
+                    'margin'=>$bomSaleItem->margin,                  
+                ];
+            }
             // $bomSale->margin = $margin;
         }
 
-        return response()->json($bomSales);
+        return response()->json($data);
     }
 
     public function getById($id){
         // $boms = Bom::with('bomItems')->get();
         // return response()->json($boms);
         
-        $bomSale = BomSale::with('bomSaleItems')->withSum('salesItems','total')->find($id);
+        $bomSale = BomSale::with('bomSaleItems.saleItems')->find($id);
 
         $bomSale->cogs = $bomSale->sales_items_sum_total;
         $cogs = $bomSale->cogs;
