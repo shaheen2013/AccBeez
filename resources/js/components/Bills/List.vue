@@ -23,20 +23,18 @@
                 </el-icon>
                 <span style="vertical-align: middle"> Search </span>
             </el-button>
+            <el-button type="primary" @click="exportToExcel">
+                <el-icon style="vertical-align: middle">
+                    <Download />
+                </el-icon>
+                <span style="vertical-align: middle"> Export to Excel </span>
+            </el-button>
             <el-button type="danger" @click="handleBulkDelete">
                 <el-icon style="vertical-align: middle">
                     <Delete />
                 </el-icon>
                 <span style="vertical-align: middle">Delete Selecteds</span>
             </el-button>
-            <!-- <el-button
-                :loading="downloading"
-                class="filter-item"
-                type="primary"
-                @click="handleDownload"
-            >
-                <el-icon><Download /></el-icon>Export
-            </el-button> -->
         </div>
 
 
@@ -94,7 +92,8 @@
 
 
 <script >
-import BillItem from "./Item.vue";
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 import { ElMessage, ElMessageBox } from 'element-plus'
 
@@ -117,9 +116,6 @@ export default {
             multipleSelection: [],
             bulkDeleteIds: [],
         };
-    },
-    components:{
-        BillItem
     },
     async created() {
         try {
@@ -224,10 +220,6 @@ export default {
                     });
             this.loading = false;
         },
-        handleDownload(){
-
-        },
-
         handleSizeChange(val) {
             this.pageSize = val;
             this.getList();
@@ -239,6 +231,48 @@ export default {
         handleSelectionChange(val) {
             this.multipleSelection = val;
         },
+
+        // Export Excel file
+        exportToExcel() {
+            console.log('filteredRegisters', this.bills);
+            const data = this.bills.map(bill => {
+                const { id, invoice_number, client_id, created_at, updated_at, ...filteredData } = bill;
+                return filteredData;
+            });
+
+            const worksheet = XLSX.utils.json_to_sheet(data, {
+                header: Object.keys(data[0]),
+                cellStyles: true
+            });
+
+            // Modify header names and styles
+            const headerRange = XLSX.utils.decode_range(worksheet['!ref']);
+            for (let col = headerRange.s.c; col <= headerRange.e.c; col++) {
+                const headerCell = XLSX.utils.encode_cell({ r: headerRange.s.r, c: col });
+                let headerCellValue = worksheet[headerCell].v;
+                if(headerCellValue.includes('month')){
+                    headerCellValue = this.original_months[headerCellValue.split('-')[1] - 1]+'-'+headerCellValue.split('-')[2]
+                }
+                console.log('headerCellValue', headerCellValue)
+                headerCellValue = this.capitalizeFirstLetter(headerCellValue);
+                const modifiedHeader = headerCellValue;
+                worksheet[headerCell].v = modifiedHeader;
+                worksheet[headerCell].s = {
+                    font: { bold: true }
+                };
+            }
+
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+            const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+            const dataBlob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            saveAs(dataBlob, 'exported_data.xlsx');
+        },
+        capitalizeFirstLetter(str) {
+            const words = str.split('_');
+            const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
+            return capitalizedWords.join(' ');
+        }
     },
     computed: {
         formattedInvoiceTotal() {

@@ -16,6 +16,10 @@ import SaleList from './components/Sales/List.vue';
 import SaleShow from './components/Sales/Show.vue';
 import ExlTable from "@/components/ExlTable/ExlTable.vue";
 
+import BomSaleList from './components/BomSales/List.vue';
+import BomSaleCreate from './components/BomSales/Create.vue';
+import BomSaleShow from './components/BomSales/Show.vue';
+
 const routes = [
     {
         path: '/',
@@ -117,6 +121,27 @@ const routes = [
         path: '/sales/view/:id',
         name: 'SaleShow',
         component: SaleShow
+    },
+
+    {
+        path: '/bomSales',
+        name: 'BomSaleList',
+        component: BomSaleList
+    },
+    {
+        path: '/bomSales/create',
+        name: 'BomSaleCreate',
+        component: BomSaleCreate
+    },
+    {
+        path: '/bomSales/edit/:id',
+        name: 'BomSaleEdit',
+        component: BomSaleCreate
+    },
+    {
+        path: '/bomSales/view/:id',
+        name: 'BomSaleShow',
+        component: BomSaleShow
     },
     {
         path: '/:pathMatch(.*)*',

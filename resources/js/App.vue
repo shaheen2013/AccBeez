@@ -55,14 +55,24 @@
                                 Sales
                             </el-menu-item>
                         </router-link>
-                        <router-link to="/exl-table" style="text-decoration: none;"
+                        <router-link to="/bomSales" style="text-decoration: none;"
+                                     :style="[$route.path === '/bomSales' ? {color: 'royalblue'} : {color: 'black'}]">
+                            <el-menu-item index="6">
+                                <!-- <el-icon><icon-menu /></el-icon> -->
+                                <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px">
+                                    <CreditCard />
+                                </el-icon>
+                                Bom Sales
+                            </el-menu-item>
+                        </router-link>
+                        <!-- <router-link to="/exl-table" style="text-decoration: none;"
                                      :style="[$route.path === '/exl-table' ? {color: 'royalblue'} : {color: 'black'}]">
                             <el-menu-item index="5">
 
 
                                 Xl Table
                             </el-menu-item>
-                        </router-link>
+                        </router-link> -->
                     </el-menu>
 
 

@@ -32,7 +32,7 @@ Route::middleware('role:Super-Admin')->group(function(){
 });
 
 Route::middleware('role:Admin')->group(function(){
-    
+
 });
 
 
@@ -47,6 +47,7 @@ Route::post('/bills/{id}', [App\Http\Controllers\BillController::class, 'update'
 Route::delete('/bills/{id}', [App\Http\Controllers\BillController::class, 'delete'])->name('bills.delete');
 
 
+Route::get('/boms/get-all-boms', [App\Http\Controllers\BomController::class, 'getAllBoms'])->name('boms.getAllBoms');
 Route::get('/boms', [App\Http\Controllers\BomController::class, 'index'])->name('boms.list');
 Route::post('/boms', [App\Http\Controllers\BomController::class, 'store'])->name('boms.store');
 Route::get('/boms/edit/{id}', [App\Http\Controllers\BomController::class, 'edit'])->name('boms.edit');
@@ -84,16 +85,16 @@ Route::get('/bill/blade/{billId}/export/{format}',[ExportController::class,'expo
 Route::get('/bom/blade/{bomId}/export/{format}',[ExportController::class,'exportBomBladeXls']);
 Route::get('/sale/blade/{saleId}/export/{format}',[ExportController::class,'exportSaleBladeXls']);
 
-// cogs routes 
+// cogs routes
 Route::get('/cogs/boms',[COGSController::class,'getAll']);
 Route::get('/cogs/boms/{id}',[COGSController::class,'getById']);
 
-//bom sales routes 
-Route::get('/bomsales', [App\Http\Controllers\BomSaleController::class, 'index'])->name('bomsales.list');
-Route::post('/bomsales', [App\Http\Controllers\BomSaleController::class, 'store'])->name('bomsales.store');
-Route::get('/bomsales/edit/{id}', [App\Http\Controllers\BomSaleController::class, 'edit'])->name('bomsales.edit');
-Route::post('/bomsales/{id}', [App\Http\Controllers\BomSaleController::class, 'update'])->name('bomsales.update');
-Route::delete('/bomsales/{id}', [App\Http\Controllers\BomSaleController::class, 'delete'])->name('bomsales.delete');
+//bom sales routes
+Route::get('/bomSales', [App\Http\Controllers\BomSaleController::class, 'index'])->name('bomSales.list');
+Route::post('/bomSales', [App\Http\Controllers\BomSaleController::class, 'store'])->name('bomSales.store');
+Route::get('/bomSales/edit/{id}', [App\Http\Controllers\BomSaleController::class, 'edit'])->name('bomSales.edit');
+Route::post('/bomSales/{id}', [App\Http\Controllers\BomSaleController::class, 'update'])->name('bomSales.update');
+Route::delete('/bomSales/{id}', [App\Http\Controllers\BomSaleController::class, 'delete'])->name('bomSales.delete');
 
 // role permssion management routes 
 Route::get('/roles/all',[RolePermissionController::class,'roleIndex']);
@@ -106,5 +107,7 @@ Route::get('/permissions/all',[RolePermissionController::class,'permissionIndex'
 Route::post('/permissions/create',[RolePermissionController::class,'permissionStore']);
 Route::delete('/permissions/delete/{id}',[RolePermissionController::class,'permissionDestroy']);
 
+
 // user role management routes 
 Route::put('/users/roles/update/{id}', [App\Http\Controllers\UserController::class, 'assignUserRole']);
+

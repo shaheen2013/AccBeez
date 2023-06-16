@@ -21,6 +21,18 @@
                 </el-icon>
                 <span style="vertical-align: middle"> Export to Excel </span>
             </el-button>
+
+            <div style="float: right;">
+                <span style="vertical-align: middle;  font-size:16px;">Year</span>
+                <el-date-picker
+                    v-model="year"
+                    type="year"
+                    placeholder="Pick a year"
+                    @change="handleYearFilter"
+                />
+            </div>
+
+
         </div>
 
 
@@ -28,17 +40,14 @@
             <el-table-column fixed prop="name" label="Name" />
             <el-table-column fixed prop="sku" label="SKU" />
             <template v-for="month in months">
-                <el-table-column :prop="`month-${month}`" :label="original_months[month.split('-')[0] - 1]+'-'+month.split('-')[1]">
+                <el-table-column :prop="`month-${month}`" :label="original_months[month.split('-')[1] - 1]+'-'+month.split('-')[0]">
                     <template #default="scope">
-                            <!-- {{ month.split('-')[0] }}  -->
-                            <!-- {{original_months[month.split('-')[0] - 1]}} -->
+                            <!-- {{ month.split('-')[1] }}  -->
+                            <!-- {{original_months[month.split('-')[1] - 1]}} -->
                         {{ formattedAverage(scope.row[`month-${month}`]) }}
                     </template>
                 </el-table-column>
             </template>
-            <!-- <template v-for="month in months">
-                <el-table-column :prop="`month-${month}`" :label="original_months[month-1]" />
-            </template> -->
 
 
             <el-table-column fixed='right' prop="bill_item_id" label="Operations" >
@@ -60,7 +69,7 @@
                 layout="total, sizes, prev, pager, next"
                 :total="total"
                 :page-count="totalPages"
-                :page-sizes="[5, 10, 20, 50, 100]"
+                :page-sizes="[10, 20, 50, 100, 500]"
                 @size-change="handleSizeChange"
                 @current-change="handlePageChange"
             />
@@ -87,12 +96,15 @@ export default {
             ],
             query: {
                 page: 1,
-                limit: 5,
+                limit: 10,
                 keyword: '',
+                year: '',
             },
             total: null,
             totalPages: null,
-            pageSize: 5,
+            pageSize: 10,
+            year: null,
+            selectedYear: null,
         };
     },
     async mounted() {
@@ -108,6 +120,7 @@ export default {
                 limit: this.pageSize,
                 keyword: this.query.keyword,
                 page: this.query.page,
+                year: this.query.year,
             }
             console.log('params', params);
             await axios.get(`/api/registers`, {params}).
@@ -119,6 +132,10 @@ export default {
                         this.total = res.data.total;
                         this.totalPages = Math.ceil(res.data.total / this.pageSize);
                     });
+        },
+        handleYearFilter(){
+            this.query.year = new Date(this.year).getFullYear();
+            this.getList();
         },
         handleFilter() {
             this.query.page = 1;
@@ -157,7 +174,7 @@ export default {
                 const headerCell = XLSX.utils.encode_cell({ r: headerRange.s.r, c: col });
                 let headerCellValue = worksheet[headerCell].v;
                 if(headerCellValue.includes('month')){
-                    headerCellValue = this.original_months[headerCellValue.split('-')[1] - 1]+'-'+headerCellValue.split('-')[2]
+                    headerCellValue = this.original_months[headerCellValue.split('-')[2] - 1]+'-'+headerCellValue.split('-')[1]
                 }
                 console.log('headerCellValue', headerCellValue)
                 headerCellValue = this.capitalizeFirstLetter(headerCellValue);

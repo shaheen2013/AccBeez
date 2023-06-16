@@ -1,6 +1,17 @@
 <template>
     <div>
-        <el-text tag="b" type="primary" size="large">View Register</el-text>
+        <div>
+            <el-text tag="b" type="primary" size="large">View Register</el-text>
+            <div style="float: right;">
+                <span style="vertical-align: middle;  font-size:16px;">Year</span>
+                <el-date-picker
+                    v-model="year"
+                    type="year"
+                    placeholder="Pick a year"
+                    @change="handleYearFilter"
+                />
+            </div>
+        </div>
 
         <h4>
             <!-- Raw Material Register -->
@@ -59,11 +70,21 @@
                         <el-table-column prop="closing_date_quantity" label="Quantity" width="100%" />
                         <el-table-column prop="closing_date_total" label="Value" />
                     </el-table-column>
-                    <el-table-column  label="Invoice Number">
-                        <el-table-column prop="value"  />
+                    <!-- <el-table-column  label="Invoice Number">
+                    </el-table-column> -->
+                    <el-table-column label="Invoice Number" width="150">
+                        <template v-slot="{ row }">
+                            <div v-if="row && row.invoices">
+                                <div v-for="invoice in row.invoices.split(',')">
+                                    <a href="#" class="router-link-styling" @click="handleInvoiceClick(invoice)">
+                                        {{ invoice }}
+                                    </a>
+                                </div>
+                            </div>
+                        </template>
                     </el-table-column>
                     <el-table-column  label="Remarks">
-                        <el-table-column prop="value" />
+                        <!-- <el-table-column prop="value" /> -->
                     </el-table-column>
                 </el-table>
 
@@ -72,7 +93,7 @@
                         <router-link :to="'/registers'">
                             <el-button type="info" class="me-2">Back</el-button>
                         </router-link>
-                        <el-button type="primary" @click="downloadPdf" class="me-2">Download PDF</el-button>
+                        <!-- <el-button type="primary" @click="downloadPdf" class="me-2">Download PDF</el-button> -->
                     </el-col>
                 </el-row>
             </div>
@@ -99,28 +120,42 @@ export default {
                     'total': 0,
                 }]
             },
+            query: {
+                year: '',
+            },
             register_rows: [],
             bill_item: null,
             isMounted: false,
+            year: null,
         };
     },
     async created() {
         let paths = this.$route.path.split("/");
         this.register.id = paths[3];
         console.log('Route Name: ', this.$route.name);
-        await axios.get(`/api/registers/view/`+this.register.id).
+        await this.getList();
+        this.isMounted = true;
+    },
+    methods: {
+        downloadPdf(){
+            window.location.href = `/registers/download-pdf/`+this.register.id;
+        },
+        async getList(){
+            let params = {
+                year: this.query.year,
+            }
+            await axios.get(`/api/registers/view/`+this.register.id, {params}).
                 then((res) => {
-                    this.register.id = res.data.id;
+                    this.register.id = res.data.bill_item.id;
                     this.register.items = res.data.mergedItems;
                     this.register_rows = res.data.mergedItems;
                     this.bill_item = res.data.bill_item;
                     console.log('res:', res.data, this.bill_item);
                 });
-                this.isMounted = true;
-    },
-    methods: {
-        downloadPdf(){
-            window.location.href = `/registers/download-pdf/`+this.register.id;
+        },
+        handleYearFilter(){
+            this.query.year = new Date(this.year).getFullYear();
+            this.getList();
         },
         formatCurrency(value) {
             return parseFloat(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -167,6 +202,10 @@ export default {
                 return value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             }
         },
+        handleInvoiceClick(invoice){
+            window.location.href = `/bills/download-pdf/`+invoice.split('-')[1];
+        },
+
     },
 };
 </script>

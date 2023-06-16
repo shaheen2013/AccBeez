@@ -1,14 +1,16 @@
 <template>
-    <el-form ref="ruleFormRef" :model="bom" class="demo-bom"
+    <el-form ref="ruleFormRef" :model="bomSale" class="demo-bomSale"
         label-position="top"
         status-icon
     >
-        <el-text tag="b" type="primary" size="large">View Bom</el-text>
+        <el-text tag="b" type="primary" size="large">View BomSale</el-text>
 
 
         <el-card class="box-card">
             <h4>Invoice for AccBeez</h4>
-            <p><strong>Name:</strong> {{ bom.name }}</p>
+            <p><strong>Description:</strong> {{ bomSale.description }}</p>
+            <p><strong>Date:</strong> {{ bomSale.date }}</p>
+
 
             <el-row>
                 <el-col :span="24">
@@ -22,7 +24,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="item in bom.items" :key="item.id">
+                            <tr v-for="item in bomSale.items" :key="item.id">
                                 <td>{{ item.sku }}</td>
                                 <td>{{ item.quantity }}</td>
                                 <td>{{ formatCurrency(item.rate) }}</td>
@@ -31,7 +33,7 @@
                             <tr>
                                 <td style="border: none;" colspan="2"></td>
                                 <td style="border: none;">Invoice Total</td>
-                                <td colspan="2" style="text-align: right;">{{ formatCurrency(bom.invoice_total) }}</td>
+                                <td colspan="2" style="text-align: right;">{{ formatCurrency(bomSale.invoice_total) }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -41,12 +43,12 @@
 
             <el-row>
                 <el-col>
-                    <router-link :to="'/boms'">
+                    <router-link :to="'/bomSales'">
                         <el-button type="info" class="me-2">Back</el-button>
                     </router-link>
                     <el-button type="primary" @click="downloadPdf" class="me-2">Download PDF</el-button>
-                    <el-button type="primary" @click="exportBomXLS" class="me-2">Export Excel</el-button>
-                    <el-button type="primary" @click="exportBomCSV" class="me-2">Export CSV</el-button>
+                    <el-button type="primary" @click="exportBomSaleXLS" class="me-2">Export Excel</el-button>
+                    <el-button type="primary" @click="exportBomSaleCSV" class="me-2">Export CSV</el-button>
                 </el-col>
             </el-row>
         </el-card>
@@ -55,13 +57,14 @@
 
 <script>
 export default {
-    name: 'BomShow',
+    name: 'BomSaleShow',
     data() {
         return {
-            bom : {
+            bomSale : {
                 id: null,
-                name: '',
+                description: '',
                 invoice_total: 0,
+                date: '',
                 items: [{
                     'sku': null,
                     'quantity': 0,
@@ -71,33 +74,35 @@ export default {
             },
         };
     },
+
     async created() {
         let paths = this.$route.path.split("/");
-        this.bom.id = paths[3];
+        this.bomSale.id = paths[3];
         console.log('Route Name: ', this.$route.name);
-        await axios.get(`/api/boms/edit/`+this.bom.id).
+        await axios.get(`/api/bomSales/edit/`+this.bomSale.id).
                 then((res) => {
                     console.log('res:', res);
-                    this.bom.id = res.data.id;
-                    this.bom.name = res.data.name;
-                    this.bom.invoice_total = res.data.invoice_total;
-                    this.bom.items = res.data.bom_items;
+                    this.bomSale.id = res.data.id;
+                    this.bomSale.description = res.data.description;
+                    this.bomSale.invoice_total = res.data.invoice_total;
+                    this.bomSale.date = res.data.date;
+                    this.bomSale.items = res.data.bomSale_items;
                 });
     },
     methods: {
         downloadPdf(){
-            window.location.href = `/boms/download-pdf/`+this.bom.id;
+            window.location.href = `/bomSales/download-pdf/`+this.bomSale.id;
+        },
+        exportBomSaleXLS(){
+            let format = 'xls';
+            window.location.href = `/api/bomSale/blade/`+this.bomSale.id+`/export/`+format;
+        },
+        exportBomSaleCSV(){
+            let format = 'csv';
+            window.location.href = `/api/bomSale/blade/`+this.bomSale.id+`/export/`+format;
         },
         formatCurrency(value) {
             return parseFloat(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        },
-        exportBomXLS(){
-            let format = 'xls';
-            window.location.href = `/api/bom/blade/`+this.bom.id+`/export/`+format;
-        },
-        exportBomCSV(){
-            let format = 'csv';
-            window.location.href = `/api/bom/blade/`+this.bom.id+`/export/`+format;
         },
     },
 };

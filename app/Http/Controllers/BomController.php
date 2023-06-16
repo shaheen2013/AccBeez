@@ -137,4 +137,12 @@ class BomController extends Controller
             return 'Delete Failed';
         }
     }
+
+    public function getAllBoms()
+    {
+        $boms = Bom::select('name', 'invoice_total')
+                            ->orderBy('name', 'asc')
+                            ->get();
+        return response()->json($boms);
+    }
 }

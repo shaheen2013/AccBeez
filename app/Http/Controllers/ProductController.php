@@ -11,23 +11,15 @@ class ProductController extends Controller
 {
     public function index()
     {
-        // $products = DB::table('bill_items')->get()->toArray();
-        // $products = DB::table('bill_items')->get()->unique('sku')->toArray();
-        // $products = DB::table('bill_items')->get()->unique('sku')->map(function ($item) {
-        //     return (array) $item;
-        // })->toArray();
-        $products = DB::table('bill_items')
-                    ->select('sku', 'name', 'rate', 'id')
-                    ->orderBy('sku', 'asc')
-                    ->orderBy('id', 'desc')
-                    ->get()
-                    ->unique('sku');
-        // $products = DB::table('bill_items')
-        //             ->select('sku', 'quantity', 'rate', 'total')
-        //             // ->orderBy('rate', 'desc')
-        //             ->distinct('sku')
-        //             ->get()
-        //             ->toArray();
+        $products = BillItem::with(['closingDates' => function ($query) {
+                                $query->select('id', 'sku', 'date')->orderBy('date', 'desc');
+                            }])
+                            ->select('sku', 'name', 'rate', 'bill_items.id as id')
+                            ->orderBy('sku', 'asc')
+                            ->orderBy('id', 'desc')
+                            ->get()
+                            ->unique('sku');
+
         return response()->json($products);
     }
 }

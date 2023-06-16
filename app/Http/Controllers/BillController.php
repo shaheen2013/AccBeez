@@ -40,7 +40,7 @@ class BillController extends Controller
             $billData = $request->only('description', 'date', 'invoice_total');
             DB::beginTransaction();
             $bill = Bill::create($billData);
-            $bill->invoice_number = $bill->id;
+            $bill->invoice_number = mt_rand(10000, 99999).'-'.$bill->id;
             $bill->save();
             // dd('store', $request->all(), $billData);
             foreach($request->items as $item){

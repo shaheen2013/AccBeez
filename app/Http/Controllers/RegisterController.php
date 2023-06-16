@@ -20,15 +20,19 @@ class RegisterController extends Controller
     public function index(Request $request)
     {
         $searchParams = $request->all();
-        $limit = Arr::get($searchParams, 'limit', 5);
+        $limit = Arr::get($searchParams, 'limit', 10);
         $keyword = Arr::get($searchParams, 'keyword', '');
+        $year = Arr::get($searchParams, 'year', '');
         $perPage = $request->input('limit') ?? 10;
         $page = $request->input('page') ?? 1;
         $startAt = ($perPage * ($page-1));
-        // dd($perPage, $page, $startAt);
+        // dd($searchParams, $perPage, $page, $startAt, $year);
 
         $distinctMonths = DB::table('bills')
-                            ->select(DB::raw("DATE_FORMAT(bills.date, '%m-%Y') as month"))
+                            ->select(DB::raw("DATE_FORMAT(bills.date, '%Y-%m') as month"))
+                            ->when(!empty($year), function (Builder $query) use ($year) {
+                                return $query->whereRaw('YEAR(bills.date) = ?', [$year]);
+                            })
                             ->orderBy('month')
                             ->pluck('month', 'month')
                             ->unique()
@@ -41,10 +45,13 @@ class RegisterController extends Controller
                                             DB::raw('round(SUM(total) / SUM(quantity),2) as avg_cost'),
                                             DB::raw('YEAR(bills.date) as year'),
                                             // DB::raw('MONTH(bills.date) as month')
-                                            DB::raw("DATE_FORMAT(bills.date, '%m-%Y') as month")
+                                            DB::raw("DATE_FORMAT(bills.date, '%Y-%m') as month")
                         )
                         ->when(!empty($keyword), function (Builder $query) use ($keyword) {
                             return $query->where('sku', 'LIKE', '%' . $keyword . '%');
+                        })
+                        ->when(!empty($year), function (Builder $query) use ($year) {
+                            return $query->whereRaw('YEAR(bills.date) = ?', [$year]);
                         })
                         ->groupBy(['sku', 'month', 'year'])
                         ->orderBy('sku')
@@ -96,9 +103,9 @@ class RegisterController extends Controller
 
     public function close(Request $request)
     {
-        // $request['date'] = Carbon::now()->format('Y-m-d');
         $input = $request->all();
-        $input['date'] = '2023-02-10';
+        $input['date'] = Carbon::now()->format('Y-m-d');
+        // $input['date'] = '2023-02-04';
         $input['status'] = 0;
         $closingDate = ClosingDate::updateOrCreate(
             ['date' => $input['date'], 'sku' => $input['sku']],
@@ -117,8 +124,10 @@ class RegisterController extends Controller
 
 
 
-    public function view($id)
+    public function view(Request $request, $id)
     {
+        // dd($request->all(), $id);
+        $year = $request->year;
         $bill_item = BillItem::with('closingDates')->find($id);
         $closingDates = $bill_item->closingDates;
         $sku = $bill_item->sku;
@@ -131,8 +140,12 @@ class RegisterController extends Controller
                                         DB::raw('SUM(total) as bill_item_total'),
                                         DB::raw('SUM(total) / SUM(quantity) as bill_item_rate'),
                                         DB::raw('0 as bill_item_avg_rate'),
+                                        DB::raw("GROUP_CONCAT(bills.invoice_number SEPARATOR ',') as `invoices`")
                                 )
                                 ->where('sku', $sku)
+                                ->when(!empty($year), function ($query) use ($year) {
+                                    return $query->whereRaw('YEAR(bills.date) = ?', [$year]);
+                                })
                                 ->distinct('date')
                                 ->get()
                                 ->keyBy('date')
@@ -146,6 +159,9 @@ class RegisterController extends Controller
                                         DB::raw('0 as sale_item_avg_rate'),
                                 )
                                 ->where('sku', $sku)
+                                ->when(!empty($year), function ($query) use ($year) {
+                                    return $query->whereRaw('YEAR(sales.date) = ?', [$year]);
+                                })
                                 ->distinct('date')
                                 ->get()
                                 ->keyBy('date')
@@ -154,6 +170,9 @@ class RegisterController extends Controller
                                                 DB::raw('0 as closing_date_avg_rate')
                                         )
                                         ->where('sku', $sku)
+                                        ->when(!empty($year), function ($query) use ($year) {
+                                            return $query->whereRaw('YEAR(date) = ?', [$year]);
+                                        })
                                         ->distinct('date')
                                         ->get()
                                         ->keyBy('date')
@@ -165,15 +184,30 @@ class RegisterController extends Controller
         $uniqueDates = array_keys($mergedArray);
         sort($uniqueDates);
         // dump($uniqueDates, $mergedArray);
+        if(!$uniqueDates){
+            $data = [
+                'mergedItems' => $mergedArray,
+                'bill_item' => $bill_item,
+                'uniqueDates' => $uniqueDates
+            ];
+            return $data;
+        }
 
         $startDate = min($uniqueDates);
         $endDate = max($uniqueDates);
         $currentDate = new DateTime($startDate);
         $endDate = new DateTime($endDate);
-        while ($currentDate < $endDate) {
+        // dump($currentDate, $endDate);
+        if($currentDate == $endDate){
             $yearMonth = $currentDate->format('Y-m');
             $yearMonths[$yearMonth] = $yearMonth.'-01';
             $currentDate->modify('+1 month');
+        } else {
+            while ($currentDate < $endDate) {
+                $yearMonth = $currentDate->format('Y-m');
+                $yearMonths[$yearMonth] = $yearMonth.'-01';
+                $currentDate->modify('+1 month');
+            }
         }
         $yearMonths = array_values($yearMonths);
         $uniqueDates = array_unique(array_merge($uniqueDates, $yearMonths));
@@ -185,6 +219,7 @@ class RegisterController extends Controller
             "bill_item_rate" => null,
             "bill_item_total" => null,
             "bill_item_avg_rate" => null,
+            "invoices" => null,
         ];
         $singleSaleItem = [
             "sale_item_quantity" => null,

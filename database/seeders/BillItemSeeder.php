@@ -14,6 +14,7 @@ class BillItemSeeder extends Seeder
      */
     public function run()
     {
+        // $billIds = DB::table('bills')->where('id', '>', 61)->pluck('id')->toArray();
         $billIds = DB::table('bills')->pluck('id')->toArray();
         $groceryItems = [
             'Apple',
