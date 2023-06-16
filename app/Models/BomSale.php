@@ -11,16 +11,15 @@ class BomSale extends Model
 
     protected $fillable = ['description', 'date', 'invoice_total', 'invoice_number'];
     public function bomSaleItems(){
-        return $this->hasMany(BomSaleItem::class);
+        return $this->hasMany(BomSaleItem::class,'bom_sale_id','id');
     }
 
     public function sales(){
         return $this->hasMany(Sale::class,'bom_sale_id','id');
     }
 
-
-    public function salesItems(){
-        return $this->hasManyThrough(SaleItem::class,Sale::class,'bom_sale_id','sale_id','id','id');
-    }
+    // public function salesItems(){
+    //     return $this->hasManyThrough(SaleItem::class,Sale::class,'bom_sale_id','sale_id','id','id');
+    // }
 
 }

@@ -44,8 +44,8 @@ class BomSaleController extends Controller
             // dd('store', $request->all(), $bomSaleData);
             foreach($request->items as $item){
                 $item['bom_sale_id'] = $bomSale->id;
-                BomSaleItem::create($item);
-                $this->bomSales($item,$item['quantity'],$bomSale);
+                $data = BomSaleItem::create($item);
+                $this->bomSales($data->toArray(),$item['quantity'],$bomSale);
                 // $this->salesEntry($item);
             }
             DB::commit();
@@ -68,6 +68,7 @@ class BomSaleController extends Controller
                 'description'=>$bomSale->description,
                 'items'=>[
                     [
+                        'bom_sale_item_id'=>$item['id'],
                         'sku'=>$bomItem->sku,
                         'name'=>$bomItem->sku,
                         'rate'=>$bomItem->rate,

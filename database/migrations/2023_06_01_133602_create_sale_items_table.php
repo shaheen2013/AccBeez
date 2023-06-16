@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('quantity')->default(0);
             $table->double('total')->default(0);
             $table->unsignedBigInteger('client_id')->nullable();
+            $table->unsignedBigInteger('bom_sale_item_id')->nullable();
             $table->timestamps();
         });
     }

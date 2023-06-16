@@ -15,4 +15,8 @@ class BomSaleItem extends Model
     public function bom(){
         return $this->belongsTo(Bom::class);
     }
+
+    public function saleItems(){
+        return $this->hasMany(SaleItem::class,'bom_sale_item_id','id');
+    }
 }
