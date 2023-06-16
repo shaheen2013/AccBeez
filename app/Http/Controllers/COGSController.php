@@ -11,7 +11,7 @@ class COGSController extends Controller
     public function getAll(){
         // $boms = Bom::with('bomItems')->get();
         // return response()->json($boms);
-        
+
         $bomSales = BomSale::with('bomSaleItems.saleItems')->get();
         $data = [];
 
@@ -32,13 +32,14 @@ class COGSController extends Controller
                     'date'=>$bomSale->date,
                     'description'=>$bomSale->description,
                     'invoice_number'=>$bomSale->invoice_number,
+                    'invoice_total'=>$bomSale->invoice_total,
                     'name'=> $bomSaleItem->name,
                     'rate'=> $bomSaleItem->rate,
                     'unit'=> $bomSaleItem->unit,
                     'quantity'=> $bomSaleItem->quantity,
                     'total'=> $bomSaleItem->total,
                     'cogs'=>$cogs,
-                    'margin'=>$bomSaleItem->margin,                  
+                    'margin'=>$bomSaleItem->margin,
                 ];
             }
             // $bomSale->margin = $margin;
@@ -50,7 +51,7 @@ class COGSController extends Controller
     public function getById($id){
         // $boms = Bom::with('bomItems')->get();
         // return response()->json($boms);
-        
+
         $bomSale = BomSale::with('bomSaleItems.saleItems')->find($id);
 
         $bomSale->cogs = $bomSale->sales_items_sum_total;

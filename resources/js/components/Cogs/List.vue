@@ -40,26 +40,15 @@
             <el-table-column fixed prop="description" label="Description" />
             <el-table-column fixed prop="date" label="Date" />
             <el-table-column fixed prop="invoice_total" label="Invoice Total" />
-            <template v-for="month in months">
-                <el-table-column :prop="`month-${month}`" :label="original_months[month.split('-')[1] - 1]+'-'+month.split('-')[0]">
-                    <template #default="scope">
-                            <!-- {{ month.split('-')[1] }}  -->
-                            <!-- {{original_months[month.split('-')[1] - 1]}} -->
-                        {{ formattedAverage(scope.row[`month-${month}`]) }}
-                    </template>
-                </el-table-column>
-            </template>
 
-
-            <el-table-column fixed='right' prop="bill_item_id" label="Operations" >
-                <template  #default="scope">
-                    <router-link :to="'/cogs/view/'+scope.row.bill_item_id">
-                        <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px" >
-                            <View />
-                        </el-icon>
-                    </router-link>
-                </template>
-            </el-table-column>
+            <el-table-column fixed prop="name" label="Name" />
+            <el-table-column fixed prop="invoice_total" label="Invoice Total" />
+            <el-table-column fixed prop="rate" label="Rate" />
+            <el-table-column fixed prop="unit" label="Unit" />
+            <el-table-column fixed prop="quantity" label="Quantity" />
+            <el-table-column fixed prop="total" label="Total" />
+            <el-table-column fixed prop="cogs" label="Cogs" />
+            <el-table-column fixed prop="margin" label="margin" />
         </el-table>
 
 
