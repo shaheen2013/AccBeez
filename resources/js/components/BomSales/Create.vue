@@ -156,7 +156,7 @@ export default {
                         this.bomSale.description = res.data.description;
                         this.bomSale.invoice_total = res.data.invoice_total;
                         this.bomSale.date = res.data.date;
-                        this.bomSale.items = res.data.bomSale_items;
+                        this.bomSale.items = res.data.bom_sale_items;
                     });
             console.log('BomSale edit', this.bomSale)
         }
