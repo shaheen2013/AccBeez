@@ -96,7 +96,7 @@ Route::get('/bomSales/edit/{id}', [App\Http\Controllers\BomSaleController::class
 Route::post('/bomSales/{id}', [App\Http\Controllers\BomSaleController::class, 'update'])->name('bomSales.update');
 Route::delete('/bomSales/{id}', [App\Http\Controllers\BomSaleController::class, 'delete'])->name('bomSales.delete');
 
-// role permssion routes 
+// role permssion management routes 
 Route::get('/roles/all',[RolePermissionController::class,'roleIndex']);
 Route::post('/roles/create',[RolePermissionController::class,'roleStore']);
 Route::get('/roles/edit/{id}',[RolePermissionController::class,'roleEdit']);
@@ -106,3 +106,8 @@ Route::delete('/roles/delete/{id}',[RolePermissionController::class,'roleDestroy
 Route::get('/permissions/all',[RolePermissionController::class,'permissionIndex']);
 Route::post('/permissions/create',[RolePermissionController::class,'permissionStore']);
 Route::delete('/permissions/delete/{id}',[RolePermissionController::class,'permissionDestroy']);
+
+
+// user role management routes 
+Route::put('/users/roles/update/{id}', [App\Http\Controllers\UserController::class, 'assignUserRole']);
+
