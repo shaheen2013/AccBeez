@@ -68,8 +68,8 @@ class BomSaleController extends Controller
                 'description'=>$bomSale->description,
                 'items'=>[
                     [
-                        'sku'=>$bomItem->name,
-                        'name'=>$bomItem->name,
+                        'sku'=>$bomItem->sku,
+                        'name'=>$bomItem->sku,
                         'rate'=>$bomItem->rate,
                     ],
                 ],
@@ -82,6 +82,7 @@ class BomSaleController extends Controller
             $data['items'][0]['total'] = $total_price;
             $data['invoice_total'] = $total_price;
 
+            // dump($data);
             $request = new Request($data);
             $this->salesEntry($request);
         }
