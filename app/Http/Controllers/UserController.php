@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Mail\SendVerificationCodeMail;
 use App\Events\EmailVerificationCodeEvent;
+use Spatie\Permission\Models\Role;
+
+use function PHPSTORM_META\type;
 
 class UserController extends Controller
 {
@@ -24,8 +27,11 @@ class UserController extends Controller
     {
         // dd('hi index');
         $users = User::all();
+        $roles = Role::all()->pluck('name');
         foreach($users as $user){
-            $user->role = $user->getRoleNames()[0];
+            if($user->hasAnyRole($roles->toArray())){
+                $user->role = $user->getRoleNames()[0];
+            }
         }
         // dd(Auth::check(), auth());
 
@@ -37,7 +43,7 @@ class UserController extends Controller
     {
         // dd(config('app.url'));
         try {
-            $userData = $request->only('name', 'email');
+            $userData = $request->only('name', 'email','role');
 
             DB::beginTransaction();
             $userData['invitation_token'] = random_int(100000, 999999);
@@ -68,8 +74,10 @@ class UserController extends Controller
 
     public function update(UserRequest $request, $id)
     {
+        error_log('update method');     
         try {
-            $userData = $request->only('name', 'email');
+            $userData = $request->only('name', 'email','role');
+            return response($userData);
             $user = User::find($id);
             DB::beginTransaction();
             $user->update($userData);

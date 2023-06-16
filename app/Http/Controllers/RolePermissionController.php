@@ -15,7 +15,7 @@ class RolePermissionController extends Controller
     public function roleStore(Request $request){
         $validation = Validator::make($request->all(),[
             'roleName'=>'required',
-            'permissions'=>'required',
+            'permissions'=>'nullable | array',
         ]);
 
         if($validation->fails())return response()->json(['errors'=>$validation->errors()->all()],400);
