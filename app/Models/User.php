@@ -45,4 +45,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function adminUsers() {
+        return $this->hasMany(UserAssign::class, 'admin_id', 'id')->whereNotNull('user_id');
+    }
 }
