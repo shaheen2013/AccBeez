@@ -9,6 +9,7 @@ import BomCreate from './components/Boms/Create.vue';
 import BomShow from './components/Boms/Show.vue';
 import UserCreate from './components/Users/Create.vue';
 import UserList from './components/Users/List.vue';
+import AssignUsers from './components/Users/AssignUsers.vue';
 import NotFoundPage from './components/NotFoundPage.vue';
 import Dashboard from './components/Dashboard.vue';
 import SaleCreate from './components/Sales/Create.vue';
@@ -85,6 +86,11 @@ const routes = [
         path: '/users',
         name: 'UserList',
         component: UserList
+    },
+    {
+        path: '/assign-users',
+        name: 'AssignUsers',
+        component: AssignUsers
     },
     {
         path: '/users/create',

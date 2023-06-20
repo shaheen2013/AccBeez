@@ -56,6 +56,10 @@ Route::post('/boms/{id}', [App\Http\Controllers\BomController::class, 'update'])
 Route::delete('/boms/{id}', [App\Http\Controllers\BomController::class, 'delete'])->name('boms.delete');
 
 
+
+Route::get('/get-users-by-role', [App\Http\Controllers\UserController::class, 'getUsersByRole'])->name('users.getUsersByRole');
+Route::post('/assign-user', [App\Http\Controllers\UserController::class, 'assignUser'])->name('users.assignUser');
+
 Route::get('/users', [App\Http\Controllers\UserController::class, 'index'])->name('users.list');
 Route::post('/users', [App\Http\Controllers\UserController::class, 'store'])->name('users.store');
 Route::get('/users/edit/{id}', [App\Http\Controllers\UserController::class, 'edit'])->name('users.edit');

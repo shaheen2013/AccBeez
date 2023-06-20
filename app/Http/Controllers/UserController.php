@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Mail\SendVerificationCodeMail;
 use App\Events\EmailVerificationCodeEvent;
+use App\Models\UserAssign;
 use Spatie\Permission\Models\Role;
 
 use function PHPSTORM_META\type;
@@ -123,6 +124,42 @@ class UserController extends Controller
         return redirect()->route('login');
     }
 
+    public function getUsersByRole(){
+        $admins = User::whereHas('roles', function($query){
+            $query->where('name', 'Admin');
+        })->get();
+        $users = User::whereHas('roles', function($query){
+            $query->where('name', 'User');
+        })->get();
+        
+        return response()->json(
+        [
+            'admins' => $admins,
+            'users' => $users
+        ]);
+    }
+
+    public function assignUser(Request $request) {
+        $admin = $request->admin;
+        $users = $request->user;
+
+        // admin create
+        UserAssign::create([
+            'admin_id' => $admin,
+            'user_id' => null,
+            'user_type' => 'Admin'
+        ]);
+        // users create
+        foreach($users as $user_id){
+            UserAssign::create([
+                'admin_id' => $admin,
+                'user_id' => $user_id,
+                'user_type' => 'User'
+            ]);
+        }
+
+        return "inserted successfully";
+    }
 
     public function logged_in_user(Request $request)
     {
