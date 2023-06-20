@@ -15,6 +15,14 @@
                 <el-form-item label="Email" prop="email">
                     <el-input v-model="user.email" type="email" :disabled="operation === 'view'" />
                 </el-form-item>
+                <el-select v-model="user.user_type" placeholder="Select" class="mt-2 mb-3">
+                    <el-option 
+                        v-for="item in userTypes"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                    />
+                </el-select>
 
                 <el-row>
                     <el-col>
@@ -49,7 +57,18 @@ export default {
                 id: null,
                 name: '',
                 email: '',
+                user_type: ''
             },
+            userTypes: [
+                {
+                    value: 'Admin',
+                    label: 'Admin'
+                },
+                {
+                    value: 'User',
+                    label: 'User'
+                }
+            ],
             logged_in_user: null,
             isCreated: false,
         };
@@ -94,6 +113,7 @@ export default {
         },
         async createUser() {
             console.log('createUser:', this.user)
+
             try {
                 await axios.post(`/api/users`, this.user).
                         then((res) => {

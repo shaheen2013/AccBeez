@@ -48,8 +48,12 @@ class UserController extends Controller
             DB::beginTransaction();
             $userData['invitation_token'] = random_int(100000, 999999);
             $userData['password'] = Hash::make('123456');
-            $userData['role'] = 'user';
+            $userRole = $request->user_type ? $request->user_type : 'User';
+
+
             $user = User::create($userData);
+
+            $user->assignRole($userRole);
             // event(new SendVerificationCode($user->email, $user->invitation_token));
             // dd('store', $request->all(), $userData);
             DB::commit();
