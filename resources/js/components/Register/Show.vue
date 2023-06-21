@@ -146,6 +146,7 @@ export default {
             }
             await axios.get(`/api/registers/view/`+this.register.id, {params}).
                 then((res) => {
+                console.log(res.data)
                     this.register.id = res.data.bill_item.id;
                     this.register.items = res.data.mergedItems;
                     this.register_rows = res.data.mergedItems;

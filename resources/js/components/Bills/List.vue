@@ -23,12 +23,27 @@
                 </el-icon>
                 <span style="vertical-align: middle"> Search </span>
             </el-button>
-            <el-button type="primary" @click="exportToExcel">
+            <el-button type="primary" @click="exportData('xls')">
                 <el-icon style="vertical-align: middle">
                     <Download />
                 </el-icon>
                 <span style="vertical-align: middle"> Export to Excel </span>
             </el-button>
+
+            <el-button type="primary" @click="exportData('csv')">
+                <el-icon style="vertical-align: middle">
+                    <Download />
+                </el-icon>
+                <span style="vertical-align: middle"> Export to CSV </span>
+            </el-button>
+
+            <el-button type="primary" @click="downloadPdf">
+                <el-icon style="vertical-align: middle">
+                    <Download />
+                </el-icon>
+                <span style="vertical-align: middle"> Download Pdf </span>
+            </el-button>
+
             <el-button type="danger" @click="handleBulkDelete">
                 <el-icon style="vertical-align: middle">
                     <Delete />
@@ -114,7 +129,12 @@
 <script >
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+
 import { genFileId } from 'element-plus'
+
+import { excelParser } from "../../utils/excel-parser";
+import {mapState, mapActions} from "vuex";
+
 
 import { ElMessage, ElMessageBox } from 'element-plus'
 
@@ -291,6 +311,31 @@ export default {
             const dataBlob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
             saveAs(dataBlob, 'exported_data.xlsx');
         },
+
+        async exportData(format){
+            try {
+                await axios.get(`/api/bills/exported-data`).
+                then(({data}) => {
+                    const bills = data.data.map((bill)=>{
+                        return {
+                            Date: bill.date,
+                            Description: bill.description,
+                            Invoice_Total: bill.invoice_total,
+                        }
+                    })
+
+                    excelParser().exportDataFromJSON(bills, 'Bill list', format);
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        async downloadPdf(){
+            window.location.href = `/bills/download-bills/`;
+        },
+
+
         capitalizeFirstLetter(str) {
             const words = str.split('_');
             const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
