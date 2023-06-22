@@ -15,11 +15,26 @@
                 </el-icon>
                 <span style="vertical-align: middle"> Search </span>
             </el-button>
-            <el-button type="primary" @click="exportToExcel">
+            <el-button type="primary" @click="exportData('pdf')">
                 <el-icon style="vertical-align: middle">
                     <Download />
                 </el-icon>
-                <span style="vertical-align: middle"> Export to Excel </span>
+                <span style="vertical-align: middle"> Download Pdf</span>
+            </el-button>
+
+            <el-button type="primary" @click="exportData('csv')">
+                <el-icon style="vertical-align: middle">
+                    <Download />
+                </el-icon>
+                <span style="vertical-align: middle"> Download csv</span>
+            </el-button>
+
+
+            <el-button type="primary" @click="exportData('xls')">
+                <el-icon style="vertical-align: middle">
+                    <Download />
+                </el-icon>
+                <span style="vertical-align: middle"> Download Excel </span>
             </el-button>
 
             <div style="float: right;">
@@ -73,6 +88,7 @@
 <script >
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import {excelParser} from "../../utils/excel-parser.js";
 
 export default {
     name: 'Cog',
@@ -144,6 +160,20 @@ export default {
             if (value !== null) {
                 return value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             }
+        },
+
+        async exportData(format){
+            window.location.href = `/api/cogs/exported-data/${format}`;
+            //excelParser().exportDataFromJSON(this.cogs, 'Cogs list', format);
+            // try {
+            //     await axios.get(`/api/cogs/exported-data`).
+            //     then(({data}) => {
+            //
+            //         excelParser().exportDataFromJSON(bills, 'Cogs list', format);
+            //     });
+            // } catch (error) {
+            //     console.error(error);
+            // }
         },
         // Export Excel file
         exportToExcel() {

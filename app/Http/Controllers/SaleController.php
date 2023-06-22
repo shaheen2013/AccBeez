@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\BillResource;
+use App\Http\Resources\SalesResource;
+use App\Models\Bill;
 use Exception;
 use Carbon\Carbon;
 use App\Models\Sale;
@@ -13,6 +16,7 @@ use App\Http\Requests\SaleRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\Log;
 
 class SaleController extends Controller
 {
@@ -149,6 +153,17 @@ class SaleController extends Controller
         } catch (Exception $ex) {
             DB::rollBack();
             return 'Delete Failed';
+        }
+    }
+
+    public function exportData(){
+        try{
+            $data = SalesResource::collection(Sale::latest()->get());
+
+            return response()->successResponse('Sales list', $data);
+        }catch (Exception $exception){
+            Log::info($exception->getMessage());
+            return response()->errorResponse();
         }
     }
 

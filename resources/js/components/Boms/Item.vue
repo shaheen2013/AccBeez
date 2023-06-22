@@ -18,11 +18,11 @@
         </td>
         <td>
             <el-input v-model="formattedRate" type="number" placeholder="Rate" :disabled="operation === 'view'"
-                        @blur="calculateTotal" />
+                        @keyup="calculateTotal" />
         </td>
         <td>
             <el-input v-model="item.quantity" type="number" placeholder="Quantity" :disabled="operation === 'view'"
-                        @blur="calculateTotal" />
+                        @keyup="calculateTotal" />
         </td>
         <td>
             <el-input v-model="formattedTotal" type="text" placeholder="Total" disabled style="color: #000000" />
@@ -50,9 +50,10 @@ export default {
     created() {  },
     methods: {
         calculateTotal() {
+            console.log(parseFloat(this.item.rate))
             this.item.total = parseFloat(this.item.rate) * parseFloat(this.item.quantity);
             let summation = this.bom.items.reduce((total, element) => total + element.total, 0);
-            console.log('summation:', summation, this.item.total);
+            //console.log('summation:', summation, this.item.total);
             this.$emit('changeInvoiceTotal', summation);
         },
         getDeletedItemsId(index, id) {

@@ -68,10 +68,13 @@ Route::post('/sales', [App\Http\Controllers\SaleController::class, 'store'])->na
 Route::get('/sales/edit/{id}', [App\Http\Controllers\SaleController::class, 'edit'])->name('sales.edit');
 Route::post('/sales/{id}', [App\Http\Controllers\SaleController::class, 'update'])->name('sales.update');
 Route::delete('/sales/{id}', [App\Http\Controllers\SaleController::class, 'delete'])->name('sales.delete');
+Route::get('/sales/exported-data', [App\Http\Controllers\SaleController::class, 'exportData'])->name('sales.list');
 
 Route::get('/products', [App\Http\Controllers\ProductController::class, 'index'])->name('products.list');
 
-
+//Route::get('/register/exported-data/{formats}',[App\Http\Controllers\RegisterController::class,'exportCsvData']);
+Route::get('/register/exported-data/{fileType}', [App\Http\Controllers\RegisterController::class, 'exportData']);
+Route::get('/register/{id}/export-balance-sheet/{fileType}', [App\Http\Controllers\RegisterController::class, 'exportBalanceSheet']);
 Route::get('/registers', [App\Http\Controllers\RegisterController::class, 'index'])->name('registers');
 Route::get('/registers/view/{id}', [App\Http\Controllers\RegisterController::class, 'view'])->name('registers.view');
 Route::post('/registers/close/', [App\Http\Controllers\RegisterController::class, 'close'])->name('registers.close');
@@ -90,6 +93,7 @@ Route::get('/bills/import',[ExportController::class,'importBillXls']);
 
 
 // cogs routes
+Route::get('/cogs/exported-data/{fileType}',[COGSController::class,'exportData']);
 Route::get('/cogs/boms/{id}',[COGSController::class,'getById']);
 Route::get('/cogs/boms',[COGSController::class,'getAll']);
 
