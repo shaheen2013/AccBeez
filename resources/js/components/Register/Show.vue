@@ -37,7 +37,6 @@
 
             <!-- Raw Material Register -->
             <div style="float:right">
-                <el-button type="info" class="me-1" @click="closeDate">Close Register</el-button>
                 <el-button v-if="isMounted && bill_item.closing_dates && bill_item.closing_dates.length>0"
                         type="info" class="me-1" @click="undoDate">
                     Undo Register
