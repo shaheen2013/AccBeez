@@ -16,7 +16,7 @@ class COGSController extends Controller
         // $boms = Bom::with('bomItems')->get();
         // return response()->json($boms);
 
-        $bomSales = BomSale::with('bomSaleItems.saleItems')->get();
+        $bomSales = BomSale::with('bomSaleItems.saleItems')->latest()->get();
         $data = [];
 
         foreach($bomSales as $bomSale){
@@ -68,7 +68,7 @@ class COGSController extends Controller
 
     public function exportData(Request $request){
 
-        $bomSales = BomSale::with('bomSaleItems.saleItems')->get();
+        $bomSales = BomSale::with('bomSaleItems.saleItems')->latest()->get();
         $data = [];
 
         foreach($bomSales as $bomSale){
