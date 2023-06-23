@@ -25,7 +25,7 @@ class BomController extends Controller
         $bomsQuery = DB::table('boms')
                         ->when(!empty($keyword), function (Builder $query) use ($keyword) {
                             return $query->where('name', 'LIKE', '%' . $keyword . '%');
-                        });
+                        })->latest();
 
         return response()->json($bomsQuery->paginate($limit));
     }

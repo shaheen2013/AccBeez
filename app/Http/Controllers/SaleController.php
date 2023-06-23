@@ -34,7 +34,7 @@ class SaleController extends Controller
         $salesQuery = DB::table('sales')
                         ->when(!empty($keyword), function (Builder $query) use ($keyword) {
                             return $query->where('description', 'LIKE', '%' . $keyword . '%');
-                        });
+                        })->latest();
 
         return response()->json($salesQuery->paginate($limit));
     }

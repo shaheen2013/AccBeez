@@ -27,7 +27,7 @@ class UserController extends Controller
     public function index()
     {
         // dd('hi index');
-        $users = User::all();
+        $users = User::latest()->get();
         $roles = Role::all()->pluck('name');
         foreach($users as $user){
             if($user->hasAnyRole($roles->toArray())){
@@ -131,7 +131,7 @@ class UserController extends Controller
         $users = User::whereHas('roles', function($query){
             $query->where('name', 'User');
         })->get();
-        
+
         return response()->json(
         [
             'admins' => $admins,
