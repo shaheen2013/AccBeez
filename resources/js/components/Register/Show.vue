@@ -14,6 +14,27 @@
         </div>
 
         <h4>
+            <el-button type="primary" @click="exportBalanceSheet(bill_item.id, 'xls')">
+                <el-icon style="vertical-align: middle">
+                    <Download />
+                </el-icon>
+                <span style="vertical-align: middle"> Export to Excel </span>
+            </el-button>
+
+            <el-button type="primary" @click="exportBalanceSheet(bill_item.id, 'xls')">
+                <el-icon style="vertical-align: middle">
+                    <Download />
+                </el-icon>
+                <span style="vertical-align: middle"> Export to Excel </span>
+            </el-button>
+
+            <el-button type="primary" @click="exportBalanceSheet(bill_item.id, 'pdf')">
+                <el-icon style="vertical-align: middle">
+                    <Download />
+                </el-icon>
+                <span style="vertical-align: middle"> Download pdf </span>
+            </el-button>
+
             <!-- Raw Material Register -->
             <div style="float:right">
                 <el-button type="info" class="me-1" @click="closeDate">Close Register</el-button>
@@ -146,6 +167,7 @@ export default {
             }
             await axios.get(`/api/registers/view/`+this.register.id, {params}).
                 then((res) => {
+                console.log(res.data)
                     this.register.id = res.data.bill_item.id;
                     this.register.items = res.data.mergedItems;
                     this.register_rows = res.data.mergedItems;
@@ -204,6 +226,10 @@ export default {
         },
         handleInvoiceClick(invoice){
             window.location.href = `/bills/download-pdf/`+invoice.split('-')[1];
+        },
+
+        exportBalanceSheet(id, format){
+            window.location.href = `/api/register/${id}/export-balance-sheet/${format}`;
         },
 
     },

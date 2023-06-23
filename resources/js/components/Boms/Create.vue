@@ -61,9 +61,26 @@
             </el-row>
 
 
-            <el-form-item label="Invoice Total">
-                <el-input v-model="formattedTotal" type="text" placeholder="Invoice Total" disabled />
-            </el-form-item>
+            <el-row>
+
+<!--                <el-col class="col-4">-->
+<!--                    <el-form-item label="">-->
+<!--                        <el-input v-model="bom.subTotal" type="hidden" placeholder="Sub total" @keyup="" />-->
+<!--                    </el-form-item>-->
+<!--                </el-col>-->
+
+                <el-col>
+                    <el-form-item label="Estimated profit">
+                        <el-input v-model="bom.estimatedProfit" type="number" placeholder="Estimated profit" @keyup="changeEstimatedProfit" />
+                    </el-form-item>
+                </el-col>
+
+                <el-col>
+                    <el-form-item label="Invoice Total">
+                        <el-input v-model="formattedTotal" type="text" placeholder="Invoice Total" disabled />
+                    </el-form-item>
+                </el-col>
+            </el-row>
 
 
             <el-row>
@@ -103,6 +120,8 @@ export default {
                 id: null,
                 invoice_total: 0,
                 name: '',
+                subTotal: '',
+                estimatedProfit: 0,
                 items: [{
                     'sku': null,
                     'quantity': 0,
@@ -144,7 +163,6 @@ export default {
         await axios.get(`/api/products`).
                 then((res) => {
                     this.products = res.data;
-                    console.log('products:', this.products);
                 });
     },
     methods: {
@@ -153,9 +171,16 @@ export default {
             var obj = {...this.singleItem};
             this.bom.items.push(obj);
         },
+        changeEstimatedProfit(){
+            //console.log("Be good ss ", this.bom.estimatedProfit)
+            //console.log(this.bom.estimatedProfit)
+            return this.bom.estimatedProfit
+            //console.log(this.bom.estimatedProfit)
+        },
         changeInvoiceTotal(val){
-            console.log('changeInvoiceTotal:', val);
-            this.bom.invoice_total = val;
+            this.bom.subTotal = val
+            //console.log("totalss val", val)
+            //this.bom.invoice_total = val;
         },
         async createBom() {
             console.log('createBom:', this.bom)
@@ -209,8 +234,12 @@ export default {
     },
     computed: {
         formattedTotal() {
-            return this.bom.invoice_total.toFixed(2); // Apply precision formatting
+            this.bom.invoice_total = this.bom.subTotal + ((this.bom.estimatedProfit * this.bom.subTotal) / 100)
+            return this.bom.subTotal + ((this.bom.estimatedProfit * this.bom.subTotal) / 100)
+            //const invoiceTotal =
+            //return  invoiceTotal; // Apply precision formatting
         },
+
     },
 };
 </script>

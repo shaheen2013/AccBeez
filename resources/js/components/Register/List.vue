@@ -15,12 +15,28 @@
                 </el-icon>
                 <span style="vertical-align: middle"> Search </span>
             </el-button>
-            <el-button type="primary" @click="exportToExcel">
+
+            <el-button type="primary" @click="exportData('xls')">
                 <el-icon style="vertical-align: middle">
                     <Download />
                 </el-icon>
                 <span style="vertical-align: middle"> Export to Excel </span>
             </el-button>
+
+            <el-button type="primary" @click="exportData('csv')">
+                <el-icon style="vertical-align: middle">
+                    <Download />
+                </el-icon>
+                <span style="vertical-align: middle"> Export to csv </span>
+            </el-button>
+
+            <el-button type="primary" @click="exportData('pdf')">
+                <el-icon style="vertical-align: middle">
+                    <Download />
+                </el-icon>
+                <span style="vertical-align: middle"> Download Pdf </span>
+            </el-button>
+
 
             <div style="float: right;">
                 <span style="vertical-align: middle;  font-size:16px;">Year</span>
@@ -83,6 +99,7 @@
 <script >
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import {excelParser} from "../../utils/excel-parser.js";
 
 export default {
     name: 'Register',
@@ -125,7 +142,8 @@ export default {
             console.log('params', params, this.query.year);
             await axios.get(`/api/registers`, {params}).
                     then((res) => {
-                        console.log('response in register list:', res);
+                console.log(res.data)
+                        //console.log('response in register list:', res);
                         this.registers = res.data.register_list;
                         this.months = res.data.distinct_months;
                         // this.query.page = res.data.current_page;
@@ -155,41 +173,63 @@ export default {
                 return value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             }
         },
+
+
         // Export Excel file
-        exportToExcel() {
-            console.log('filteredRegisters', this.registers);
-            const data = this.registers.map(register => {
-                const { bill_item_id, ...filteredData } = register;
-                return filteredData;
-            });
+        exportData(format) {
+            window.location.href = `/api/register/exported-data/${format}`;
+            // try {
+            //     await axios.get(`/api/register/exported-data`).
+            //     then(({data}) => {
+            //
+            //         const bills = data.data.map((bill)=>{
+            //             return {
+            //                 Date: bill.date,
+            //                 Description: bill.description,
+            //                 Invoice_Total: bill.invoice_total,
+            //             }
+            //         })
+            //
+            //         excelParser().exportDataFromJSON(bills, 'Bill list', format);
+            //     });
+            // } catch (error) {
+            //     console.error(error);
+            // }
 
-            const worksheet = XLSX.utils.json_to_sheet(data, {
-                header: Object.keys(data[0]),
-                cellStyles: true
-            });
 
-            // Modify header names and styles
-            const headerRange = XLSX.utils.decode_range(worksheet['!ref']);
-            for (let col = headerRange.s.c; col <= headerRange.e.c; col++) {
-                const headerCell = XLSX.utils.encode_cell({ r: headerRange.s.r, c: col });
-                let headerCellValue = worksheet[headerCell].v;
-                if(headerCellValue.includes('month')){
-                    headerCellValue = this.original_months[headerCellValue.split('-')[2] - 1]+'-'+headerCellValue.split('-')[1]
-                }
-                console.log('headerCellValue', headerCellValue)
-                headerCellValue = this.capitalizeFirstLetter(headerCellValue);
-                const modifiedHeader = headerCellValue;
-                worksheet[headerCell].v = modifiedHeader;
-                worksheet[headerCell].s = {
-                    font: { bold: true }
-                };
-            }
-
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-            const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-            const dataBlob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-            saveAs(dataBlob, 'exported_data.xlsx');
+            // console.log('filteredRegisters', this.registers);
+            // const data = this.registers.map(register => {
+            //     const { bill_item_id, ...filteredData } = register;
+            //     return filteredData;
+            // });
+            //
+            // const worksheet = XLSX.utils.json_to_sheet(data, {
+            //     header: Object.keys(data[0]),
+            //     cellStyles: true
+            // });
+            //
+            // // Modify header names and styles
+            // const headerRange = XLSX.utils.decode_range(worksheet['!ref']);
+            // for (let col = headerRange.s.c; col <= headerRange.e.c; col++) {
+            //     const headerCell = XLSX.utils.encode_cell({ r: headerRange.s.r, c: col });
+            //     let headerCellValue = worksheet[headerCell].v;
+            //     if(headerCellValue.includes('month')){
+            //         headerCellValue = this.original_months[headerCellValue.split('-')[2] - 1]+'-'+headerCellValue.split('-')[1]
+            //     }
+            //     console.log('headerCellValue', headerCellValue)
+            //     headerCellValue = this.capitalizeFirstLetter(headerCellValue);
+            //     const modifiedHeader = headerCellValue;
+            //     worksheet[headerCell].v = modifiedHeader;
+            //     worksheet[headerCell].s = {
+            //         font: { bold: true }
+            //     };
+            // }
+            //
+            // const workbook = XLSX.utils.book_new();
+            // XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+            // const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+            // const dataBlob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            // saveAs(dataBlob, 'exported_data.xlsx');
         },
         capitalizeFirstLetter(string) {
             return string.charAt(0).toUpperCase() + string.slice(1);
