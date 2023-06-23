@@ -1,7 +1,7 @@
 <template>
     <div>
         <div>
-            <el-text tag="b" type="primary" size="large">View Register</el-text>
+            <el-text tag="b" type="primary" size="large">View Cog</el-text>
             <div style="float: right;">
                 <span style="vertical-align: middle;  font-size:16px;">Year</span>
                 <el-date-picker
@@ -14,33 +14,12 @@
         </div>
 
         <h4>
-            <el-button type="primary" @click="exportBalanceSheet(bill_item.id, 'xls')">
-                <el-icon style="vertical-align: middle">
-                    <Download />
-                </el-icon>
-                <span style="vertical-align: middle"> Export to Excel </span>
-            </el-button>
-
-            <el-button type="primary" @click="exportBalanceSheet(bill_item.id, 'xls')">
-                <el-icon style="vertical-align: middle">
-                    <Download />
-                </el-icon>
-                <span style="vertical-align: middle"> Export to Excel </span>
-            </el-button>
-
-            <el-button type="primary" @click="exportBalanceSheet(bill_item.id, 'pdf')">
-                <el-icon style="vertical-align: middle">
-                    <Download />
-                </el-icon>
-                <span style="vertical-align: middle"> Download pdf </span>
-            </el-button>
-
-            <!-- Raw Material Register -->
+            <!-- Raw Material Cog -->
             <div style="float:right">
-                <el-button type="info" class="me-1" @click="closeDate">Close Register</el-button>
+                <el-button type="info" class="me-1" @click="closeDate">Close Cog</el-button>
                 <el-button v-if="isMounted && bill_item.closing_dates && bill_item.closing_dates.length>0"
                         type="info" class="me-1" @click="undoDate">
-                    Undo Register
+                    Undo Cog
                 </el-button>
             </div>
         </h4>
@@ -49,7 +28,7 @@
         <div class="el-table-wrapper" v-if="isMounted">
             <h3 class="text-center mb-3 font-weight-bold">{{bill_item.name}} ({{bill_item.sku}})</h3>
             <div class="table-body" style="max-height: 75vh;">
-                <el-table :data="register_rows" style="width: 100%">
+                <el-table :data="cog_rows" style="width: 100%">
                     <el-table-column prop="date" label="Date" width="120" />
                     <el-table-column label="Opening Inventory">
                         <!-- <el-table-column prop="opening_date_rate" label="Rate" width="100%" /> -->
@@ -111,7 +90,7 @@
 
                 <el-row>
                     <el-col>
-                        <router-link :to="'/registers'">
+                        <router-link :to="'/cogs'">
                             <el-button type="info" class="me-2">Back</el-button>
                         </router-link>
                         <!-- <el-button type="primary" @click="downloadPdf" class="me-2">Download PDF</el-button> -->
@@ -126,10 +105,10 @@
 
 <script>
 export default {
-    name: 'RegisterShow',
+    name: 'CogShow',
     data() {
         return {
-            register : {
+            cog : {
                 id: null,
                 description: '',
                 invoice_total: 0,
@@ -142,9 +121,9 @@ export default {
                 }]
             },
             query: {
-                year: new Date().getFullYear(),
+                year: '',
             },
-            register_rows: [],
+            cog_rows: [],
             bill_item: null,
             isMounted: false,
             year: null,
@@ -152,25 +131,24 @@ export default {
     },
     async created() {
         let paths = this.$route.path.split("/");
-        this.register.id = paths[3];
+        this.cog.id = paths[3];
         console.log('Route Name: ', this.$route.name);
         await this.getList();
         this.isMounted = true;
     },
     methods: {
         downloadPdf(){
-            window.location.href = `/registers/download-pdf/`+this.register.id;
+            window.location.href = `/cogs/download-pdf/`+this.cog.id;
         },
         async getList(){
             let params = {
                 year: this.query.year,
             }
-            await axios.get(`/api/registers/view/`+this.register.id, {params}).
+            await axios.get(`/api/cogs/view/`+this.cog.id, {params}).
                 then((res) => {
-                console.log(res.data)
-                    this.register.id = res.data.bill_item.id;
-                    this.register.items = res.data.mergedItems;
-                    this.register_rows = res.data.mergedItems;
+                    this.cog.id = res.data.bill_item.id;
+                    this.cog.items = res.data.mergedItems;
+                    this.cog_rows = res.data.mergedItems;
                     this.bill_item = res.data.bill_item;
                     console.log('res:', res.data, this.bill_item);
                 });
@@ -184,10 +162,10 @@ export default {
         },
         async closeDate(){
             try {
-                await axios.post(`/api/registers/close`, {sku: this.bill_item.sku}).
+                await axios.post(`/api/cogs/close`, {sku: this.bill_item.sku}).
                         then((res) => {
                             console.log('res:', res, this.$router);
-                            // this.$router.push('/registers');
+                            // this.$router.push('/cogs');
                         });
             } catch (error) {
                 console.error('error in response:', error.response.data);
@@ -195,7 +173,7 @@ export default {
         },
         undoDate(){
             ElMessageBox.confirm(
-                'Are you sure you want to undo Closing Register for the date '+this.bill_item.closing_dates[0].date+'?',
+                'Are you sure you want to undo Closing Cog for the date '+this.bill_item.closing_dates[0].date+'?',
                 'Warning',
                 {
                     confirmButtonText: 'OK',
@@ -203,10 +181,10 @@ export default {
                     type: 'warning',
                 }
             ).then(() => {
-                axios.post(`/api/registers/undo`, {sku: this.bill_item.sku}).
+                axios.post(`/api/cogs/undo`, {sku: this.bill_item.sku}).
                     then((res) => {
                         console.log('res:', res, this.$router);
-                        this.$router.push('/registers');
+                        this.$router.push('/cogs');
                         ElMessage({
                             type: 'success',
                             message: 'Undo completed',
@@ -226,10 +204,6 @@ export default {
         },
         handleInvoiceClick(invoice){
             window.location.href = `/bills/download-pdf/`+invoice.split('-')[1];
-        },
-
-        exportBalanceSheet(id, format){
-            window.location.href = `/api/register/${id}/export-balance-sheet/${format}`;
         },
 
     },

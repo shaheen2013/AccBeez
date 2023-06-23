@@ -45,6 +45,17 @@
                             </el-menu-item>
                         </router-link>
 
+                        <router-link to="/assign-users" style="text-decoration: none;"
+                                     :style="[$route.path === '/assign-users' ? {color: 'royalblue'} : {color: 'black'}]">
+                            <el-menu-item index="4">
+                                <!-- <el-icon><icon-menu /></el-icon> -->
+                                <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px">
+                                    <Avatar />
+                                </el-icon>
+                                Assign User
+                            </el-menu-item>
+                        </router-link>
+
                         <router-link to="/sales" style="text-decoration: none;"
                                      :style="[$route.path === '/sales' ? {color: 'royalblue'} : {color: 'black'}]">
                             <el-menu-item index="5">
@@ -63,6 +74,16 @@
                                     <CreditCard />
                                 </el-icon>
                                 Bom Sales
+                            </el-menu-item>
+                        </router-link>
+                        <router-link to="/cogs" style="text-decoration: none;"
+                                     :style="[$route.path === '/cogs' ? {color: 'royalblue'} : {color: 'black'}]">
+                            <el-menu-item index="7">
+                                <!-- <el-icon><icon-menu /></el-icon> -->
+                                <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px">
+                                    <CreditCard />
+                                </el-icon>
+                                Cogs
                             </el-menu-item>
                         </router-link>
                         <!-- <router-link to="/exl-table" style="text-decoration: none;"

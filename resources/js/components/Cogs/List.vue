@@ -1,7 +1,7 @@
 
 <template>
     <div style="padding:20px;">
-        <h1>Register List</h1>
+        <h1>Cog List</h1>
 
         <div class="filter-container">
             <el-input
@@ -15,28 +15,27 @@
                 </el-icon>
                 <span style="vertical-align: middle"> Search </span>
             </el-button>
-
-            <el-button type="primary" @click="exportData('xls')">
+            <el-button type="primary" @click="exportData('pdf')">
                 <el-icon style="vertical-align: middle">
                     <Download />
                 </el-icon>
-                <span style="vertical-align: middle"> Export to Excel </span>
+                <span style="vertical-align: middle"> Download Pdf</span>
             </el-button>
 
             <el-button type="primary" @click="exportData('csv')">
                 <el-icon style="vertical-align: middle">
                     <Download />
                 </el-icon>
-                <span style="vertical-align: middle"> Export to csv </span>
+                <span style="vertical-align: middle"> Download csv</span>
             </el-button>
 
-            <el-button type="primary" @click="exportData('pdf')">
+
+            <el-button type="primary" @click="exportData('xls')">
                 <el-icon style="vertical-align: middle">
                     <Download />
                 </el-icon>
-                <span style="vertical-align: middle"> Download Pdf </span>
+                <span style="vertical-align: middle"> Download Excel </span>
             </el-button>
-
 
             <div style="float: right;">
                 <span style="vertical-align: middle;  font-size:16px;">Year</span>
@@ -52,29 +51,19 @@
         </div>
 
 
-        <el-table :data="registers" class="small-font-table">
+        <el-table :data="cogs" class="small-font-table">
+            <el-table-column fixed prop="description" label="Description" />
+            <el-table-column fixed prop="date" label="Date" />
+            <el-table-column fixed prop="invoice_total" label="Invoice Total" />
+
             <el-table-column fixed prop="name" label="Name" />
-            <el-table-column fixed prop="sku" label="SKU" />
-            <template v-for="month in months">
-                <el-table-column :prop="`month-${month}`" :label="original_months[month.split('-')[1] - 1]+'-'+month.split('-')[0]">
-                    <template #default="scope">
-                            <!-- {{ month.split('-')[1] }}  -->
-                            <!-- {{original_months[month.split('-')[1] - 1]}} -->
-                        {{ formattedAverage(scope.row[`month-${month}`]) }}
-                    </template>
-                </el-table-column>
-            </template>
-
-
-            <el-table-column fixed='right' prop="bill_item_id" label="Operations" >
-                <template  #default="scope">
-                    <router-link :to="'/registers/view/'+scope.row.bill_item_id">
-                        <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px" >
-                            <View />
-                        </el-icon>
-                    </router-link>
-                </template>
-            </el-table-column>
+            <el-table-column fixed prop="invoice_total" label="Invoice Total" />
+            <el-table-column fixed prop="rate" label="Rate" />
+            <el-table-column fixed prop="unit" label="Unit" />
+            <el-table-column fixed prop="quantity" label="Quantity" />
+            <el-table-column fixed prop="total" label="Total" />
+            <el-table-column fixed prop="cogs" label="Cogs" />
+            <el-table-column fixed prop="margin" label="margin" />
         </el-table>
 
 
@@ -102,10 +91,10 @@ import { saveAs } from 'file-saver';
 import {excelParser} from "../../utils/excel-parser.js";
 
 export default {
-    name: 'Register',
+    name: 'Cog',
     data() {
         return {
-            registers: [],
+            cogs: [],
             months: [],
             original_months: [
                 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
@@ -115,7 +104,7 @@ export default {
                 page: 1,
                 limit: 10,
                 keyword: '',
-                year: new Date().getFullYear(),
+                year: '',
             },
             total: null,
             totalPages: null,
@@ -139,12 +128,11 @@ export default {
                 page: this.query.page,
                 year: this.query.year,
             }
-            console.log('params', params, this.query.year);
-            await axios.get(`/api/registers`, {params}).
+            console.log('params', params);
+            await axios.get(`/api/cogs/boms`).
                     then((res) => {
-                console.log(res.data)
-                        //console.log('response in register list:', res);
-                        this.registers = res.data.register_list;
+                        console.log('response in cog list:', res.data);
+                        this.cogs = res.data;
                         this.months = res.data.distinct_months;
                         // this.query.page = res.data.current_page;
                         this.total = res.data.total;
@@ -174,62 +162,54 @@ export default {
             }
         },
 
-
-        // Export Excel file
-        exportData(format) {
-            window.location.href = `/api/register/exported-data/${format}`;
+        async exportData(format){
+            window.location.href = `/api/cogs/exported-data/${format}`;
+            //excelParser().exportDataFromJSON(this.cogs, 'Cogs list', format);
             // try {
-            //     await axios.get(`/api/register/exported-data`).
+            //     await axios.get(`/api/cogs/exported-data`).
             //     then(({data}) => {
             //
-            //         const bills = data.data.map((bill)=>{
-            //             return {
-            //                 Date: bill.date,
-            //                 Description: bill.description,
-            //                 Invoice_Total: bill.invoice_total,
-            //             }
-            //         })
-            //
-            //         excelParser().exportDataFromJSON(bills, 'Bill list', format);
+            //         excelParser().exportDataFromJSON(bills, 'Cogs list', format);
             //     });
             // } catch (error) {
             //     console.error(error);
             // }
+        },
+        // Export Excel file
+        exportToExcel() {
+            console.log('filteredCogs', this.cogs);
+            const data = this.cogs.map(cog => {
+                const { bill_item_id, ...filteredData } = cog;
+                return filteredData;
+            });
 
+            const worksheet = XLSX.utils.json_to_sheet(data, {
+                header: Object.keys(data[0]),
+                cellStyles: true
+            });
 
-            // console.log('filteredRegisters', this.registers);
-            // const data = this.registers.map(register => {
-            //     const { bill_item_id, ...filteredData } = register;
-            //     return filteredData;
-            // });
-            //
-            // const worksheet = XLSX.utils.json_to_sheet(data, {
-            //     header: Object.keys(data[0]),
-            //     cellStyles: true
-            // });
-            //
-            // // Modify header names and styles
-            // const headerRange = XLSX.utils.decode_range(worksheet['!ref']);
-            // for (let col = headerRange.s.c; col <= headerRange.e.c; col++) {
-            //     const headerCell = XLSX.utils.encode_cell({ r: headerRange.s.r, c: col });
-            //     let headerCellValue = worksheet[headerCell].v;
-            //     if(headerCellValue.includes('month')){
-            //         headerCellValue = this.original_months[headerCellValue.split('-')[2] - 1]+'-'+headerCellValue.split('-')[1]
-            //     }
-            //     console.log('headerCellValue', headerCellValue)
-            //     headerCellValue = this.capitalizeFirstLetter(headerCellValue);
-            //     const modifiedHeader = headerCellValue;
-            //     worksheet[headerCell].v = modifiedHeader;
-            //     worksheet[headerCell].s = {
-            //         font: { bold: true }
-            //     };
-            // }
-            //
-            // const workbook = XLSX.utils.book_new();
-            // XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-            // const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-            // const dataBlob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-            // saveAs(dataBlob, 'exported_data.xlsx');
+            // Modify header names and styles
+            const headerRange = XLSX.utils.decode_range(worksheet['!ref']);
+            for (let col = headerRange.s.c; col <= headerRange.e.c; col++) {
+                const headerCell = XLSX.utils.encode_cell({ r: headerRange.s.r, c: col });
+                let headerCellValue = worksheet[headerCell].v;
+                if(headerCellValue.includes('month')){
+                    headerCellValue = this.original_months[headerCellValue.split('-')[2] - 1]+'-'+headerCellValue.split('-')[1]
+                }
+                console.log('headerCellValue', headerCellValue)
+                headerCellValue = this.capitalizeFirstLetter(headerCellValue);
+                const modifiedHeader = headerCellValue;
+                worksheet[headerCell].v = modifiedHeader;
+                worksheet[headerCell].s = {
+                    font: { bold: true }
+                };
+            }
+
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+            const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+            const dataBlob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            saveAs(dataBlob, 'exported_data.xlsx');
         },
         capitalizeFirstLetter(string) {
             return string.charAt(0).toUpperCase() + string.slice(1);

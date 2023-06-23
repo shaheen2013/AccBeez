@@ -2,6 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Bom;
+use App\Models\BomItem;
+use App\Models\Sale;
+use App\Models\SaleItem;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -19,5 +23,15 @@ class DatabaseSeeder extends Seeder
             BillSeeder::class,
             BillItemSeeder::class,
         ]);
+
+        Bom::factory(100)
+            ->has(BomItem::factory()->count(10))
+            ->create();
+
+        Sale::factory(100)
+            ->has(SaleItem::factory()->count(10))
+            ->create();
+
+
     }
 }

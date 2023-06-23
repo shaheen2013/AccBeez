@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\BillResource;
 use Exception;
 use App\Models\Bill;
 use App\Models\BillItem;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Arr;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\Log;
 
 class BillController extends Controller
 {
@@ -118,6 +120,15 @@ class BillController extends Controller
         }
     }
 
+    public function downloadBillsInPdf()
+    {
+        $bill = Bill::latest()->get();
+
+        $pdf = Pdf::loadView('bills.list', ['bills' => $bill]);
+        // dd($pdf);
+        return $pdf->download('bill-list.pdf');
+    }
+
     public function downloadPdf($id)
     {
 
@@ -145,6 +156,17 @@ class BillController extends Controller
         } catch (Exception $ex) {
             DB::rollBack();
             return 'Delete Failed';
+        }
+    }
+
+    public function exportData(){
+        try{
+            $data = BillResource::collection(Bill::latest()->get());
+
+            return response()->successResponse('Bill list', $data);
+        }catch (Exception $exception){
+            Log::info($exception->getMessage());
+            return response()->errorResponse();
         }
     }
 

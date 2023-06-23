@@ -9,6 +9,7 @@ import BomCreate from './components/Boms/Create.vue';
 import BomShow from './components/Boms/Show.vue';
 import UserCreate from './components/Users/Create.vue';
 import UserList from './components/Users/List.vue';
+import AssignUsers from './components/Users/AssignUsers.vue';
 import NotFoundPage from './components/NotFoundPage.vue';
 import Dashboard from './components/Dashboard.vue';
 import SaleCreate from './components/Sales/Create.vue';
@@ -19,6 +20,9 @@ import ExlTable from "@/components/ExlTable/ExlTable.vue";
 import BomSaleList from './components/BomSales/List.vue';
 import BomSaleCreate from './components/BomSales/Create.vue';
 import BomSaleShow from './components/BomSales/Show.vue';
+
+import CogsList from './components/Cogs/List.vue';
+
 
 const routes = [
     {
@@ -84,6 +88,11 @@ const routes = [
         component: UserList
     },
     {
+        path: '/assign-users',
+        name: 'AssignUsers',
+        component: AssignUsers
+    },
+    {
         path: '/users/create',
         name: 'UserCreate',
         component: UserCreate
@@ -143,6 +152,12 @@ const routes = [
         name: 'BomSaleShow',
         component: BomSaleShow
     },
+    {
+        path: '/cogs',
+        name: 'CogsList',
+        component: CogsList
+    },
+
     {
         path: '/:pathMatch(.*)*',
         component: NotFoundPage

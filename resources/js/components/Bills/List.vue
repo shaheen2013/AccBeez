@@ -23,18 +23,53 @@
                 </el-icon>
                 <span style="vertical-align: middle"> Search </span>
             </el-button>
-            <el-button type="primary" @click="exportToExcel">
+            <el-button type="primary" @click="exportData('xls')">
                 <el-icon style="vertical-align: middle">
                     <Download />
                 </el-icon>
                 <span style="vertical-align: middle"> Export to Excel </span>
             </el-button>
+
+            <el-button type="primary" @click="exportData('csv')">
+                <el-icon style="vertical-align: middle">
+                    <Download />
+                </el-icon>
+                <span style="vertical-align: middle"> Export to CSV </span>
+            </el-button>
+
+            <el-button type="primary" @click="downloadPdf">
+                <el-icon style="vertical-align: middle">
+                    <Download />
+                </el-icon>
+                <span style="vertical-align: middle"> Download Pdf </span>
+            </el-button>
+
             <el-button type="danger" @click="handleBulkDelete">
                 <el-icon style="vertical-align: middle">
                     <Delete />
                 </el-icon>
                 <span style="vertical-align: middle">Delete Selecteds</span>
             </el-button>
+            <!-- <el-upload
+                ref="upload"
+                class="upload-demo"
+                action="/bills/import"
+                :limit="1"
+                :on-exceed="handleExceed"
+                :auto-upload="false"
+            >
+                <template #trigger>
+                    <el-button type="primary">select file</el-button>
+                </template>
+                <el-button class="ml-3" type="success" @click="submitUpload">
+                    upload to server
+                </el-button>
+                <template #tip>
+                    <div class="el-upload__tip text-red">
+                        limit 1 file, new file will cover the old file
+                    </div>
+                </template>
+            </el-upload> -->
         </div>
 
 
@@ -95,6 +130,12 @@
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 
+import { genFileId } from 'element-plus'
+
+import { excelParser } from "../../utils/excel-parser";
+import {mapState, mapActions} from "vuex";
+
+
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 export default {
@@ -115,6 +156,7 @@ export default {
             pageSize: 5,
             multipleSelection: [],
             bulkDeleteIds: [],
+            upload: null,
         };
     },
     async created() {
@@ -125,6 +167,7 @@ export default {
                         this.logged_in_user = res.data;
                         console.log('logged_in_user:', this.logged_in_user);
                     });
+            this.upload = this.$refs.upload
         } catch (error) {
             console.error(error);
         }
@@ -268,11 +311,47 @@ export default {
             const dataBlob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
             saveAs(dataBlob, 'exported_data.xlsx');
         },
+
+        async exportData(format){
+            try {
+                await axios.get(`/api/bills/exported-data`).
+                then(({data}) => {
+                    const bills = data.data.map((bill)=>{
+                        return {
+                            Date: bill.date,
+                            Description: bill.description,
+                            Invoice_Total: bill.invoice_total,
+                        }
+                    })
+
+                    excelParser().exportDataFromJSON(bills, 'Bill list', format);
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        async downloadPdf(){
+            window.location.href = `/bills/download-bills/`;
+        },
+
+
         capitalizeFirstLetter(str) {
             const words = str.split('_');
             const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
             return capitalizedWords.join(' ');
-        }
+        },
+        handleExceed(files) {
+            this.upload.clearFiles()
+            const file = files[0]
+            file.uid = genFileId()
+            this.upload.handleStart(file)
+        },
+        submitUpload() {
+            // /bills/import
+
+            this.upload.submit()
+        },
     },
     computed: {
         formattedInvoiceTotal() {
@@ -283,6 +362,15 @@ export default {
     }
 };
 </script>
+
+
+
+
+
+
+
+
+
 
 <style scoped>
 .filter-container {

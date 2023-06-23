@@ -32,6 +32,8 @@ class RolePermissionSeeder extends Seeder
         $roles = [];
         Role::create(['name'=>'Super-Admin','guard_name'=>'web']);
         Role::create(['name'=>'Admin','guard_name'=>'web']);
+        Role::create(['name'=>'User','guard_name'=>'web']);
+        Role::create(['name'=>'Report-User','guard_name'=>'web']);
 
         // dd($roles,$permissions);
 

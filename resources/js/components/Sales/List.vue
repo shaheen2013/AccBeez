@@ -23,12 +23,20 @@
                 </el-icon>
                 <span style="vertical-align: middle"> Search </span>
             </el-button>
-            <el-button type="primary" @click="exportToExcel">
+            <el-button type="primary" @click="exportData('xls')">
                 <el-icon style="vertical-align: middle">
                     <Download />
                 </el-icon>
                 <span style="vertical-align: middle"> Export to Excel </span>
             </el-button>
+
+            <el-button type="primary" @click="exportData('csv')">
+                <el-icon style="vertical-align: middle">
+                    <Download />
+                </el-icon>
+                <span style="vertical-align: middle"> Export to Csv </span>
+            </el-button>
+
             <el-button type="danger" @click="handleBulkDelete">
                 <el-icon style="vertical-align: middle">
                     <Delete />
@@ -104,6 +112,7 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 
 import { ElMessage, ElMessageBox } from 'element-plus'
+import {excelParser} from "../../utils/excel-parser.js";
 
 export default {
     name: 'SaleList',
@@ -241,6 +250,16 @@ export default {
             this.multipleSelection = val;
         },
 
+        async exportData(format){
+            try {
+                await axios.get(`/api/sales/exported-data`).
+                then(({data}) => {
+                    excelParser().exportDataFromJSON(data.data, 'sales-list', format);
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        },
         // Export Excel file
         exportToExcel() {
             console.log('filteredRegisters', this.sales);

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Mail\SendVerificationCodeMail;
 use App\Events\EmailVerificationCodeEvent;
+use App\Models\UserAssign;
 use Spatie\Permission\Models\Role;
 
 use function PHPSTORM_META\type;
@@ -48,8 +49,12 @@ class UserController extends Controller
             DB::beginTransaction();
             $userData['invitation_token'] = random_int(100000, 999999);
             $userData['password'] = Hash::make('123456');
-            $userData['role'] = 'user';
+            $userRole = $request->user_type ? $request->user_type : 'User';
+
+
             $user = User::create($userData);
+
+            $user->assignRole($userRole);
             // event(new SendVerificationCode($user->email, $user->invitation_token));
             // dd('store', $request->all(), $userData);
             DB::commit();
@@ -119,6 +124,42 @@ class UserController extends Controller
         return redirect()->route('login');
     }
 
+    public function getUsersByRole(){
+        $admins = User::whereHas('roles', function($query){
+            $query->where('name', 'Admin');
+        })->get();
+        $users = User::whereHas('roles', function($query){
+            $query->where('name', 'User');
+        })->get();
+        
+        return response()->json(
+        [
+            'admins' => $admins,
+            'users' => $users
+        ]);
+    }
+
+    public function assignUser(Request $request) {
+        $admin = $request->admin;
+        $users = $request->user;
+
+        // admin create
+        UserAssign::create([
+            'admin_id' => $admin,
+            'user_id' => null,
+            'user_type' => 'Admin'
+        ]);
+        // users create
+        foreach($users as $user_id){
+            UserAssign::create([
+                'admin_id' => $admin,
+                'user_id' => $user_id,
+                'user_type' => 'User'
+            ]);
+        }
+
+        return "inserted successfully";
+    }
 
     public function logged_in_user(Request $request)
     {

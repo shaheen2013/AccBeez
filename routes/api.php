@@ -45,7 +45,7 @@ Route::get('/bills/edit/{id}', [App\Http\Controllers\BillController::class, 'edi
 Route::post('/bills/bulkdelete', [App\Http\Controllers\BillController::class, 'bulkdelete'])->name('bills.bulkdelete');
 Route::post('/bills/{id}', [App\Http\Controllers\BillController::class, 'update'])->name('bills.update');
 Route::delete('/bills/{id}', [App\Http\Controllers\BillController::class, 'delete'])->name('bills.delete');
-
+Route::get('/bills/exported-data', [App\Http\Controllers\BillController::class, 'exportData']);
 
 Route::get('/boms/get-all-boms', [App\Http\Controllers\BomController::class, 'getAllBoms'])->name('boms.getAllBoms');
 Route::get('/boms', [App\Http\Controllers\BomController::class, 'index'])->name('boms.list');
@@ -54,7 +54,11 @@ Route::get('/boms/edit/{id}', [App\Http\Controllers\BomController::class, 'edit'
 Route::post('/boms/bulkdelete', [App\Http\Controllers\BomController::class, 'bulkdelete'])->name('boms.bulkdelete');
 Route::post('/boms/{id}', [App\Http\Controllers\BomController::class, 'update'])->name('boms.update');
 Route::delete('/boms/{id}', [App\Http\Controllers\BomController::class, 'delete'])->name('boms.delete');
+Route::get('/boms/exported-data', [App\Http\Controllers\BomController::class, 'exportData']);
 
+
+Route::get('/get-users-by-role', [App\Http\Controllers\UserController::class, 'getUsersByRole'])->name('users.getUsersByRole');
+Route::post('/assign-user', [App\Http\Controllers\UserController::class, 'assignUser'])->name('users.assignUser');
 
 Route::get('/users', [App\Http\Controllers\UserController::class, 'index'])->name('users.list');
 Route::post('/users', [App\Http\Controllers\UserController::class, 'store'])->name('users.store');
@@ -68,10 +72,13 @@ Route::post('/sales', [App\Http\Controllers\SaleController::class, 'store'])->na
 Route::get('/sales/edit/{id}', [App\Http\Controllers\SaleController::class, 'edit'])->name('sales.edit');
 Route::post('/sales/{id}', [App\Http\Controllers\SaleController::class, 'update'])->name('sales.update');
 Route::delete('/sales/{id}', [App\Http\Controllers\SaleController::class, 'delete'])->name('sales.delete');
+Route::get('/sales/exported-data', [App\Http\Controllers\SaleController::class, 'exportData'])->name('sales.list');
 
 Route::get('/products', [App\Http\Controllers\ProductController::class, 'index'])->name('products.list');
 
-
+//Route::get('/register/exported-data/{formats}',[App\Http\Controllers\RegisterController::class,'exportCsvData']);
+Route::get('/register/exported-data/{fileType}', [App\Http\Controllers\RegisterController::class, 'exportData']);
+Route::get('/register/{id}/export-balance-sheet/{fileType}', [App\Http\Controllers\RegisterController::class, 'exportBalanceSheet']);
 Route::get('/registers', [App\Http\Controllers\RegisterController::class, 'index'])->name('registers');
 Route::get('/registers/view/{id}', [App\Http\Controllers\RegisterController::class, 'view'])->name('registers.view');
 Route::post('/registers/close/', [App\Http\Controllers\RegisterController::class, 'close'])->name('registers.close');
@@ -85,9 +92,14 @@ Route::get('/bill/blade/{billId}/export/{format}',[ExportController::class,'expo
 Route::get('/bom/blade/{bomId}/export/{format}',[ExportController::class,'exportBomBladeXls']);
 Route::get('/sale/blade/{saleId}/export/{format}',[ExportController::class,'exportSaleBladeXls']);
 
+Route::get('/bills/import',[ExportController::class,'importBillXls']);
+
+
+
 // cogs routes
-Route::get('/cogs/boms',[COGSController::class,'getAll']);
+Route::get('/cogs/exported-data/{fileType}',[COGSController::class,'exportData']);
 Route::get('/cogs/boms/{id}',[COGSController::class,'getById']);
+Route::get('/cogs/boms',[COGSController::class,'getAll']);
 
 //bom sales routes
 Route::get('/bomSales', [App\Http\Controllers\BomSaleController::class, 'index'])->name('bomSales.list');
@@ -96,7 +108,11 @@ Route::get('/bomSales/edit/{id}', [App\Http\Controllers\BomSaleController::class
 Route::post('/bomSales/{id}', [App\Http\Controllers\BomSaleController::class, 'update'])->name('bomSales.update');
 Route::delete('/bomSales/{id}', [App\Http\Controllers\BomSaleController::class, 'delete'])->name('bomSales.delete');
 
-// role permssion management routes 
+
+// role permssion management routes
+
+// role permssion routes
+
 Route::get('/roles/all',[RolePermissionController::class,'roleIndex']);
 Route::post('/roles/create',[RolePermissionController::class,'roleStore']);
 Route::get('/roles/edit/{id}',[RolePermissionController::class,'roleEdit']);
@@ -108,6 +124,6 @@ Route::post('/permissions/create',[RolePermissionController::class,'permissionSt
 Route::delete('/permissions/delete/{id}',[RolePermissionController::class,'permissionDestroy']);
 
 
-// user role management routes 
+// user role management routes
 Route::put('/users/roles/update/{id}', [App\Http\Controllers\UserController::class, 'assignUserRole']);
 

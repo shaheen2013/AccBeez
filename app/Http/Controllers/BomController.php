@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\BomResource;
 use Exception;
 use App\Models\Bom;
 use App\Models\BomItem;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Arr;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\Log;
 
 class BomController extends Controller
 {
@@ -144,5 +146,16 @@ class BomController extends Controller
                             ->orderBy('name', 'asc')
                             ->get();
         return response()->json($boms);
+    }
+
+    public function exportData(){
+        try{
+            $data = BomResource::collection(Bom::latest()->get());
+            return response()->successResponse('Bom list', $data);
+        }catch (Exception $exception){
+            Log::info($exception->getMessage());
+            return response()->errorResponse();
+        }
+
     }
 }
