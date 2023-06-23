@@ -70,7 +70,7 @@
 <!--                </el-col>-->
 
                 <el-col>
-                    <el-form-item label="Estimated profit">
+                    <el-form-item label="Estimated profit %">
                         <el-input v-model="bom.estimatedProfit" type="number" placeholder="Estimated profit" @keyup="changeEstimatedProfit" />
                     </el-form-item>
                 </el-col>
