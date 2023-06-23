@@ -63,7 +63,11 @@
             <el-table-column fixed prop="quantity" label="Quantity" />
             <el-table-column fixed prop="total" label="Total" />
             <el-table-column fixed prop="cogs" label="Cogs" />
-            <el-table-column fixed prop="margin" label="margin" />
+            <el-table-column fixed prop="margin" label="margin (%)" >
+                <template #default="scope">
+                    <div>{{ scope.row.margin }} %</div>      
+                </template>
+            </el-table-column>
         </el-table>
 
 
