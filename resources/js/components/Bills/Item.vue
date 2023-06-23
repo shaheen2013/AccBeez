@@ -22,23 +22,23 @@
             <!-- <el-input v-model="formattedRate" type="number" placeholder="Rate" :disabled="operation === 'view'"
                         @blur="calculateTotal" /> -->
             <el-input-number v-model="item.rate" type="text" placeholder="Rate" :disabled="operation === 'view'"
-                        :className="text-start"
-                        :controls="false"
-                        :precision="2"
-                        @blur="calculateTotal" />
+                             :className="text-start"
+                             :controls="false"
+                             :precision="2"
+                             @blur="calculateTotal" />
         </td>
         <td>
             <el-input v-model="item.unit" type="text" placeholder="Unit" :disabled="operation === 'view'"/>
         </td>
         <td>
             <el-input v-model="item.quantity" type="number" placeholder="Quantity" :disabled="operation === 'view'"
-                        @blur="calculateTotal" />
+                      @blur="calculateTotal" />
         </td>
         <td>
             <el-input-number v-model="item.total" type="text" placeholder="Total" disabled
-                        :className="text-start"
-                        :controls="false"
-                        :precision="2" />
+                             :className="text-start"
+                             :controls="false"
+                             :precision="2" />
         </td>
         <td v-if="operation !== 'view'">
             <el-button type="danger" @click="getDeletedItemsId(index, item.id)" style="width:100%; padding-right:0;">
@@ -142,28 +142,28 @@ export default {
 
 <style scoped>
 .el-autocomplete.inline-input {
-  width: 100;
-  width: 100%;
+    width: 100;
+    width: 100%;
 }
 td {
-  vertical-align: top;
+    vertical-align: top;
 }
 
 
 .my-autocomplete li {
-  line-height: normal;
-  padding: 7px;
+    line-height: normal;
+    padding: 7px;
 }
 .my-autocomplete li .name {
-  text-overflow: ellipsis;
-  overflow: hidden;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 .my-autocomplete li .addr {
-  font-size: 12px;
-  color: #b4b4b4;
+    font-size: 12px;
+    color: #b4b4b4;
 }
 .my-autocomplete li .highlighted .addr {
-  color: #ddd;
+    color: #ddd;
 }
 td{
     padding-left: 0 !important;

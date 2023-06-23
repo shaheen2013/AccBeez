@@ -21,6 +21,7 @@ import BomSaleCreate from './components/BomSales/Create.vue';
 import BomSaleShow from './components/BomSales/Show.vue';
 
 import CogsList from './components/Cogs/List.vue';
+import SkuList from './components/Sku/List.vue';
 
 
 const routes = [
@@ -151,11 +152,16 @@ const routes = [
         name: 'CogsList',
         component: CogsList
     },
-
+    {
+        path: '/skus',
+        name: 'SkuList',
+        component: SkuList
+    },
     {
         path: '/:pathMatch(.*)*',
         component: NotFoundPage
     },
+
 
     //   { path: '*', redirect: '/404' },
 ];

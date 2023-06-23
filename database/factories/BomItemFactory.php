@@ -20,7 +20,7 @@ class BomItemFactory extends Factory
         $quantity = mt_rand(10, 40);
         $rate = mt_rand(100, 400);
         return [
-            'sku'=> 'SKU-'.$this->i++,
+            'Sku'=> 'SKU-'.$this->i++,
             'quantity'=> $quantity,
             'rate'=> $rate,
             'total'=> $quantity * $rate,

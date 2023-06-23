@@ -12,13 +12,13 @@ class ProductController extends Controller
     public function index()
     {
         $products = BillItem::with(['closingDates' => function ($query) {
-                                $query->select('id', 'sku', 'date')->orderBy('date', 'desc');
+                                $query->select('id', 'Sku', 'date')->orderBy('date', 'desc');
                             }])
-                            ->select('sku', 'name', 'rate', 'bill_items.id as id')
-                            ->orderBy('sku', 'asc')
+                            ->select('Sku', 'name', 'rate', 'bill_items.id as id')
+                            ->orderBy('Sku', 'asc')
                             ->orderBy('id', 'desc')
                             ->get()
-                            ->unique('sku');
+                            ->unique('Sku');
 
         return response()->json($products);
     }

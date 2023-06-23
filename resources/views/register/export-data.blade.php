@@ -36,7 +36,7 @@
     @foreach ($register_list as $register)
         <tr>
             <td>{{ $register['name'] }}</td>
-            <td>{{ $register['sku'] }}</td>
+            <td>{{ $register['Sku'] }}</td>
             @foreach($months as $month)
                 @php($monthFormat = 'month-'.$month)
                 <td>{{$register[$monthFormat]}}</td>

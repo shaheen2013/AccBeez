@@ -21,11 +21,11 @@
                 <span style="vertical-align: middle"> Export to Excel </span>
             </el-button>
 
-            <el-button type="primary" @click="exportBalanceSheet(bill_item.id, 'xls')">
+            <el-button type="primary" @click="exportBalanceSheet(bill_item.id, 'csv')">
                 <el-icon style="vertical-align: middle">
                     <Download />
                 </el-icon>
-                <span style="vertical-align: middle"> Export to Excel </span>
+                    <span style="vertical-align: middle"> Export to CSV </span>
             </el-button>
 
             <el-button type="primary" @click="exportBalanceSheet(bill_item.id, 'pdf')">

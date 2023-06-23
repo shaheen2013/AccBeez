@@ -1,7 +1,7 @@
 <template>
     <el-form ref="ruleFormRef" :model="bill" class="demo-bill"
-        label-position="top"
-        status-icon
+             label-position="top"
+             status-icon
     >
         <el-text tag="b" v-if="operation === 'view'" type="primary" size="large">View Bill</el-text>
         <el-text tag="b" v-if="operation === 'edit'" type="primary" size="large">Edit Bill</el-text>
@@ -11,10 +11,10 @@
         <el-card class="box-card">
             <el-form-item label="Date" required>
                 <el-date-picker v-model="bill.date" type="date" label="Pick a date" placeholder="Pick a date"
-                    format="YYYY-MM-DD"
-                    value-format="YYYY-MM-DD"
-                    style="width: 100%"
-                    :disabled="operation === 'view'" />
+                                format="YYYY-MM-DD"
+                                value-format="YYYY-MM-DD"
+                                style="width: 100%"
+                                :disabled="operation === 'view'" />
             </el-form-item>
             <el-form-item label="Description" prop="description">
                 <el-input v-model="bill.description" type="textarea" :disabled="operation === 'view'" />
@@ -25,52 +25,52 @@
                 <el-col :span="24">
                     <table class="table table-borderless">
                         <thead>
-                            <tr>
-                                <th :style="operation === 'view' ? { 'width': '25%' } : { 'width': '15%' }">
-                                    <span class="required-indicator" v-if="operation !== 'view'">*</span>
-                                    <span>SKU</span>
-                                </th>
-                                <th width="15%">
-                                    <span class="required-indicator" v-if="operation !== 'view'">*</span>
-                                    <span>Name</span>
-                                </th>
-                                <th width="15%">
-                                    <span class="required-indicator" v-if="operation !== 'view'">*</span>
-                                    <span>Rate</span>
-                                </th>
-                                <th width="15%">
-                                    <span class="required-indicator" v-if="operation !== 'view'">*</span>
-                                    <span>Unit</span>
-                                </th>
-                                <th width="15%">
-                                    <span class="required-indicator" v-if="operation !== 'view'">*</span>
-                                    <span>Quantity</span>
-                                </th>
-                                <th width="15%">
-                                    <span class="required-indicator" v-if="operation !== 'view'">*</span>
-                                    <span>Item Total</span>
-                                </th>
-                                <th v-if="operation !== 'view'" width="10%">Actions</th>
-                            </tr>
+                        <tr>
+                            <th :style="operation === 'view' ? { 'width': '25%' } : { 'width': '15%' }">
+                                <span class="required-indicator" v-if="operation !== 'view'">*</span>
+                                <span>SKU</span>
+                            </th>
+                            <th width="15%">
+                                <span class="required-indicator" v-if="operation !== 'view'">*</span>
+                                <span>Name</span>
+                            </th>
+                            <th width="15%">
+                                <span class="required-indicator" v-if="operation !== 'view'">*</span>
+                                <span>Rate</span>
+                            </th>
+                            <th width="15%">
+                                <span class="required-indicator" v-if="operation !== 'view'">*</span>
+                                <span>Unit</span>
+                            </th>
+                            <th width="15%">
+                                <span class="required-indicator" v-if="operation !== 'view'">*</span>
+                                <span>Quantity</span>
+                            </th>
+                            <th width="15%">
+                                <span class="required-indicator" v-if="operation !== 'view'">*</span>
+                                <span>Item Total</span>
+                            </th>
+                            <th v-if="operation !== 'view'" width="10%">Actions</th>
+                        </tr>
                         </thead>
 
                         <tbody>
-                            <billItem
-                                v-for="(item, index) in bill.items"
-                                :key="index"
-                                :index="index"
-                                :item="item"
-                                :billItems="bill.items"
-                                :bill="bill"
-                                :operation="operation"
-                                :products="products"
-                                @changeInvoiceTotal="changeInvoiceTotal"
-                                :deletedItemsID="deletedItemsID"
-                            />
+                        <billItem
+                            v-for="(item, index) in bill.items"
+                            :key="index"
+                            :index="index"
+                            :item="item"
+                            :billItems="bill.items"
+                            :bill="bill"
+                            :operation="operation"
+                            :products="products"
+                            @changeInvoiceTotal="changeInvoiceTotal"
+                            :deletedItemsID="deletedItemsID"
+                        />
                         </tbody>
                     </table>
                     <el-button type="info" @click="addItem" v-if="operation === 'create' || operation === 'edit'"
-                                class="mb-3">
+                               class="mb-3">
                         Add
                     </el-button>
                 </el-col>
@@ -156,23 +156,23 @@ export default {
         console.log('Route Name: ', this.$route.name);
         if(this.bill.id){
             axios.get(`/api/bills/edit/`+this.bill.id).
-                    then((res) => {
-                        console.log('res:', res);
-                        this.bill.id = res.data.id;
-                        this.bill.description = res.data.description;
-                        this.bill.invoice_total = res.data.invoice_total;
-                        this.bill.date = res.data.date;
-                        this.bill.items = res.data.bill_items;
-                    });
+            then((res) => {
+                console.log('res:', res);
+                this.bill.id = res.data.id;
+                this.bill.description = res.data.description;
+                this.bill.invoice_total = res.data.invoice_total;
+                this.bill.date = res.data.date;
+                this.bill.items = res.data.bill_items;
+            });
             console.log('Bill edit', this.bill)
         }
 
 
         await axios.get(`/api/products`).
-                then((res) => {
-                    this.products = res.data;
-                    console.log('products:', this.products);
-                });
+        then((res) => {
+            this.products = res.data;
+            console.log('products:', this.products);
+        });
     },
     methods: {
 
@@ -191,10 +191,10 @@ export default {
             console.log('createBill:', this.bill)
             try {
                 await axios.post(`/api/bills`, this.bill).
-                        then((res) => {
-                            console.log('res:', res, this.$router);
-                            this.$router.push('/bills');
-                        });
+                then((res) => {
+                    console.log('res:', res, this.$router);
+                    this.$router.push('/bills');
+                });
             } catch (error) {
                 showErrors(error);
                 console.error('error in response:', error.response.data);
@@ -205,10 +205,10 @@ export default {
             console.log('updateBill:', this.bill)
             try {
                 await axios.post(`/api/bills/`+this.bill.id, this.bill).
-                        then((res) => {
-                            console.log('res:', res, this.$router);
-                            this.$router.push('/bills');
-                        });
+                then((res) => {
+                    console.log('res:', res, this.$router);
+                    this.$router.push('/bills');
+                });
             } catch (error) {
                 showErrors(error);
                 console.error(error);
@@ -229,19 +229,19 @@ export default {
 
 
 <style scoped>
-    .demo-bill {
-        padding-left: 10px;
-    }
-    .el-form-item__label {
-        font-weight:bold !important;
-        color: #212529;
-    }
-    th {
-        padding-left: 0 !important;
-        padding-top: 0 !important;
-    }
-    .required-indicator {
-        color: red;
-        margin-right: 3px;
-    }
+.demo-bill {
+    padding-left: 10px;
+}
+.el-form-item__label {
+    font-weight:bold !important;
+    color: #212529;
+}
+th {
+    padding-left: 0 !important;
+    padding-top: 0 !important;
+}
+.required-indicator {
+    color: red;
+    margin-right: 3px;
+}
 </style>>

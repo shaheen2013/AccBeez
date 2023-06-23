@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('bill_items', function (Blueprint $table) {
-            $table->string('unit')->nullable()->after('sku');
-            $table->string('name')->nullable()->after('sku');
+            $table->string('unit')->nullable()->after('Sku');
+            $table->string('name')->nullable()->after('Sku');
             $table->unsignedBigInteger('client_id')->nullable();
         });
     }

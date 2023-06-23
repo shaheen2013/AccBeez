@@ -25,7 +25,7 @@ class BillExport implements FromCollection,WithHeadings,WithHeadingRow
         }
         $data = $bill_items->map(function($bill_item,$key){
             return [
-                'sku'=>$bill_item->sku,
+                'Sku'=>$bill_item->sku,
                 'quantity'=>$bill_item->quantity,
                 'unit'=>$bill_item->unit,
                 'rate'=>$bill_item->rate,

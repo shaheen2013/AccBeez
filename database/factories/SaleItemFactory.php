@@ -18,7 +18,7 @@ class SaleItemFactory extends Factory
     public function definition(): array
     {
         return [
-            'sku'=>'SKU-'.$this->i++,
+            'Sku'=>'SKU-'.$this->i++,
             'name'=>'Sale item - '.$this->i++,
             'rate'=>mt_rand(50, 99),
             'unit'=>'Example unit '.$this->i++,

@@ -69,7 +69,7 @@ class BomSaleController extends Controller
                 'items'=>[
                     [
                         'bom_sale_item_id'=>$item['id'],
-                        'sku'=>$bomItem->sku,
+                        'Sku'=>$bomItem->sku,
                         'name'=>$bomItem->sku,
                         'rate'=>$bomItem->rate,
                     ],

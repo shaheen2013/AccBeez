@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('closing_dates', function (Blueprint $table) {
             $table->id();
-            $table->string('sku');
+            $table->string('Sku');
             $table->string('date');
             $table->boolean('status')->default(0);
             $table->timestamps();

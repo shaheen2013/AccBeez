@@ -44,7 +44,7 @@ class RegisterController extends Controller
 
            $registers = DB::table('bill_items')
                         ->leftJoin('bills', 'bill_items.bill_id', '=', 'bills.id')
-                        ->select('name', 'sku', 'bill_items.id as bill_item_id', DB::raw('SUM(quantity) as total_items'),
+                        ->select('name', 'Sku', 'bill_items.id as bill_item_id', DB::raw('SUM(quantity) as total_items'),
                                             DB::raw('SUM(total) as total_cost'),
                                             DB::raw('round(SUM(total) / SUM(quantity),2) as avg_cost'),
                                             DB::raw('YEAR(bills.date) as year'),
@@ -52,13 +52,13 @@ class RegisterController extends Controller
                                             DB::raw("DATE_FORMAT(bills.date, '%Y-%m') as month")
                         )
                         ->when(!empty($keyword), function (Builder $query) use ($keyword) {
-                            return $query->where('sku', 'LIKE', '%' . $keyword . '%');
+                            return $query->where('Sku', 'LIKE', '%' . $keyword . '%');
                         })
                         ->when(!empty($year), function (Builder $query) use ($year) {
                             return $query->whereRaw('YEAR(bills.date) = ?', [$year]);
                         })
-                        ->groupBy(['sku', 'month', 'year'])
-                        ->orderBy('sku')
+                        ->groupBy(['Sku', 'month', 'year'])
+                        ->orderBy('Sku')
                         ->orderBy('year')
                         ->orderBy('month')
                         ->get();
@@ -68,7 +68,7 @@ class RegisterController extends Controller
             return [$item->sku => [
                 "bill_item_id" => $item->bill_item_id,
                 "name" => $item->name,
-                "sku" => $item->sku,
+                "Sku" => $item->sku,
                 "avg_cost" => $item->avg_cost,
                 "month" => $item->month,
                 "year" => $item->year,
@@ -80,7 +80,7 @@ class RegisterController extends Controller
          $simpleList = $grouped->map(function ($items) use ($distinctMonths) {
             $groupedItemsByMonth = $items->keyBy('month');
             $outputItem['name'] = $items[0]['name'];
-            $outputItem['sku'] = $items[0]['sku'];
+            $outputItem['Sku'] = $items[0]['Sku'];
             $outputItem['bill_item_id'] = $items[0]['bill_item_id'];
 
             foreach ($distinctMonths as $month) {
@@ -129,7 +129,7 @@ class RegisterController extends Controller
 
         $registers = DB::table('bill_items')
             ->leftJoin('bills', 'bill_items.bill_id', '=', 'bills.id')
-            ->select('name', 'sku', 'bill_items.id as bill_item_id', DB::raw('SUM(quantity) as total_items'),
+            ->select('name', 'Sku', 'bill_items.id as bill_item_id', DB::raw('SUM(quantity) as total_items'),
                 DB::raw('SUM(total) as total_cost'),
                 DB::raw('round(SUM(total) / SUM(quantity),2) as avg_cost'),
                 DB::raw('YEAR(bills.date) as year'),
@@ -140,8 +140,8 @@ class RegisterController extends Controller
             ->when(!empty($year), function (Builder $query) use ($year) {
                 return $query->whereRaw('YEAR(bills.date) = ?', [$year]);
             })
-            ->groupBy(['sku', 'month', 'year'])
-            ->orderBy('sku')
+            ->groupBy(['Sku', 'month', 'year'])
+            ->orderBy('Sku')
             ->orderBy('year')
             ->orderBy('month')
             ->get();
@@ -151,7 +151,7 @@ class RegisterController extends Controller
             return [$item->sku => [
                 "bill_item_id" => $item->bill_item_id,
                 "name" => $item->name,
-                "sku" => $item->sku,
+                "Sku" => $item->sku,
                 "avg_cost" => $item->avg_cost,
                 "month" => $item->month,
                 "year" => $item->year,
@@ -163,7 +163,7 @@ class RegisterController extends Controller
         $simpleList = $grouped->map(function ($items) use ($distinctMonths) {
             $groupedItemsByMonth = $items->keyBy('month');
             $outputItem['name'] = $items[0]['name'];
-            $outputItem['sku'] = $items[0]['sku'];
+            $outputItem['Sku'] = $items[0]['Sku'];
             $outputItem['bill_item_id'] = $items[0]['bill_item_id'];
 
             foreach ($distinctMonths as $month) {
@@ -205,7 +205,7 @@ class RegisterController extends Controller
         // $input['date'] = '2023-02-04';
         $input['status'] = 0;
         $closingDate = ClosingDate::updateOrCreate(
-            ['date' => $input['date'], 'sku' => $input['sku']],
+            ['date' => $input['date'], 'Sku' => $input['Sku']],
             ['status' => 0]
         );
     }
@@ -214,7 +214,7 @@ class RegisterController extends Controller
     {
         // $request['date'] = Carbon::now()->format('Y-m-d');
         $input = $request->all();
-        $closingDate = ClosingDate::where('sku', $input['sku'])->orderBy('created_at', 'desc')->first()->delete();
+        $closingDate = ClosingDate::where('Sku', $input['Sku'])->orderBy('created_at', 'desc')->first()->delete();
         // dd($closingDate, $input);
     }
 
@@ -232,14 +232,14 @@ class RegisterController extends Controller
         // Find unique dates in BillItem
         $billItemDates = Bill::leftJoin('bill_items', 'bills.id', '=', 'bill_items.bill_id')
                                 ->groupBy('date')
-                                ->select('bills.date', 'bill_items.sku', DB::raw("'billItem' as model"),
+                                ->select('bills.date', 'bill_items.Sku', DB::raw("'billItem' as model"),
                                         DB::raw('SUM(quantity) as bill_item_quantity'),
                                         DB::raw('SUM(total) as bill_item_total'),
                                         DB::raw('SUM(total) / SUM(quantity) as bill_item_rate'),
                                         DB::raw('0 as bill_item_avg_rate'),
                                         DB::raw("GROUP_CONCAT(bills.invoice_number SEPARATOR ',') as `invoices`")
                                 )
-                                ->where('sku', $sku)
+                                ->where('Sku', $sku)
                                 ->when(!empty($year), function ($query) use ($year) {
                                     return $query->whereRaw('YEAR(bills.date) = ?', [$year]);
                                 })
@@ -249,13 +249,13 @@ class RegisterController extends Controller
                                 ->toArray();
         $saleItemDates = Sale::leftJoin('sale_items', 'sales.id', '=', 'sale_items.sale_id')
                                 ->groupBy('date')
-                                ->select('sales.date', 'sale_items.sku', DB::raw("'saleItem' as model"),
+                                ->select('sales.date', 'sale_items.Sku', DB::raw("'saleItem' as model"),
                                         DB::raw('SUM(quantity) as sale_item_quantity'),
                                         DB::raw('SUM(total) as sale_item_total'),
                                         DB::raw('SUM(total) / SUM(quantity) as sale_item_rate'),
                                         DB::raw('0 as sale_item_avg_rate'),
                                 )
-                                ->where('sku', $sku)
+                                ->where('Sku', $sku)
                                 ->when(!empty($year), function ($query) use ($year) {
                                     return $query->whereRaw('YEAR(sales.date) = ?', [$year]);
                                 })
@@ -263,10 +263,10 @@ class RegisterController extends Controller
                                 ->get()
                                 ->keyBy('date')
                                 ->toArray();
-        $closingDates = ClosingDate::select('date', 'sku', DB::raw("'closingDate' as model"),
+        $closingDates = ClosingDate::select('date', 'Sku', DB::raw("'closingDate' as model"),
                                                 DB::raw('0 as closing_date_avg_rate')
                                         )
-                                        ->where('sku', $sku)
+                                        ->where('Sku', $sku)
                                         ->when(!empty($year), function ($query) use ($year) {
                                             return $query->whereRaw('YEAR(date) = ?', [$year]);
                                         })
@@ -451,14 +451,14 @@ class RegisterController extends Controller
         // Find unique dates in BillItem
         $billItemDates = Bill::leftJoin('bill_items', 'bills.id', '=', 'bill_items.bill_id')
             ->groupBy('date')
-            ->select('bills.date', 'bill_items.sku', DB::raw("'billItem' as model"),
+            ->select('bills.date', 'bill_items.Sku', DB::raw("'billItem' as model"),
                 DB::raw('SUM(quantity) as bill_item_quantity'),
                 DB::raw('SUM(total) as bill_item_total'),
                 DB::raw('SUM(total) / SUM(quantity) as bill_item_rate'),
                 DB::raw('0 as bill_item_avg_rate'),
                 DB::raw("GROUP_CONCAT(bills.invoice_number SEPARATOR ',') as `invoices`")
             )
-            ->where('sku', $sku)
+            ->where('Sku', $sku)
             ->when(!empty($year), function ($query) use ($year) {
                 return $query->whereRaw('YEAR(bills.date) = ?', [$year]);
             })
@@ -468,13 +468,13 @@ class RegisterController extends Controller
             ->toArray();
         $saleItemDates = Sale::leftJoin('sale_items', 'sales.id', '=', 'sale_items.sale_id')
             ->groupBy('date')
-            ->select('sales.date', 'sale_items.sku', DB::raw("'saleItem' as model"),
+            ->select('sales.date', 'sale_items.Sku', DB::raw("'saleItem' as model"),
                 DB::raw('SUM(quantity) as sale_item_quantity'),
                 DB::raw('SUM(total) as sale_item_total'),
                 DB::raw('SUM(total) / SUM(quantity) as sale_item_rate'),
                 DB::raw('0 as sale_item_avg_rate'),
             )
-            ->where('sku', $sku)
+            ->where('Sku', $sku)
             ->when(!empty($year), function ($query) use ($year) {
                 return $query->whereRaw('YEAR(sales.date) = ?', [$year]);
             })
@@ -482,10 +482,10 @@ class RegisterController extends Controller
             ->get()
             ->keyBy('date')
             ->toArray();
-        $closingDates = ClosingDate::select('date', 'sku', DB::raw("'closingDate' as model"),
+        $closingDates = ClosingDate::select('date', 'Sku', DB::raw("'closingDate' as model"),
             DB::raw('0 as closing_date_avg_rate')
         )
-            ->where('sku', $sku)
+            ->where('Sku', $sku)
             ->when(!empty($year), function ($query) use ($year) {
                 return $query->whereRaw('YEAR(date) = ?', [$year]);
             })
@@ -695,17 +695,17 @@ class RegisterController extends Controller
 
     //     $registerQuery = DB::table('bill_items')
     //                     ->leftJoin('bills', 'bill_items.bill_id', '=', 'bills.id')
-    //                     ->select('sku', 'name', 'bill_items.id as bill_item_id', DB::raw('SUM(quantity) as total_items'),
+    //                     ->select('Sku', 'name', 'bill_items.id as bill_item_id', DB::raw('SUM(quantity) as total_items'),
     //                                         DB::raw('SUM(total) as total_cost'),
     //                                         DB::raw('round(SUM(total) / SUM(quantity),2) as avg_cost'),
     //                                         DB::raw('YEAR(bills.date) as year'),
     //                                         DB::raw('MONTH(bills.date) as month')
     //                     )
     //                     ->when(!empty($keyword), function (Builder $query) use ($keyword) {
-    //                         return $query->where('sku', 'LIKE', '%' . $keyword . '%');
+    //                         return $query->where('Sku', 'LIKE', '%' . $keyword . '%');
     //                     })
-    //                     ->groupBy(['sku', 'month', 'year'])
-    //                     ->orderBy('sku')
+    //                     ->groupBy(['Sku', 'month', 'year'])
+    //                     ->orderBy('Sku')
     //                     ->orderBy('year')
     //                     ->orderBy('month');
     //                     // ->get();
@@ -715,9 +715,9 @@ class RegisterController extends Controller
     //     dd($registers);
 
     //     $grouped = collect($registers->data)->mapToGroups(function ($item) {
-    //         return [$item->sku => [
+    //         return [$item->Sku => [
     //             "bill_item_id" => $item->bill_item_id,
-    //             "sku" => $item->sku,
+    //             "Sku" => $item->Sku,
     //             "name" => $item->name,
     //             "avg_cost" => $item->avg_cost,
     //             "month" => $item->month,
@@ -729,7 +729,7 @@ class RegisterController extends Controller
 
     //     $simpleList = $grouped->map(function ($items) use ($distinctMonths) {
     //         $groupedItemsByMonth = $items->keyBy('month');
-    //         $outputItem['sku'] = $items[0]['sku'];
+    //         $outputItem['Sku'] = $items[0]['Sku'];
     //         $outputItem['name'] = $items[0]['name'];
     //         $outputItem['bill_item_id'] = $items[0]['bill_item_id'];
 

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('bom_items', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('bom_id');
-            $table->text('sku');
+            $table->text('Sku');
             $table->integer('quantity')->default(0);
             $table->double('rate')->default(0);
             $table->double('total')->default(0);

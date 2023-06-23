@@ -69,7 +69,7 @@ class BillItemSeeder extends Seeder
 
                 DB::table('bill_items')->insert([
                     'bill_id' => $billId,
-                    'sku' => $item.'-'.rand(1,3),
+                    'Sku' => $item.'-'.rand(1,3),
                     'name' => $item,
                     'rate' => $rate,
                     'unit' => $unit,

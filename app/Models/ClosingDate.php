@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class ClosingDate extends Model
 {
     use HasFactory;
-    protected $fillable = ['sku', 'date', 'status'];
+    protected $fillable = ['Sku', 'date', 'status'];
     public function billItem(){
-        return $this->belongsTo(BillItem::class, 'sku', 'sku');
+        return $this->belongsTo(BillItem::class, 'Sku', 'Sku');
     }
 }

@@ -109,7 +109,7 @@ export default {
                 // this.saleItems.forEach((item) => {
                 //     // console.log('item in forech', item)
 
-                //     if (item && item.sku === product.sku) {
+                //     if (item && item.Sku === product.Sku) {
                 //         item.quantity++;
                 //     }
                 // });
