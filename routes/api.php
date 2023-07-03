@@ -94,6 +94,8 @@ Route::get('/bom/blade/{bomId}/export/{format}',[ExportController::class,'export
 Route::get('/sale/blade/{saleId}/export/{format}',[ExportController::class,'exportSaleBladeXls']);
 
 Route::post('/bill/import',[ImportController::class,'billImport']);
+Route::post('/bom/import',[ImportController::class,'bomImport']);
+Route::post('/sale/import',[ImportController::class,'saleImport']);
 
 
 

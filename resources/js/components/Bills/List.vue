@@ -51,24 +51,18 @@
                 <span style="vertical-align: middle">Delete Selecteds</span>
             </el-button>
             <el-upload
-                ref="upload"
+                v-model:file-list="fileList"
                 class="upload-demo"
                 action="/api/bill/import"
-                :limit="1"
+                multiple
+                :on-preview="handlePreview"
+                :on-remove="handleRemove"
+                :on-success="handleSuccess"
+                :before-remove="beforeRemove"
+                :limit="3"
                 :on-exceed="handleExceed"
-                :auto-upload="false"
             >
-                <template #trigger>
-                    <el-button type="primary">select file</el-button>
-                </template>
-                <el-button class="ml-3" type="success" @click="submitUpload">
-                    upload to server
-                </el-button>
-                <template #tip>
-                    <div class="el-upload__tip text-red">
-                        limit 1 file, new file will cover the old file
-                    </div>
-                </template>
+                <el-button type="primary">Import to CSV</el-button>
             </el-upload>
         </div>
 
@@ -347,10 +341,8 @@ export default {
             file.uid = genFileId()
             this.upload.handleStart(file)
         },
-        submitUpload() {
-            // /bills/import
-
-            this.upload.submit()
+        handleSuccess() {
+            ElMessage.success('File has already imported!')
         },
     },
     computed: {
