@@ -42,6 +42,21 @@
                 </el-icon>
                 <span style="vertical-align: middle">Delete Selecteds</span>
             </el-button>
+            <el-upload
+                v-model:file-list="fileList"
+                class="upload-demo"
+                action="/api/bom/import"
+                multiple
+                :on-preview="handlePreview"
+                :on-remove="handleRemove"
+                :on-success="handleSuccess"
+                :before-remove="beforeRemove"
+                :limit="3"
+                :on-exceed="handleExceed"
+            >
+                <el-button type="primary">Import to CSV</el-button>
+            </el-upload>
+
         </div>
 
         <el-table :data="boms"
@@ -285,6 +300,9 @@ export default {
             const words = str.split('_');
             const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
             return capitalizedWords.join(' ');
+        },
+        handleSuccess(res) {
+            ElMessage.success('File has already imported!')
         }
     },
     computed: {
@@ -304,5 +322,9 @@ a href{
 }
 .filter-container {
   padding-bottom: 10px;
+}
+.upload-demo {
+    display: inline;
+    margin-left: 12px;
 }
 </style>
