@@ -50,10 +50,10 @@
                 </el-icon>
                 <span style="vertical-align: middle">Delete Selecteds</span>
             </el-button>
-            <!-- <el-upload
+            <el-upload
                 ref="upload"
                 class="upload-demo"
-                action="/bills/import"
+                action="/api/bill/import"
                 :limit="1"
                 :on-exceed="handleExceed"
                 :auto-upload="false"
@@ -69,7 +69,7 @@
                         limit 1 file, new file will cover the old file
                     </div>
                 </template>
-            </el-upload> -->
+            </el-upload>
         </div>
 
 
@@ -378,5 +378,9 @@ export default {
 }
 .demo-pagination-block  {
   margin-top: 10px;
+}
+.upload-demo {
+    display: inline;
+    margin-left: 12px;
 }
 </style>

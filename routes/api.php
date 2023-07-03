@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\COGSController;
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\ImportController;
 use App\Http\Controllers\RolePermissionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -92,7 +93,7 @@ Route::get('/bill/blade/{billId}/export/{format}',[ExportController::class,'expo
 Route::get('/bom/blade/{bomId}/export/{format}',[ExportController::class,'exportBomBladeXls']);
 Route::get('/sale/blade/{saleId}/export/{format}',[ExportController::class,'exportSaleBladeXls']);
 
-Route::get('/bills/import',[ExportController::class,'importBillXls']);
+Route::post('/bill/import',[ImportController::class,'billImport']);
 
 
 
