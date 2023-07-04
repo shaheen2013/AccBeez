@@ -1,0 +1,67 @@
+<template>
+    <el-button text @click="dialogFormVisible = true">
+        Create company
+    </el-button>
+
+    <el-dialog v-model="dialogFormVisible" title="Create company">
+        <el-form :model="form">
+            <el-form-item label="Company name">
+                <el-input v-model="company.name" placeholder="Company name" />
+            </el-form-item>
+
+            <el-form-item>
+                <el-button type="primary" @click="submitData">Create</el-button>
+            </el-form-item>
+        </el-form>
+        <template #footer>
+            <span class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">Cancel</el-button>
+            </span>
+        </template>
+    </el-dialog>
+</template>
+  
+<script setup>
+import { reactive, ref } from 'vue'
+
+import { useCompanyStore } from "@/stores/CompanyStore"
+import { storeToRefs } from "pinia";
+
+const { company } = storeToRefs(useCompanyStore());
+
+const dialogTableVisible = ref(false)
+const dialogFormVisible = ref(false)
+const formLabelWidth = '140px'
+
+
+</script>
+
+<script>
+    export default {
+        methods: {
+            submitData(){
+                const createCompany = useCompanyStore()
+                createCompany.createCompany()
+            }
+        }
+    }
+</script>
+
+<style scoped>
+.el-button--text {
+    margin-right: 15px;
+}
+
+.el-select {
+    width: 300px;
+}
+
+.el-input {
+    width: 300px;
+}
+
+.dialog-footer button:first-child {
+    margin-right: 10px;
+}
+</style>
+  

@@ -20,8 +20,10 @@
     },
     "dependencies": {
         "element-plus": "^2.3.5",
+        "es6-promise": "^4.2.8",
         "export-from-json": "^1.7.2",
         "file-saver": "^2.0.5",
+        "pinia": "^2.1.4",
         "vue-router": "^4.2.1",
         "vuex": "^4.1.0",
         "xlsx": "^0.18.5"

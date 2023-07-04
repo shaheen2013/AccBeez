@@ -1,4 +1,6 @@
 import { createWebHistory, createRouter } from "vue-router";
+
+import CompanyList from './components/Companies/List.vue'
 import BillList from './components/Bills/List.vue';
 import BillCreate from './components/Bills/Create.vue';
 import BillShow from './components/Bills/Show.vue';
@@ -23,139 +25,152 @@ import BomSaleShow from './components/BomSales/Show.vue';
 
 import CogsList from './components/Cogs/List.vue';
 
+import DashboardLayout from './layout/DashboardLayout.vue'
+
 
 const routes = [
     {
         path: '/',
+        component: CompanyList,
+    },
+    {
+        path: '/dashboard',
+        component: DashboardLayout,
         name: 'dashboard',
-        component: Dashboard,
-    },
-    {
-        path: '/registers',
-        name: 'registers',
-        component: Register,
-    },
-    {
-        path: '/registers/view/:id',
-        name: 'RegisterShow',
-        component: RegisterShow,
-    },
-    {
-        path: '/bills',
-        name: 'BillList',
-        component: BillList
-    },
-    {
-        path: '/bills/create',
-        name: 'BillCreate',
-        component: BillCreate
-    },
-    {
-        path: '/bills/edit/:id',
-        name: 'BillEdit',
-        component: BillCreate
-    },
-    {
-        path: '/bills/view/:id',
-        name: 'BillShow',
-        component: BillShow
-    },
+        children: [
+            {
+                path: '/dashboard',
+                component: Dashboard,
+            },
+            {
+                path: '/registers',
+                name: 'registers',
+                component: Register,
+            },
+            {
+                path: '/registers/view/:id',
+                name: 'RegisterShow',
+                component: RegisterShow,
+            },
+            {
+                path: '/bills',
+                name: 'BillList',
+                component: BillList
+            },
+            {
+                path: '/bills/create',
+                name: 'BillCreate',
+                component: BillCreate
+            },
+            {
+                path: '/bills/edit/:id',
+                name: 'BillEdit',
+                component: BillCreate
+            },
+            {
+                path: '/bills/view/:id',
+                name: 'BillShow',
+                component: BillShow
+            },
 
-    {
-        path: '/boms',
-        name: 'BomList',
-        component: BomList
-    },
-    {
-        path: '/boms/create',
-        name: 'BomCreate',
-        component: BomCreate
-    },
-    {
-        path: '/boms/edit/:id',
-        name: 'BomEdit',
-        component: BomCreate
-    },
-    {
-        path: '/boms/view/:id',
-        name: 'BomView',
-        component: BomShow
-    },
+            {
+                path: '/boms',
+                name: 'BomList',
+                component: BomList
+            },
+            {
+                path: '/boms/create',
+                name: 'BomCreate',
+                component: BomCreate
+            },
+            {
+                path: '/boms/edit/:id',
+                name: 'BomEdit',
+                component: BomCreate
+            },
+            {
+                path: '/boms/view/:id',
+                name: 'BomView',
+                component: BomShow
+            },
 
-    {
-        path: '/users',
-        name: 'UserList',
-        component: UserList
-    },
-    {
-        path: '/assign-users',
-        name: 'AssignUsers',
-        component: AssignUsers
-    },
-    {
-        path: '/users/create',
-        name: 'UserCreate',
-        component: UserCreate
-    },
-    {
-        path: '/users/edit/:id',
-        name: 'UserEdit',
-        component: UserCreate
-    },
-    {
-        path: '/users/view/:id',
-        name: 'UserView',
-        component: UserCreate
-    },
-    {
-        path: '/sales',
-        name: 'SaleList',
-        component: SaleList
-    },  {
-        path: '/exl-table',
-        name: 'ExlTable',
-        component: ExlTable
-    },
-    {
-        path: '/sales/create',
-        name: 'SaleCreate',
-        component: SaleCreate
-    },
-    {
-        path: '/sales/edit/:id',
-        name: 'SaleEdit',
-        component: SaleCreate
-    },
-    {
-        path: '/sales/view/:id',
-        name: 'SaleShow',
-        component: SaleShow
-    },
+            {
+                path: '/users',
+                name: 'UserList',
+                component: UserList
+            },
+            {
+                path: '/assign-users',
+                name: 'AssignUsers',
+                component: AssignUsers
+            },
+            {
+                path: '/users/create',
+                name: 'UserCreate',
+                component: UserCreate
+            },
+            {
+                path: '/users/edit/:id',
+                name: 'UserEdit',
+                component: UserCreate
+            },
+            {
+                path: '/users/view/:id',
+                name: 'UserView',
+                component: UserCreate
+            },
+            {
+                path: '/sales',
+                name: 'SaleList',
+                component: SaleList
+            }, {
+                path: '/exl-table',
+                name: 'ExlTable',
+                component: ExlTable
+            },
+            {
+                path: '/sales/create',
+                name: 'SaleCreate',
+                component: SaleCreate
+            },
+            {
+                path: '/sales/edit/:id',
+                name: 'SaleEdit',
+                component: SaleCreate
+            },
+            {
+                path: '/sales/view/:id',
+                name: 'SaleShow',
+                component: SaleShow
+            },
 
-    {
-        path: '/bomSales',
-        name: 'BomSaleList',
-        component: BomSaleList
-    },
-    {
-        path: '/bomSales/create',
-        name: 'BomSaleCreate',
-        component: BomSaleCreate
-    },
-    {
-        path: '/bomSales/edit/:id',
-        name: 'BomSaleEdit',
-        component: BomSaleCreate
-    },
-    {
-        path: '/bomSales/view/:id',
-        name: 'BomSaleShow',
-        component: BomSaleShow
-    },
-    {
-        path: '/cogs',
-        name: 'CogsList',
-        component: CogsList
+            {
+                path: '/bomSales',
+                name: 'BomSaleList',
+                component: BomSaleList
+            },
+            {
+                path: '/bomSales/create',
+                name: 'BomSaleCreate',
+                component: BomSaleCreate
+            },
+            {
+                path: '/bomSales/edit/:id',
+                name: 'BomSaleEdit',
+                component: BomSaleCreate
+            },
+            {
+                path: '/bomSales/view/:id',
+                name: 'BomSaleShow',
+                component: BomSaleShow
+            },
+            {
+                path: '/cogs',
+                name: 'CogsList',
+                component: CogsList
+            },
+
+        ]
     },
 
     {
@@ -167,8 +182,10 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
-  routes,
+    history: createWebHistory(),
+    routes,
 });
+
+
 
 export default router;
