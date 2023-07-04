@@ -37,6 +37,7 @@ Route::middleware('role:Admin')->group(function(){
 });
 
 
+Route::apiResource('companies', App\Http\Controllers\CompanyController::class);
 
 
 
