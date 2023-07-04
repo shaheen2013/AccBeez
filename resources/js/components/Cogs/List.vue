@@ -54,16 +54,18 @@
         <el-table :data="cogs" class="small-font-table">
             <el-table-column fixed prop="description" label="Description" />
             <el-table-column fixed prop="date" label="Date" />
-            <el-table-column fixed prop="invoice_total" label="Invoice Total" />
 
             <el-table-column fixed prop="name" label="Name" />
-            <el-table-column fixed prop="invoice_total" label="Invoice Total" />
             <el-table-column fixed prop="rate" label="Rate" />
             <el-table-column fixed prop="unit" label="Unit" />
             <el-table-column fixed prop="quantity" label="Quantity" />
             <el-table-column fixed prop="total" label="Total" />
             <el-table-column fixed prop="cogs" label="Cogs" />
-            <el-table-column fixed prop="margin" label="margin" />
+            <el-table-column fixed prop="margin" label="margin (%)" >
+                <template #default="scope">
+                    <div>{{ scope.row.margin }} %</div>      
+                </template>
+            </el-table-column>
         </el-table>
 
 
