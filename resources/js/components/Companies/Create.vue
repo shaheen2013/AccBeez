@@ -1,7 +1,13 @@
 <template>
-    <el-button text @click="dialogFormVisible = true">
+    <!-- <el-button text @click="dialogFormVisible = true">
         Create company
-    </el-button>
+    </el-button> -->
+
+    <h1>
+        <el-button type="primary" style="float: right;" @click="dialogFormVisible = true">
+            Create company
+        </el-button>
+    </h1>
 
     <el-dialog v-model="dialogFormVisible" title="Create company">
         <el-form :model="form">
@@ -37,14 +43,14 @@ const formLabelWidth = '140px'
 </script>
 
 <script>
-    export default {
-        methods: {
-            submitData(){
-                const createCompany = useCompanyStore()
-                createCompany.createCompany()
-            }
+export default {
+    methods: {
+        submitData() {
+            const createCompany = useCompanyStore()
+            createCompany.createCompany()
         }
     }
+}
 </script>
 
 <style scoped>
@@ -52,13 +58,6 @@ const formLabelWidth = '140px'
     margin-right: 15px;
 }
 
-.el-select {
-    width: 300px;
-}
-
-.el-input {
-    width: 300px;
-}
 
 .dialog-footer button:first-child {
     margin-right: 10px;

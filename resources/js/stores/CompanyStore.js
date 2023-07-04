@@ -11,7 +11,9 @@ export const useCompanyStore = defineStore("CompanyStore", {
     }),
 
     getters: {
-
+        getCompanyList(state){
+            return state.companies;
+        }
     },
 
     actions: {
@@ -19,7 +21,7 @@ export const useCompanyStore = defineStore("CompanyStore", {
             try {
                 await axios.get(`/api/companies`)
                 .then(({data})=>{
-                    this.companies.push(data.data)
+                    this.companies=data.data;
                     this.totalCompany = data.data.length
                 })
                 .catch((error)=>{
@@ -32,12 +34,16 @@ export const useCompanyStore = defineStore("CompanyStore", {
         },
 
         async createCompany(){
+            
             try {
                 await axios.post(`/api/companies`, {
                     name: this.company.name,
                   })
                 .then(({data})=>{
-                   console.log(data.data);
+                    if(data.success === 'true'){
+                        this.company.name = ''
+                        this.companies.unshift(data.data)
+                    }
                 })
                 .catch((error)=>{
                     console.log(error);
