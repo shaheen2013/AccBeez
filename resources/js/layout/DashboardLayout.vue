@@ -4,7 +4,7 @@
             <el-aside width="200px">
                 <el-scrollbar>
                     <el-menu>
-                        <router-link to="/bills" style="text-decoration: none;"
+                        <router-link :to="'/company/' + $route.params.comp_id + '/bills'" style="text-decoration: none;"
                                      :style="[$route.path === '/bills' ? {color: 'royalblue'} : {color: 'black'}]">
                             <el-menu-item index="1">
                                 <!-- <el-icon><icon-menu /></el-icon> -->
@@ -14,7 +14,7 @@
                                 Bills
                             </el-menu-item>
                         </router-link>
-                        <router-link to="/registers" style="text-decoration: none;"
+                        <router-link :to="'/company/' + $route.params.comp_id + '/registers'" style="text-decoration: none;"
                                      :style="[$route.path === '/registers' ? {color: 'royalblue'} : {color: 'black'}]">
                             <el-menu-item index="2">
                                 <!-- <el-icon><icon-menu /></el-icon> -->
@@ -24,7 +24,7 @@
                                 Register
                             </el-menu-item>
                         </router-link>
-                        <router-link to="/boms" style="text-decoration: none;"
+                        <router-link :to="'/company/' + $route.params.comp_id + '/boms'" style="text-decoration: none;"
                                      :style="[$route.path === '/boms' ? {color: 'royalblue'} : {color: 'black'}]">
                             <el-menu-item index="3">
                                 <!-- <el-icon><icon-menu /></el-icon> -->
@@ -34,7 +34,7 @@
                                 BOM
                             </el-menu-item>
                         </router-link>
-                        <router-link to="/users" style="text-decoration: none;"
+                        <router-link :to="'/company/' + $route.params.comp_id + '/users'" style="text-decoration: none;"
                                      :style="[$route.path === '/users' ? {color: 'royalblue'} : {color: 'black'}]">
                             <el-menu-item index="4">
                                 <!-- <el-icon><icon-menu /></el-icon> -->
@@ -56,7 +56,7 @@
                             </el-menu-item>
                         </router-link>
 
-                        <router-link to="/sales" style="text-decoration: none;"
+                        <router-link :to="'/company/' + $route.params.comp_id + '/sales'" style="text-decoration: none;"
                                      :style="[$route.path === '/sales' ? {color: 'royalblue'} : {color: 'black'}]">
                             <el-menu-item index="5">
                                 <!-- <el-icon><icon-menu /></el-icon> -->
@@ -66,7 +66,7 @@
                                 Sales
                             </el-menu-item>
                         </router-link>
-                        <router-link to="/bomSales" style="text-decoration: none;"
+                        <router-link :to="'/company/' + $route.params.comp_id + '/bomSales'" style="text-decoration: none;"
                                      :style="[$route.path === '/bomSales' ? {color: 'royalblue'} : {color: 'black'}]">
                             <el-menu-item index="6">
                                 <!-- <el-icon><icon-menu /></el-icon> -->
@@ -76,7 +76,7 @@
                                 Bom Sales
                             </el-menu-item>
                         </router-link>
-                        <router-link to="/cogs" style="text-decoration: none;"
+                        <router-link :to="'/company/' + $route.params.comp_id + '/cogs'" style="text-decoration: none;"
                                      :style="[$route.path === '/cogs' ? {color: 'royalblue'} : {color: 'black'}]">
                             <el-menu-item index="7">
                                 <!-- <el-icon><icon-menu /></el-icon> -->

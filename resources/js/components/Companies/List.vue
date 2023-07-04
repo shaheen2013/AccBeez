@@ -20,8 +20,10 @@
     </el-row>
 
     <el-row :gutter="12">
-        <el-col :span="8" v-for="company in getCompanyList" class="pb-2">
-            <el-card shadow="always"> {{ company.name }} </el-card>
+        <el-col :span="8" v-for="company in getCompanyList" class="pb-2" :key="company.id">
+            <router-link :to="'/company/' + company.id + '/dashboard'" style="text-decoration: none;">
+                <el-card shadow="always"> {{ company.name }} </el-card>
+            </router-link>
         </el-col>
     </el-row>
 </template>
