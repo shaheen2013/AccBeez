@@ -15,9 +15,6 @@ return new class extends Migration
             $table->string('unit')->nullable()->after('sku');
             $table->string('name')->nullable()->after('sku');
             $table->unsignedBigInteger('client_id')->nullable();
-            $table->integer('company_id');
-            $table->integer('created_by')->nullable();
-            $table->integer('updated_by')->nullable();
         });
     }
 

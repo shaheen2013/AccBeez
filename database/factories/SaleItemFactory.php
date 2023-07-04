@@ -24,6 +24,7 @@ class SaleItemFactory extends Factory
             'unit'=>'Example unit '.$this->i++,
             'quantity'=>mt_rand(50, 99),
             'total'=>mt_rand(500, 999),
+            'company_id' => rand(1, 5)
         ];
     }
 }

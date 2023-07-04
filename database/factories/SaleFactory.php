@@ -26,6 +26,7 @@ class SaleFactory extends Factory
             'date'=>$this->faker->date,
             'invoice_total'=>mt_rand(500, 960),
             'invoice_number'=>Str::random(8),
+            'company_id' => rand(1, 5)
         ];
     }
 }

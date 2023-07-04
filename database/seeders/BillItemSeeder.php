@@ -75,6 +75,7 @@ class BillItemSeeder extends Seeder
                     'unit' => $unit,
                     'quantity' => $quantity,
                     'total' => $total,
+                    'company_id' => rand(1, 5),
                     'created_at' => $createdAt,
                     'updated_at' => $updatedAt,
                 ]);

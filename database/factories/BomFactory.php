@@ -19,7 +19,8 @@ class BomFactory extends Factory
     {
         return [
             'name'=> 'Example bom '.$this->i++,
-            'invoice_total'=> mt_rand(100, 800)
+            'invoice_total'=> mt_rand(100, 800),
+            'company_id' => rand(1, 5)
         ];
     }
 }
