@@ -14,6 +14,9 @@ return new class extends Migration
         Schema::table('bills', function (Blueprint $table) {
             $table->string('invoice_number')->nullable();
             $table->unsignedBigInteger('client_id')->nullable();
+            $table->integer('company_id');
+            $table->integer('created_by')->nullable();
+            $table->integer('updated_by')->nullable();
         });
     }
 
