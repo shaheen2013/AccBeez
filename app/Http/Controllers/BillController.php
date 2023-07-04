@@ -29,6 +29,7 @@ class BillController extends Controller
         $limit = Arr::get($searchParams, 'limit', 5);
         $keyword = Arr::get($searchParams, 'keyword', '');
         $billsQuery = DB::table('bills')
+                        ->where('company_id', $searchParams['company_id'])
                         ->when(!empty($keyword), function (Builder $query) use ($keyword) {
                             return $query->where('description', 'LIKE', '%' . $keyword . '%');
                         })->latest();
