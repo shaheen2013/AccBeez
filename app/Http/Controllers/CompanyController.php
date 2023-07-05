@@ -6,6 +6,7 @@ use App\Http\Requests\CompanyRequest;
 use App\Http\Resources\CompanyResource;
 use App\Models\Company;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class CompanyController extends Controller
 {
@@ -31,7 +32,9 @@ class CompanyController extends Controller
      */
     public function store(CompanyRequest $request)
     {
-        $company = Company::create($request->validated());
+        $requestData = $request->validated();
+        $requestData['slug'] = Str::slug($request->name);
+        $company = Company::create($requestData);
 
         $data = new CompanyResource($company);
 
