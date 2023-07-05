@@ -42,8 +42,11 @@ class BillController extends Controller
 
     public function store(BillRequest $request)
     {
+        $company_id = Company::where('slug', $request->slug)->pluck('id')->first();
+        
         try {
             $billData = $request->only('description', 'date', 'invoice_total');
+            $billData['company_id'] = $company_id;
             DB::beginTransaction();
             $bill = Bill::create($billData);
             $bill->invoice_number = mt_rand(10000, 99999).'-'.$bill->id;
@@ -51,6 +54,7 @@ class BillController extends Controller
             // dd('store', $request->all(), $billData);
             foreach($request->items as $item){
                 $item['bill_id'] = $bill->id;
+                $item['company_id'] = $company_id;
                 BillItem::create($item);
             }
             DB::commit();

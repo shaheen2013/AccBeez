@@ -4,7 +4,7 @@
 
         <h1>
             Bill List
-            <router-link to="/bills/create" style="text-decoration: none; color: inherit;">
+            <router-link :to=" '/' + $route.params.slug + '/bills/create'" style="text-decoration: none; color: inherit;">
                 <el-button type="primary" v-if="logged_in_user && logged_in_user.role === 'Super-Admin'" style="float: right;">
                     Create
                 </el-button>
@@ -80,12 +80,12 @@
             </el-table-column>
             <el-table-column prop="id" label="Operations" >
                 <template  #default="scope">
-                    <router-link :to="'/bills/edit/'+scope.row.id"  v-if="logged_in_user && logged_in_user.role === 'Super-Admin'">
+                    <router-link :to="'/' + $route.params.slug + '/bills/edit/'+scope.row.id"  v-if="logged_in_user && logged_in_user.role === 'Super-Admin'">
                         <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px" >
                             <Edit />
                         </el-icon>
                     </router-link>
-                    <router-link :to="'/bills/view/'+scope.row.id">
+                    <router-link :to="'/' + $route.params.slug + '/bills/view/'+scope.row.id">
                         <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px" >
                             <View />
                         </el-icon>
