@@ -21,7 +21,7 @@
 
     <el-row :gutter="12">
         <el-col :span="8" v-for="company in getCompanyList" class="pb-2" :key="company.id">
-            <router-link :to="'/company/' + company.id + '/dashboard'" style="text-decoration: none;">
+            <router-link :to="'/' + company.slug + '/dashboard'" style="text-decoration: none;">
                 <el-card shadow="always"> {{ company.name }} </el-card>
             </router-link>
         </el-col>

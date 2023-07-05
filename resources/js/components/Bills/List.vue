@@ -245,7 +245,7 @@ export default {
                 limit: this.pageSize,
                 keyword: this.query.keyword,
                 page: this.query.page,
-                company_id: this.$route.params.comp_id
+                slug: this.$route.params.slug
             }
             console.log('params', params);
             await axios.get(`/api/bills`, {params}).

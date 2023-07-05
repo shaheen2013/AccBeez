@@ -39,57 +39,57 @@ const routes = [
         name: 'dashboard',
         children: [
             {
-                path: '/company/:comp_id/dashboard',
+                path: '/:slug/dashboard',
                 component: Dashboard,
             },
             {
-                path: '/company/:comp_id/registers',
+                path: '/:slug/registers',
                 name: 'registers',
                 component: Register,
             },
             {
-                path: '/company/:comp_id/registers/view/:id',
+                path: '/:slug/registers/view/:id',
                 name: 'RegisterShow',
                 component: RegisterShow,
             },
             {
-                path: '/company/:comp_id/bills',
+                path: '/:slug/bills',
                 name: 'BillList',
                 component: BillList
             },
             {
-                path: '/company/:comp_id/bills/create',
+                path: '/:slug/bills/create',
                 name: 'BillCreate',
                 component: BillCreate
             },
             {
-                path: '/company/:comp_id/bills/edit/:id',
+                path: '/:slug/bills/edit/:id',
                 name: 'BillEdit',
                 component: BillCreate
             },
             {
-                path: '/company/:comp_id/bills/view/:id',
+                path: '/:slug/bills/view/:id',
                 name: 'BillShow',
                 component: BillShow
             },
 
             {
-                path: '/company/:comp_id/boms',
+                path: '/:slug/boms',
                 name: 'BomList',
                 component: BomList
             },
             {
-                path: '/company/:comp_id/boms/create',
+                path: '/:slug/boms/create',
                 name: 'BomCreate',
                 component: BomCreate
             },
             {
-                path: '/company/:comp_id/boms/edit/:id',
+                path: '/:slug/boms/edit/:id',
                 name: 'BomEdit',
                 component: BomCreate
             },
             {
-                path: '/company/:comp_id/boms/view/:id',
+                path: '/:slug/boms/view/:id',
                 name: 'BomView',
                 component: BomShow
             },
@@ -120,7 +120,7 @@ const routes = [
                 component: UserCreate
             },
             {
-                path: '/company/:comp_id/sales',
+                path: '/:slug/sales',
                 name: 'SaleList',
                 component: SaleList
             }, {
@@ -129,43 +129,43 @@ const routes = [
                 component: ExlTable
             },
             {
-                path: '/company/:comp_id/sales/create',
+                path: '/:slug/sales/create',
                 name: 'SaleCreate',
                 component: SaleCreate
             },
             {
-                path: '/company/:comp_id/sales/edit/:id',
+                path: '/:slug/sales/edit/:id',
                 name: 'SaleEdit',
                 component: SaleCreate
             },
             {
-                path: '/company/:comp_id/sales/view/:id',
+                path: '/:slug/sales/view/:id',
                 name: 'SaleShow',
                 component: SaleShow
             },
 
             {
-                path: '/company/:comp_id/bomSales',
+                path: '/:slug/bomSales',
                 name: 'BomSaleList',
                 component: BomSaleList
             },
             {
-                path: '/company/:comp_id/bomSales/create',
+                path: '/:slug/bomSales/create',
                 name: 'BomSaleCreate',
                 component: BomSaleCreate
             },
             {
-                path: '/company/:comp_id/bomSales/edit/:id',
+                path: '/:slug/bomSales/edit/:id',
                 name: 'BomSaleEdit',
                 component: BomSaleCreate
             },
             {
-                path: '/company/:comp_id/bomSales/view/:id',
+                path: '/:slug/bomSales/view/:id',
                 name: 'BomSaleShow',
                 component: BomSaleShow
             },
             {
-                path: '/company/:comp_id/cogs',
+                path: '/:slug/cogs',
                 name: 'CogsList',
                 component: CogsList
             },

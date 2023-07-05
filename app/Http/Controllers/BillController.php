@@ -8,6 +8,7 @@ use App\Models\Bill;
 use App\Models\BillItem;
 use Illuminate\Http\Request;
 use App\Http\Requests\BillRequest;
+use App\Models\Company;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -28,8 +29,10 @@ class BillController extends Controller
         // dd('hi index', $searchParams);
         $limit = Arr::get($searchParams, 'limit', 5);
         $keyword = Arr::get($searchParams, 'keyword', '');
+
+        $company_id = Company::where('slug', $searchParams['slug'])->pluck('id')->first();
         $billsQuery = DB::table('bills')
-                        ->where('company_id', $searchParams['company_id'])
+                        ->where('company_id', $company_id)
                         ->when(!empty($keyword), function (Builder $query) use ($keyword) {
                             return $query->where('description', 'LIKE', '%' . $keyword . '%');
                         })->latest();
