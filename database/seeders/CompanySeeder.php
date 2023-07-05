@@ -15,24 +15,24 @@ class CompanySeeder extends Seeder
     {
         DB::table('companies')->insert([
             [
-                'name'=>'Company 01',
-                'slug' => 'company-01'
+                'name'=>'HDFC Bank',
+                'slug' => 'hdfc-bank'
             ],
             [
-                'name'=>'Company 02',
-                'slug' => 'company-02'
+                'name'=>'BHP Group',
+                'slug' => 'bhp-group'
             ],
             [
-                'name'=>'Company 03',
-                'slug' => 'company-03'
+                'name'=>'CSL',
+                'slug' => 'csl'
             ],
             [
-                'name'=>'Company 04',
-                'slug' => 'company-04'
+                'name'=>'Woolworth Group',
+                'slug' => 'woolworth-group'
             ],
             [
-                'name'=>'Company 05',
-                'slug' => 'company-05'
+                'name'=>'Telstra',
+                'slug' => 'telstra'
             ],
         ]);
     }
