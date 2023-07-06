@@ -35,11 +35,15 @@ class BomController extends Controller
     public function store(BomRequest $request)
     {
         try {
-            $bomData = $request->only('name', 'invoice_total');
+            $bomData = $request->only('name', 'invoice_total', 'slug');
+            $company_id = getCompanyIdBySlug($bomData['slug']);
+            $bomData['company_id'] = $company_id;
+
             DB::beginTransaction();
             $bom = Bom::create($bomData);
             foreach($request->items as $item){
                 $item['bom_id'] = $bom->id;
+                $item['company_id'] = $company_id;
                 BomItem::create($item);
             }
             DB::commit();

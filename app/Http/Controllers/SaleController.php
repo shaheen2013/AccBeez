@@ -29,9 +29,11 @@ class SaleController extends Controller
     {
         $searchParams = $request->all();
         // dd('hi index', $searchParams);
+        $company_id = getCompanyIdBySlug($searchParams['slug']);
         $limit = Arr::get($searchParams, 'limit', 5);
         $keyword = Arr::get($searchParams, 'keyword', '');
         $salesQuery = DB::table('sales')
+                        ->where('company_id', $company_id)
                         ->when(!empty($keyword), function (Builder $query) use ($keyword) {
                             return $query->where('description', 'LIKE', '%' . $keyword . '%');
                         })->latest();

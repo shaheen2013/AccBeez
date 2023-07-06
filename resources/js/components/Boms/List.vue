@@ -72,12 +72,12 @@
             <el-table-column prop="id" label="Operations" >
 
                 <template  #default="scope">
-                    <router-link :to="'/boms/edit/'+scope.row.id">
+                    <router-link :to="'/' + $route.params.slug + '/boms/edit/'+scope.row.id">
                         <el-icon :size="20" :color="color" style="width: 1em; height: 1em; margin-right: 8px"  v-if="logged_in_user && logged_in_user.role === 'Super-Admin'">
                             <Edit />
                         </el-icon>
                     </router-link>
-                    <router-link :to="'/boms/view/'+scope.row.id">
+                    <router-link :to="'/' + $route.params.slug + '/boms/view/'+scope.row.id">
                         <el-icon :size="20" :color="color" style="width: 1em; height: 1em; margin-right: 8px" >
                             <View />
                         </el-icon>

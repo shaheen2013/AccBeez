@@ -4,7 +4,7 @@
 
         <h1>
             Sale List
-            <router-link to="/sales/create" style="text-decoration: none; color: inherit;">
+            <router-link :to="'/' + $route.params.slug + '/sales/create'" style="text-decoration: none; color: inherit;">
                 <el-button type="primary" v-if="logged_in_user && logged_in_user.role === 'Super-Admin'" style="float: right;">
                     Create
                 </el-button>
@@ -82,12 +82,12 @@
             </el-table-column>
             <el-table-column prop="id" label="Operations" >
                 <template  #default="scope">
-                    <router-link :to="'/sales/edit/'+scope.row.id"  v-if="logged_in_user && logged_in_user.role === 'Super-Admin'">
+                    <router-link :to="'/' + $route.params.slug + '/sales/edit/'+scope.row.id"  v-if="logged_in_user && logged_in_user.role === 'Super-Admin'">
                         <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px" >
                             <Edit />
                         </el-icon>
                     </router-link>
-                    <router-link :to="'/sales/view/'+scope.row.id">
+                    <router-link :to="'/' + $route.params.slug + '/sales/view/'+scope.row.id">
                         <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px" >
                             <View />
                         </el-icon>
@@ -240,6 +240,7 @@ export default {
                 limit: this.pageSize,
                 keyword: this.query.keyword,
                 page: this.query.page,
+                slug: this.$route.params.slug
             }
             console.log('params', params);
             await axios.get(`/api/sales`, {params}).
