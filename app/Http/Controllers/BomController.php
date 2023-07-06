@@ -19,11 +19,10 @@ class BomController extends Controller
     public function index(Request $request)
     {
         $searchParams = $request->all();
-        // dd('hi index', $searchParams);
         $limit = Arr::get($searchParams, 'limit', 5);
         $keyword = Arr::get($searchParams, 'keyword', '');
         $company_id = getCompanyIdBySlug($searchParams['slug']);
-        
+
         $bomsQuery = DB::table('boms')
                         ->where('company_id', $company_id)
                         ->when(!empty($keyword), function (Builder $query) use ($keyword) {

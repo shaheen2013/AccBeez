@@ -30,7 +30,7 @@ class BillController extends Controller
         $limit = Arr::get($searchParams, 'limit', 5);
         $keyword = Arr::get($searchParams, 'keyword', '');
 
-        $company_id = Company::where('slug', $searchParams['slug'])->pluck('id')->first();
+        $company_id = getCompanyIdBySlug($searchParams['slug']);
         $billsQuery = DB::table('bills')
                         ->where('company_id', $company_id)
                         ->when(!empty($keyword), function (Builder $query) use ($keyword) {
@@ -42,7 +42,7 @@ class BillController extends Controller
 
     public function store(BillRequest $request)
     {
-        $company_id = Company::where('slug', $request->slug)->pluck('id')->first();
+        $company_id = getCompanyIdBySlug($request->slug);
         
         try {
             $billData = $request->only('description', 'date', 'invoice_total');

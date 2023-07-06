@@ -168,7 +168,7 @@ export default {
         }
 
 
-        await axios.get(`/api/products`).
+        await axios.get(`/api/products?slug=` + this.$route.params.slug).
                 then((res) => {
                     this.products = res.data;
                     console.log('products:', this.products);
