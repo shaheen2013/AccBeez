@@ -225,6 +225,7 @@ export default {
                 limit: this.pageSize,
                 keyword: this.query.keyword,
                 page: this.query.page,
+                slug: this.$route.params.slug
             }
             // console.log('params', params);
             await axios.get(`/api/boms`, {params}).
