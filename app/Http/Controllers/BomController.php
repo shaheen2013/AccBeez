@@ -146,9 +146,11 @@ class BomController extends Controller
         }
     }
 
-    public function getAllBoms()
+    public function getAllBoms(Request $request)
     {
+        $company_id = getCompanyIdBySlug($request->slug);
         $boms = Bom::select('name', 'invoice_total')
+                            ->where('company_id', $company_id)
                             ->orderBy('name', 'asc')
                             ->get();
         return response()->json($boms);
