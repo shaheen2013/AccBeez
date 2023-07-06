@@ -44,7 +44,10 @@ class SaleController extends Controller
     public function store(SaleRequest $request)
     {
         try {
-            $saleData = $request->only('description', 'date', 'invoice_total');
+            $saleData = $request->only('description', 'date', 'invoice_total', 'slug');
+            $company_id = getCompanyIdBySlug($saleData['slug']);
+
+            $saleData['company_id'] = $company_id;
             DB::beginTransaction();
             $sale = Sale::create($saleData);
             $now = Carbon::now();
@@ -55,6 +58,7 @@ class SaleController extends Controller
             // dd('store', $request->all(), $saleData);
             foreach($request->items as $item){
                 $item['sale_id'] = $sale->id;
+                $item['company_id'] = $company_id;
                 SaleItem::create($item);
             }
             DB::commit();
