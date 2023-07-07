@@ -131,3 +131,4 @@ Route::delete('/permissions/delete/{id}',[RolePermissionController::class,'permi
 // user role management routes
 Route::put('/users/roles/update/{id}', [App\Http\Controllers\UserController::class, 'assignUserRole']);
 
+

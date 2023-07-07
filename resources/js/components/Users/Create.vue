@@ -10,30 +10,35 @@
                 <el-text tag="b"  v-if="operation === 'create'" type="primary" size="large">Create User</el-text>
 
                 <el-form-item label="Name" prop="name">
-                    <el-input v-model="user.name" type="text" :disabled="operation === 'view'" />
+                    <el-input class="w-50" v-model="user.name" type="text" :disabled="operation === 'view'" />
                 </el-form-item>
                 <el-form-item label="Email" prop="email">
-                    <el-input v-model="user.email" type="email" :disabled="operation === 'view'" />
+                    <el-input class="w-50" v-model="user.email" type="email" :disabled="operation === 'view'" />
                 </el-form-item>
-                <el-select v-model="user.user_type" placeholder="Select" class="mt-2 mb-3" @change="userTypeHandler">
-                    <el-option 
-                        v-for="item in userTypes"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
-                    />
-                </el-select>
-
-                <div v-if="isUserType">
-                    <el-select v-model="selectedCompany" placeholder="Select" class="mt-2 mb-3">
-                        <el-option
-                            v-for="item in companies"
+                <el-form-item label="Select User Type">
+                    <el-select v-model="user.user_type" placeholder="Select" class="mt-2 w-50" @change="userTypeHandler">
+                        <el-option 
+                            v-for="item in userTypes"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value"
-                        >
-                        </el-option>
+                        />
                     </el-select>
+                </el-form-item>
+
+                <div v-if="isUserType">
+                    <el-form-item label="Select Company">
+                        <el-select v-model="selectedCompany" placeholder="Select Company" class="mb-3 w-50">
+                            <el-option
+                                v-for="item in companies"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.slug"
+                            >
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    
                 </div>
                 
 
@@ -57,7 +62,7 @@
 
 <script >
 
-import { showErrors } from '@/utils/helper.js'
+import { showErrors } from '@/utils/helper.js';
 import NotFoundPage from "../NotFoundPage.vue";
 
 export default {
@@ -83,16 +88,7 @@ export default {
                 }
             ],
             selectedCompany: '',
-            companies: [
-                {
-                    value: 'Grameenphone',
-                    label: 'Grameenphone'
-                },
-                {
-                    value: 'BankAsia',
-                    label: 'Bank Asia'
-                }
-            ],
+            companies: null,
             logged_in_user: null,
             isCreated: false,
             isUserType: false,
@@ -129,6 +125,11 @@ export default {
                     console.log('logged_in_user:', this.logged_in_user);
                 });
         this.isCreated = true;
+
+        await axios.get('/api/companies')
+                    .then(res => {
+                        this.companies = res.data.data
+                    })
     },
     methods: {
         submitForm(){
