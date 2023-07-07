@@ -129,9 +129,10 @@ export default {
                 keyword: this.query.keyword,
                 page: this.query.page,
                 year: this.query.year,
+                slug: this.$route.params.slug
             }
             console.log('params', params);
-            await axios.get(`/api/cogs/boms`).
+            await axios.get(`/api/cogs/boms`, { params }).
                     then((res) => {
                         console.log('response in cog list:', res.data);
                         this.cogs = res.data;

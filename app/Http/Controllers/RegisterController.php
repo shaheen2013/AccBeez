@@ -30,10 +30,12 @@ class RegisterController extends Controller
         $perPage = $request->input('limit') ?? 10;
         $page = $request->input('page') ?? 1;
         $startAt = ($perPage * ($page-1));
-        // dd($searchParams, $perPage, $page, $startAt, $year);
+        $company_id = getCompanyIdBySlug($request->slug);
+
 
          $distinctMonths = DB::table('bills')
                             ->select(DB::raw("DATE_FORMAT(bills.date, '%Y-%m') as month"))
+                            ->where('company_id', $company_id)
                             ->when(!empty($year), function (Builder $query) use ($year) {
                                 return $query->whereRaw('YEAR(bills.date) = ?', [$year]);
                             })
@@ -57,6 +59,7 @@ class RegisterController extends Controller
                         ->when(!empty($year), function (Builder $query) use ($year) {
                             return $query->whereRaw('YEAR(bills.date) = ?', [$year]);
                         })
+                        ->where('bills.company_id', $company_id)
                         ->groupBy(['sku', 'month', 'year'])
                         ->orderBy('sku')
                         ->orderBy('year')
@@ -228,7 +231,8 @@ class RegisterController extends Controller
         $bill_item = BillItem::with('closingDates')->find($id);
         $closingDates = $bill_item->closingDates;
         $sku = $bill_item->sku;
-
+        // TODO company_id needs to be implement later
+        // $company_id = getCompanyIdBySlug($request->slug);
         // Find unique dates in BillItem
         $billItemDates = Bill::leftJoin('bill_items', 'bills.id', '=', 'bill_items.bill_id')
                                 ->groupBy('date')

@@ -12,11 +12,14 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class COGSController extends Controller
 {
-    public function getAll(){
+    public function getAll(Request $request){
         // $boms = Bom::with('bomItems')->get();
         // return response()->json($boms);
-
-        $bomSales = BomSale::with('bomSaleItems.saleItems')->latest()->get();
+        $company_id = getCompanyIdBySlug($request->slug);
+        $bomSales = BomSale::with('bomSaleItems.saleItems')
+                            ->where('company_id', $company_id)
+                            ->latest()
+                            ->get();
         $data = [];
 
         foreach($bomSales as $bomSale){

@@ -110,7 +110,7 @@
 
                 <el-row>
                     <el-col>
-                        <router-link :to="'/registers'">
+                        <router-link :to="'/'+ $route.params.slug + '/registers'">
                             <el-button type="info" class="me-2">Back</el-button>
                         </router-link>
                         <!-- <el-button type="primary" @click="downloadPdf" class="me-2">Download PDF</el-button> -->
@@ -150,9 +150,7 @@ export default {
         };
     },
     async created() {
-        let paths = this.$route.path.split("/");
-        this.register.id = paths[3];
-        console.log('Route Name: ', this.$route.name);
+        this.register.id = this.$route.params.id;
         await this.getList();
         this.isMounted = true;
     },
@@ -163,6 +161,7 @@ export default {
         async getList(){
             let params = {
                 year: this.query.year,
+                slug: this.$route.params.slug
             }
             await axios.get(`/api/registers/view/`+this.register.id, {params}).
                 then((res) => {

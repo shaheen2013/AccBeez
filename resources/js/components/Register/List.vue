@@ -68,7 +68,7 @@
 
             <el-table-column fixed='right' prop="bill_item_id" label="Operations" >
                 <template  #default="scope">
-                    <router-link :to="'/registers/view/'+scope.row.bill_item_id">
+                    <router-link :to="'/' + $route.params.slug + '/registers/view/'+scope.row.bill_item_id">
                         <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px" >
                             <View />
                         </el-icon>
@@ -138,6 +138,7 @@ export default {
                 keyword: this.query.keyword,
                 page: this.query.page,
                 year: this.query.year,
+                slug: this.$route.params.slug
             }
             console.log('params', params, this.query.year);
             await axios.get(`/api/registers`, {params}).
