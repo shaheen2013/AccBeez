@@ -15,7 +15,7 @@
                 <el-form-item label="Email" prop="email">
                     <el-input v-model="user.email" type="email" :disabled="operation === 'view'" />
                 </el-form-item>
-                <el-select v-model="user.user_type" placeholder="Select" class="mt-2 mb-3">
+                <el-select v-model="user.user_type" placeholder="Select" class="mt-2 mb-3" @change="userTypeHandler">
                     <el-option 
                         v-for="item in userTypes"
                         :key="item.value"
@@ -23,6 +23,19 @@
                         :value="item.value"
                     />
                 </el-select>
+
+                <div v-if="isUserType">
+                    <el-select v-model="selectedCompany" placeholder="Select" class="mt-2 mb-3">
+                        <el-option
+                            v-for="item in companies"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"
+                        >
+                        </el-option>
+                    </el-select>
+                </div>
+                
 
                 <el-row>
                     <el-col>
@@ -69,8 +82,20 @@ export default {
                     label: 'User'
                 }
             ],
+            selectedCompany: '',
+            companies: [
+                {
+                    value: 'Grameenphone',
+                    label: 'Grameenphone'
+                },
+                {
+                    value: 'BankAsia',
+                    label: 'Bank Asia'
+                }
+            ],
             logged_in_user: null,
             isCreated: false,
+            isUserType: false,
         };
     },
     components:{
@@ -81,21 +106,19 @@ export default {
             this.operation = 'create';
         } else if(this.$route.name == 'UserEdit'){
             this.operation = 'edit';
-            let paths = this.$route.path.split("/");
-            this.user.id = paths[3];
+            this.user.id = this.$route.params.id;
         } else {
             this.operation = 'view';
-            let paths = this.$route.path.split("/");
-            this.user.id = paths[3];
+            this.user.id = this.$route.params.id;
         }
-        console.log('Route Name: ', this.$route.name);
         if(this.user.id){
             axios.get(`/api/users/edit/`+this.user.id).
                     then((res) => {
                         console.log('res:', res);
-                        this.user.id = res.data.id;
-                        this.user.name = res.data.name;
-                        this.user.email = res.data.email;
+                        this.user.id = res.data.user.id;
+                        this.user.name = res.data.user.name;
+                        this.user.email = res.data.user.email;
+                        this.user.user_type = res.data.roles[0];
                     });
             console.log('User edit', this.user)
         }
@@ -110,6 +133,14 @@ export default {
     methods: {
         submitForm(){
             console.log(this.user)
+        },
+        userTypeHandler(value){
+            console.log('userTypeHandler_value', value);
+            if(value === 'User'){
+                this.isUserType = true
+            }else{
+                this.isUserType = false
+            }
         },
         async createUser() {
             console.log('createUser:', this.user)
@@ -151,4 +182,4 @@ export default {
         font-weight:bold !important;
         color: #212529;
     }
-</style>>
+</style>

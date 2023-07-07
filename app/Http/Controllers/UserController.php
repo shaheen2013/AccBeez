@@ -44,7 +44,7 @@ class UserController extends Controller
     {
         // dd(config('app.url'));
         try {
-            $userData = $request->only('name', 'email','role');
+            $userData = $request->only('name', 'email','role', 'user_type');
 
             DB::beginTransaction();
             $userData['invitation_token'] = random_int(100000, 999999);
@@ -58,7 +58,7 @@ class UserController extends Controller
             // event(new SendVerificationCode($user->email, $user->invitation_token));
             // dd('store', $request->all(), $userData);
             DB::commit();
-            SendVerificationCode::dispatch($user['email'], $user['invitation_token']);
+            // SendVerificationCode::dispatch($user['email'], $user['invitation_token']);
             return $user;
         } catch (Exception $ex) {
             DB::rollBack();
@@ -71,9 +71,12 @@ class UserController extends Controller
     {
         // dd('hi index');
         $user = User::find($id);
-
+        $roles = $user->getRoleNames();
         // Return the customers as a response
-        return response()->json($user);
+        return response()->json([
+            'user' => $user,
+            'roles' => $roles
+        ]);
     }
 
 

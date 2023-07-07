@@ -34,7 +34,7 @@
                                 BOM
                             </el-menu-item>
                         </router-link>
-                        <router-link :to="'/' + $route.params.slug + '/users'" style="text-decoration: none;"
+                        <router-link :to="'/users'" style="text-decoration: none;"
                                      :style="[$route.path === '/users' ? {color: 'royalblue'} : {color: 'black'}]">
                             <el-menu-item index="4">
                                 <!-- <el-icon><icon-menu /></el-icon> -->
