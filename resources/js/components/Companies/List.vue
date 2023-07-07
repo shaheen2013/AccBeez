@@ -6,7 +6,10 @@
     </el-col>
 
     <el-col :span="12">
-      <create></create>
+      
+      <div v-if="logged_in_user && logged_in_user.role === 'Super-Admin'">
+        <create></create>
+      </div>
       <h1>
         <!-- <router-link :to="{ name: 'companyCreate'}" style="text-decoration: none; color: inherit;">
                     <el-button type="primary" style="float: right;">
@@ -37,30 +40,42 @@
             <div class="card-box-section">
               <div class="card-bottom-content">
                 <div>
-                  <h5 style="font-weight: 700; margin-bottom: 0px;">cash available</h5>
-                  <p style="font-size: 13px;">738248</p>
+                  <h5 style="font-weight: 700; margin-bottom: 0px">
+                    cash available
+                  </h5>
+                  <p style="font-size: 13px">738248</p>
                 </div>
                 <div>
-                  <h5 style="font-weight: 700; margin-bottom: 0px;">cash available</h5>
-                  <p style="font-size: 13px;">738248</p>
+                  <h5 style="font-weight: 700; margin-bottom: 0px">
+                    cash available
+                  </h5>
+                  <p style="font-size: 13px">738248</p>
                 </div>
                 <div>
-                  <h5 style="font-weight: 700; margin-bottom: 0px;">cash available</h5>
-                  <p style="font-size: 13px;">738248</p>
+                  <h5 style="font-weight: 700; margin-bottom: 0px">
+                    cash available
+                  </h5>
+                  <p style="font-size: 13px">738248</p>
                 </div>
               </div>
               <div class="card-bottom-content">
                 <div>
-                  <h5 style="font-weight: 700; margin-bottom: 0px;">cash available</h5>
-                  <p style="font-size: 13px;">738248</p>
+                  <h5 style="font-weight: 700; margin-bottom: 0px">
+                    cash available
+                  </h5>
+                  <p style="font-size: 13px">738248</p>
                 </div>
                 <div>
-                  <h5 style="font-weight: 700; margin-bottom: 0px;">cash available</h5>
-                  <p style="font-size: 13px;">738248</p>
+                  <h5 style="font-weight: 700; margin-bottom: 0px">
+                    cash available
+                  </h5>
+                  <p style="font-size: 13px">738248</p>
                 </div>
                 <div>
-                  <h5 style="font-weight: 700; margin-bottom: 0px;">cash available</h5>
-                  <p style="font-size: 13px;">738248</p>
+                  <h5 style="font-weight: 700; margin-bottom: 0px">
+                    cash available
+                  </h5>
+                  <p style="font-size: 13px">738248</p>
                 </div>
               </div>
             </div>
@@ -83,6 +98,11 @@ import { useCompanyStore } from "@/stores/CompanyStore";
 
 export default {
   name: "CompanyList",
+  data() {
+    return {
+      logged_in_user: null,
+    };
+  },
   components: {
     create,
   },
@@ -90,7 +110,16 @@ export default {
   computed: {
     ...mapState(useCompanyStore, { getCompanyList: "getCompanyList" }),
   },
-
+  async created() {
+    try {
+      await axios.get(`/logged_in_user`).then((res) => {
+        this.logged_in_user = res.data;
+        console.log("logged_in_user:", this.logged_in_user);
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  },
   mounted() {
     const getAllCompanies = useCompanyStore();
     getAllCompanies.fetchCompanies();
@@ -101,37 +130,35 @@ export default {
 
 <style>
 .compaines-card-wrapper {
-    background-color: #fff;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    padding-bottom: 1px;
-    border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  padding-bottom: 1px;
+  border-radius: 10px;
 }
 .card-subtitle {
-    align-items: center;
-    gap: 16px;
-    margin-top: 24px;
-    padding: 0 10px;
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
+  padding: 0 10px;
 }
 .card-subtitle-font {
-    font-size: 20px;
-    font-weight: bold;
+  font-size: 20px;
+  font-weight: bold;
 }
-.card-box-section{
-    background-color: #393838;
-    color: white;
-    padding:18px;
-    margin: 10px;
-    border-radius: 10px;
-    position: relative;
-
+.card-box-section {
+  background-color: #393838;
+  color: white;
+  padding: 18px;
+  margin: 10px;
+  border-radius: 10px;
+  position: relative;
 }
-.card-bottom-content{
-    display:flex;
-    align-items: center;
-    gap: 24px;
-    justify-content: space-between;
-    margin-bottom: 16px;
-    
+.card-bottom-content {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  justify-content: space-between;
+  margin-bottom: 16px;
 }
 </style>
 
