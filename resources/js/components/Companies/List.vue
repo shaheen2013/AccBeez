@@ -39,8 +39,13 @@
             <div>
               <p>
                 <span style="font-weight: bold; font-size: large;"> Users: </span>
-                <span v-for="(user, index) in company.company_users" :key="user.id">
-                  {{ displayUser(user.user) }} {{ index === 0 || index === company.company_users.length - 1 ? '' : ',' }}
+                <span v-if="company.company_users.length !== 0">
+                  <span v-for="(user, index) in company.company_users" :key="user.id" class="text-warning">
+                    {{ index !== 0 ? ',' : '' }} {{ displayUser(user.user) }} 
+                  </span>
+                </span>
+                <span v-else class="text-danger">
+                  Not Assigned Yet
                 </span>
               </p>
             </div>
