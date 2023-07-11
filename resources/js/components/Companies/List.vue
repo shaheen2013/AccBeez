@@ -32,7 +32,6 @@
         style="text-decoration: none"
       >
         <el-card shadow="always">
-          <div class="compaines-card-wrapper">
             <div class="card-subtitle">
               <p class="card-subtitle-font">{{ company.name }}</p>
             </div>
@@ -41,39 +40,38 @@
               <div class="card-bottom-content">
                 <div>
                   <h5 style="font-weight: 700; margin-bottom: 0px">
-                    Total Bills
+                    Bills
                   </h5>
-                  <p style="font-size: 13px">{{ company.bills_count }}</p>
+                  <span style="font-size: 13px">{{ company.bills_count }}</span>
                 </div>
                 <div>
                   <h5 style="font-weight: 700; margin-bottom: 0px">
-                    Total Boms
+                    Boms
                   </h5>
-                  <p style="font-size: 13px">{{ company.boms_count }}</p>
+                  <span style="font-size: 13px">{{ company.boms_count }}</span>
                 </div>
                 <div>
                   <h5 style="font-weight: 700; margin-bottom: 0px">
-                    Total Sales
+                    Sales
                   </h5>
-                  <p style="font-size: 13px">{{ company.sales_count }}</p>
+                  <span style="font-size: 13px">{{ company.sales_count }}</span>
                 </div>
               </div>
               <div class="card-bottom-content">
                 <div>
                   <h5 style="font-weight: 700; margin-bottom: 0px">
-                    Total Bom Sales Count
+                    Bom Sales
                   </h5>
-                  <p style="font-size: 13px">{{ company.bom_sales_count }}</p>
+                  <span style="font-size: 13px">{{ company.bom_sales_count }}</span>
                 </div>
                 <div>
                   <h5 style="font-weight: 700; margin-bottom: 0px">
-                    Total Users
+                    Users
                   </h5>
-                  <p style="font-size: 13px">{{ company.company_users_count }}</p>
+                  <span style="font-size: 13px">{{ company.company_users_count }}</span>
                 </div>
               </div>
             </div>
-          </div>
         </el-card>
       </router-link>
     </el-col>
@@ -143,7 +141,6 @@ export default {
   background-color: #393838;
   color: white;
   padding: 18px;
-  margin: 10px;
   border-radius: 10px;
   position: relative;
 }
@@ -152,7 +149,6 @@ export default {
   align-items: center;
   gap: 24px;
   justify-content: space-between;
-  margin-bottom: 16px;
 }
 </style>
 

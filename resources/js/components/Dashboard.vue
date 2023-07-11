@@ -81,17 +81,33 @@
       </el-card>
     </el-col>
   </el-row>
-
- 
+  <div class="mt-5">
+    <el-row :gutter="12">
+      <el-col :span="8">
+        <apexchart
+          width="500"
+          type="bar"
+          :options="chartOptions"
+          :series="series"
+        ></apexchart>
+      </el-col>
+      <el-col :span="8">
+        <apexchart width="450" type="donut" :options="donatChartOptions" :series="donatSeries"></apexchart>
+      </el-col>
+    </el-row>
+  </div>
 </template>
 
 <script>
+
 export default {
   name: "Dashboard",
   data() {
     return {
       size: "50px",
       color: "green",
+      donatChartOptions: {},
+      donatSeries: [44, 55, 41, 17, 15],
       chartOptions: {
         chart: {
           id: "vuechart-example",
