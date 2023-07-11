@@ -4,6 +4,7 @@ import { defineStore } from 'pinia'
 export const useCompanyStore = defineStore("CompanyStore", {
     state: () => ({
         companies: [],
+        user: {},
         totalCompany : 0,
         company: {
             name: ''
@@ -32,6 +33,8 @@ export const useCompanyStore = defineStore("CompanyStore", {
                 console.error(error);
             }
         },
+
+    
 
         async createCompany(){
             

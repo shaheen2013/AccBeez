@@ -23,6 +23,7 @@ import BomSaleCreate from './components/BomSales/Create.vue';
 import BomSaleShow from './components/BomSales/Show.vue';
 import CogsList from './components/Cogs/List.vue';
 import DashboardLayout from './layout/DashboardLayout.vue'
+import getLogedInUser from "./helper";
 
 
 const routes = [
@@ -52,7 +53,8 @@ const routes = [
             {
                 path: '/:slug/bills',
                 name: 'BillList',
-                component: BillList
+                component: BillList,
+                meta: { requiresAuth: true },
             },
             {
                 path: '/:slug/bills/create',
@@ -182,7 +184,19 @@ const router = createRouter({
     history: createWebHistory(),
     routes,
 });
+router.beforeEach((to, from) => {
+    const user = getLogedInUser();
+    console.log('user:', user);
+    console.log('to:', to);
+    if (to.meta.requiresAuth) {
 
+    //  window.location.href = '/login';
+     return;
+    //   return {
+    //     path: '/login',
+    //   }
+    }
+  });
 
 
 export default router;

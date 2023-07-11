@@ -45,16 +45,15 @@
                             </el-menu-item>
                         </router-link>
 
-                        <router-link to="/assign-users" style="text-decoration: none;"
+                        <!-- <router-link to="/assign-users" style="text-decoration: none;"
                                      :style="[$route.path === '/assign-users' ? {color: 'royalblue'} : {color: 'black'}]">
                             <el-menu-item index="4">
-                                <!-- <el-icon><icon-menu /></el-icon> -->
                                 <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px">
                                     <Avatar />
                                 </el-icon>
                                 Assign User
                             </el-menu-item>
-                        </router-link>
+                        </router-link> -->
 
                         <router-link :to="'/' + $route.params.slug + '/sales'" style="text-decoration: none;"
                                      :style="[$route.path === '/sales' ? {color: 'royalblue'} : {color: 'black'}]">
