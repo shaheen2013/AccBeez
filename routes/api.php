@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\COGSController;
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\ImportController;
 use App\Http\Controllers\RolePermissionController;
@@ -130,5 +131,7 @@ Route::delete('/permissions/delete/{id}',[RolePermissionController::class,'permi
 
 // user role management routes
 Route::put('/users/roles/update/{id}', [App\Http\Controllers\UserController::class, 'assignUserRole']);
+
+Route::get('/company/overview', [CompanyController::class, 'companyOverview']);
 
 
