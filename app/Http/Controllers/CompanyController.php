@@ -15,7 +15,7 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $companies = Company::latest()->withCount('bills', 'boms', 'sales', 'bomSales', 'companyUsers')->get();
+        $companies = Company::latest()->withCount('bills', 'boms', 'sales', 'bomSales', 'companyUsers')->with('companyUsers.user')->get();
         return response()->successResponse('Company list', $companies);
     }
 
