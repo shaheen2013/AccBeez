@@ -41,41 +41,35 @@
               <div class="card-bottom-content">
                 <div>
                   <h5 style="font-weight: 700; margin-bottom: 0px">
-                    cash available
+                    Total Bills
                   </h5>
-                  <p style="font-size: 13px">738248</p>
+                  <p style="font-size: 13px">{{ company.bills_count }}</p>
                 </div>
                 <div>
                   <h5 style="font-weight: 700; margin-bottom: 0px">
-                    cash available
+                    Total Boms
                   </h5>
-                  <p style="font-size: 13px">738248</p>
+                  <p style="font-size: 13px">{{ company.boms_count }}</p>
                 </div>
                 <div>
                   <h5 style="font-weight: 700; margin-bottom: 0px">
-                    cash available
+                    Total Sales
                   </h5>
-                  <p style="font-size: 13px">738248</p>
+                  <p style="font-size: 13px">{{ company.sales_count }}</p>
                 </div>
               </div>
               <div class="card-bottom-content">
                 <div>
                   <h5 style="font-weight: 700; margin-bottom: 0px">
-                    cash available
+                    Total Bom Sales Count
                   </h5>
-                  <p style="font-size: 13px">738248</p>
+                  <p style="font-size: 13px">{{ company.bom_sales_count }}</p>
                 </div>
                 <div>
                   <h5 style="font-weight: 700; margin-bottom: 0px">
-                    cash available
+                    Total Users
                   </h5>
-                  <p style="font-size: 13px">738248</p>
-                </div>
-                <div>
-                  <h5 style="font-weight: 700; margin-bottom: 0px">
-                    cash available
-                  </h5>
-                  <p style="font-size: 13px">738248</p>
+                  <p style="font-size: 13px">{{ company.company_users_count }}</p>
                 </div>
               </div>
             </div>

@@ -7,7 +7,7 @@ import App from './App.vue';
 import Sidebar from '../css/sidebar.css'
 // import store from './store/index.js'
 import pinia from './stores/store.js'
-
+import VueApexCharts from 'vue-apexcharts'
 
 
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
@@ -17,8 +17,6 @@ const app = createApp(App)
     .use(router)
     .use(ElementPlus)
     .use(Sidebar);
-
-
 app.use(pinia)
 
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {

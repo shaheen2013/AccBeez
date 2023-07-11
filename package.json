@@ -19,11 +19,13 @@
         "vue": "^3.2.37"
     },
     "dependencies": {
+        "apexcharts": "^3.41.0",
         "element-plus": "^2.3.5",
         "es6-promise": "^4.2.8",
         "export-from-json": "^1.7.2",
         "file-saver": "^2.0.5",
         "pinia": "^2.1.4",
+        "vue-apexcharts": "^1.6.2",
         "vue-router": "^4.2.1",
         "vuex": "^4.1.0",
         "xlsx": "^0.18.5"
