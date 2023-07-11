@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Mail\SendVerificationCodeMail;
 use App\Events\EmailVerificationCodeEvent;
+use App\Models\CompanyUser;
 use App\Models\UserAssign;
 use App\Notifications\UserAuthenticationNotification;
 use Illuminate\View\View;
@@ -44,17 +45,20 @@ class UserController extends Controller
 
     public function store(UserRequest $request)
     {
-
-
         // dd(config('app.url'));
         try {
             $userData = $request->only('name', 'email','role', 'user_type');
-
             DB::beginTransaction();
             $userData['invitation_token'] = $this->generateToken();
             $userRole = $request->user_type ? $request->user_type : 'User';
             $user = User::create($userData);
             $user->assignRole($userRole);
+            if($request->user_type =='User'){
+                $user->company()->create([
+                    'user_id' => $user->id,
+                    'company_id' => $request->company_id
+                ]);
+            }
             $user->notify(new UserAuthenticationNotification($user->name,$user->email,$user->invitation_token));
             DB::commit();
             return $user;
@@ -89,6 +93,12 @@ class UserController extends Controller
             $userData = $request->only('name', 'email','role');
             $user = User::find($id);
             $user->update($userData);
+
+            if($request->user_type =='User'){
+                $user->company()->update([
+                    'company_id' => $request->company_id
+                ]);
+            }
             return $user;
         } catch (Exception $ex) {
             return response()->json( new \Illuminate\Support\MessageBag(['catch_exception'=>$ex->getMessage()]), 403);

@@ -49,4 +49,8 @@ class User extends Authenticatable
     public function adminUsers() {
         return $this->hasMany(UserAssign::class, 'admin_id', 'id')->whereNotNull('user_id');
     }
+
+    public function company() {
+        return $this->hasOne(CompanyUser::class);
+    }
 }
