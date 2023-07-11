@@ -28,12 +28,12 @@
 
                 <div v-if="isUserType">
                     <el-form-item label="Select Company">
-                        <el-select v-model="selectedCompany" placeholder="Select Company" class="mb-3 w-50">
+                        <el-select v-model="user.company_id" placeholder="Select Company" class="mb-3 w-50">
                             <el-option
                                 v-for="item in companies"
                                 :key="item.id"
                                 :label="item.name"
-                                :value="item.slug"
+                                :value="item.id"
                             >
                             </el-option>
                         </el-select>
@@ -75,7 +75,8 @@ export default {
                 id: null,
                 name: '',
                 email: '',
-                user_type: ''
+                user_type: '',
+                company_id:'',
             },
             userTypes: [
                 {

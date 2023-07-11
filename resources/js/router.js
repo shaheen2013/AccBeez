@@ -18,13 +18,10 @@ import SaleCreate from './components/Sales/Create.vue';
 import SaleList from './components/Sales/List.vue';
 import SaleShow from './components/Sales/Show.vue';
 import ExlTable from "@/components/ExlTable/ExlTable.vue";
-
 import BomSaleList from './components/BomSales/List.vue';
 import BomSaleCreate from './components/BomSales/Create.vue';
 import BomSaleShow from './components/BomSales/Show.vue';
-
 import CogsList from './components/Cogs/List.vue';
-
 import DashboardLayout from './layout/DashboardLayout.vue'
 
 

@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CompanyRequest;
 use App\Http\Resources\CompanyResource;
 use App\Models\Company;
+use App\Models\CompanyUser;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class CompanyController extends Controller
@@ -15,7 +18,11 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $companies = Company::latest()->withCount('bills', 'boms', 'sales', 'bomSales', 'companyUsers')->with('companyUsers.user')->get();
+        $role =Auth::user()->getRoleNames()->toArray();     
+        $companies = Company::when(in_array("User",$role),function($q){
+            $q->whereIn('id',CompanyUser::where('user_id',Auth::id())->pluck('company_id'));
+        })->latest()->withCount('bills', 'boms', 'sales', 'bomSales', 'companyUsers')->with('companyUsers.user')->get();
+        
         return response()->successResponse('Company list', $companies);
     }
 
