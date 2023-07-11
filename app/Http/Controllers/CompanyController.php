@@ -22,7 +22,7 @@ class CompanyController extends Controller
         $companies = Company::when(in_array("User",$role),function($q){
             $q->whereIn('id',CompanyUser::where('user_id',Auth::id())->pluck('company_id'));
         })->latest()->withCount('bills', 'boms', 'sales', 'bomSales', 'companyUsers')->with('companyUsers.user')->get();
-        
+
         return response()->successResponse('Company list', $companies);
     }
 
@@ -78,5 +78,14 @@ class CompanyController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+    public function companyOverview(Request $request)
+    {
+        $company = Company::where('slug', $request->slug)
+                        ->withCount('bills', 'boms', 'sales', 'bomSales')
+                        ->first();
+        return response()->json([
+            'company' => $company
+        ]);
     }
 }
