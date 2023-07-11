@@ -122,7 +122,8 @@ export default {
   },
   methods: {
     displayUser(user) {
-      return user.name;
+      console.log("user:", user);
+      return user?.name;
     }
   },
 };
