@@ -21,8 +21,8 @@ class CompanyController extends Controller
         $role =Auth::user()->getRoleNames()->toArray();     
         $companies = Company::when(in_array("User",$role),function($q){
             $q->whereIn('id',CompanyUser::where('user_id',Auth::id())->pluck('company_id'));
-        })->latest()->get();
-        $companies = CompanyResource::collection($companies);
+        })->latest()->withCount('bills', 'boms', 'sales', 'bomSales', 'companyUsers')->with('companyUsers.user')->get();
+        
         return response()->successResponse('Company list', $companies);
     }
 

@@ -6,7 +6,6 @@
     </el-col>
 
     <el-col :span="12">
-      
       <div v-if="logged_in_user && logged_in_user.role === 'Super-Admin'">
         <create></create>
       </div>
@@ -32,51 +31,48 @@
         style="text-decoration: none"
       >
         <el-card shadow="always">
-          <div class="compaines-card-wrapper">
-            <div class="card-subtitle">
-              <p class="card-subtitle-font">{{ company.name }}</p>
-            </div>
+          <div class="card-subtitle">
+            <p class="card-subtitle-font">{{ company.name }}</p>
+          </div>
 
-            <div class="card-box-section">
-              <div class="card-bottom-content">
-                <div>
-                  <h5 style="font-weight: 700; margin-bottom: 0px">
-                    cash available
-                  </h5>
-                  <p style="font-size: 13px">738248</p>
-                </div>
-                <div>
-                  <h5 style="font-weight: 700; margin-bottom: 0px">
-                    cash available
-                  </h5>
-                  <p style="font-size: 13px">738248</p>
-                </div>
-                <div>
-                  <h5 style="font-weight: 700; margin-bottom: 0px">
-                    cash available
-                  </h5>
-                  <p style="font-size: 13px">738248</p>
-                </div>
+          <div class="card-box-section">
+            <div>
+              <p>
+                <span style="font-weight: bold; font-size: large;"> Users: </span>
+                <span v-for="(user, index) in company.company_users" :key="user.id">
+                  {{ displayUser(user.user) }} {{ index === 0 || index === company.company_users.length - 1 ? '' : ',' }}
+                </span>
+              </p>
+            </div>
+            <el-divider content-position="center">
+              Overview
+            </el-divider>
+            <div class="card-bottom-content">
+              <div>
+                <h5 style="font-weight: 700; margin-bottom: 0px">Bills</h5>
+                <span style="font-size: 13px">{{ company.bills_count }}</span>
               </div>
-              <div class="card-bottom-content">
-                <div>
-                  <h5 style="font-weight: 700; margin-bottom: 0px">
-                    cash available
-                  </h5>
-                  <p style="font-size: 13px">738248</p>
-                </div>
-                <div>
-                  <h5 style="font-weight: 700; margin-bottom: 0px">
-                    cash available
-                  </h5>
-                  <p style="font-size: 13px">738248</p>
-                </div>
-                <div>
-                  <h5 style="font-weight: 700; margin-bottom: 0px">
-                    cash available
-                  </h5>
-                  <p style="font-size: 13px">738248</p>
-                </div>
+              <div>
+                <h5 style="font-weight: 700; margin-bottom: 0px">Boms</h5>
+                <span style="font-size: 13px">{{ company.boms_count }}</span>
+              </div>
+              <div>
+                <h5 style="font-weight: 700; margin-bottom: 0px">Sales</h5>
+                <span style="font-size: 13px">{{ company.sales_count }}</span>
+              </div>
+            </div>
+            <div class="card-bottom-content">
+              <div>
+                <h5 style="font-weight: 700; margin-bottom: 0px">Bom Sales</h5>
+                <span style="font-size: 13px">{{
+                  company.bom_sales_count
+                }}</span>
+              </div>
+              <div>
+                <h5 style="font-weight: 700; margin-bottom: 0px">Users</h5>
+                <span style="font-size: 13px">{{
+                  company.company_users_count
+                }}</span>
               </div>
             </div>
           </div>
@@ -124,7 +120,11 @@ export default {
     const getAllCompanies = useCompanyStore();
     getAllCompanies.fetchCompanies();
   },
-  methods: {},
+  methods: {
+    displayUser(user) {
+      return user.name;
+    }
+  },
 };
 </script>
 
@@ -149,7 +149,6 @@ export default {
   background-color: #393838;
   color: white;
   padding: 18px;
-  margin: 10px;
   border-radius: 10px;
   position: relative;
 }
@@ -158,7 +157,7 @@ export default {
   align-items: center;
   gap: 24px;
   justify-content: space-between;
-  margin-bottom: 16px;
+  margin-top: 5px;
 }
 </style>
 
