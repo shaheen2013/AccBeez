@@ -153,6 +153,7 @@ export default {
                             this.$router.push('/users');
                         });
             } catch (error) {
+                console.log(error);
                 showErrors(error);
                 console.error('error in response:', error.response.data);
             }

@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Hash;
 use App\Mail\SendVerificationCodeMail;
 use App\Events\EmailVerificationCodeEvent;
 use App\Models\UserAssign;
+use App\Notifications\UserAuthenticationNotification;
+use Illuminate\View\View;
 use Spatie\Permission\Models\Role;
 
 use function PHPSTORM_META\type;
@@ -42,28 +44,29 @@ class UserController extends Controller
 
     public function store(UserRequest $request)
     {
+
+
         // dd(config('app.url'));
         try {
             $userData = $request->only('name', 'email','role', 'user_type');
 
             DB::beginTransaction();
-            $userData['invitation_token'] = random_int(100000, 999999);
-            $userData['password'] = Hash::make('123456');
+            $userData['invitation_token'] = $this->generateToken();
             $userRole = $request->user_type ? $request->user_type : 'User';
-
-
             $user = User::create($userData);
-
             $user->assignRole($userRole);
-            // event(new SendVerificationCode($user->email, $user->invitation_token));
-            // dd('store', $request->all(), $userData);
+            $user->notify(new UserAuthenticationNotification($user->name,$user->email,$user->invitation_token));
             DB::commit();
-            // SendVerificationCode::dispatch($user['email'], $user['invitation_token']);
             return $user;
         } catch (Exception $ex) {
             DB::rollBack();
             return response()->json( new \Illuminate\Support\MessageBag(['catch_exception'=>$ex->getMessage()]), 403);
         }
+    }
+
+    private function generateToken()
+    {
+        return md5(rand(1, 10) . microtime());
     }
 
 
@@ -170,6 +173,43 @@ class UserController extends Controller
         $logged_in_user = User::find($logged_in_user->id);
         $logged_in_user->role = $logged_in_user->getRoleNames()[0];
         return response()->json($logged_in_user);
+    }
+
+    /**
+     * Show the password Store page.
+     * @param Request $request
+     * 
+     * @return View
+     */
+    function showPasswordPage(Request $request) :View
+    {
+        if (! $request->hasValidSignature()) {
+            abort(401);
+        }
+        if (User::where('invitation_token', request()->token)->doesntExist()) {
+            abort(401);
+        }
+
+        return view('auth.password', ['request' => $request]);
+    }
+
+    /**
+     * Store the password.
+     * @param Request $request
+     * 
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    function passwordStore(Request $request)
+    {
+        $request->validate([
+            'password' => 'required|string|confirmed',
+        ]);
+        $user = User::where('invitation_token', request()->token)->first();
+        $user->password = Hash::make(request()->password);
+        $user->invitation_token = null;
+        $user->status = 1;
+        $user->save();
+        return redirect()->route('login');    
     }
 
 }
