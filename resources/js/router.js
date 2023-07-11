@@ -24,6 +24,8 @@ import CogsList from './components/Cogs/List.vue';
 import DashboardLayout from './layout/DashboardLayout.vue'
 import getLogedInUser from "./helper";
 
+import { useAuthUserStore } from "@/stores/AuthUser";
+
 
 const routes = [
     {
@@ -179,6 +181,10 @@ const router = createRouter({
     routes,
 });
 router.beforeEach((to, from) => {
+    const loggedUser = useAuthUserStore();
+    loggedUser.loggedUser();
+
+
     const user = getLogedInUser();
     console.log('user:', user);
     console.log('to:', to);
