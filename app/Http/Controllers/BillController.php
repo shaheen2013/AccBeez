@@ -43,9 +43,8 @@ class BillController extends Controller
     public function store(BillRequest $request)
     {
         $company_id = getCompanyIdBySlug($request->slug);
-        
         try {
-            $billData = $request->only('description', 'date', 'invoice_total');
+            $billData = $request->only('description', 'date', 'invoice_total', 'vendor_name', 'bill_number');
             $billData['company_id'] = $company_id;
             DB::beginTransaction();
             $bill = Bill::create($billData);

@@ -14,6 +14,7 @@
                     <div class="value">{{ item.sku }}</div>
                 </template>
             </el-autocomplete>
+            <el-text class="mx-1 text-warning" v-if="isNewItem">This will create new item</el-text>
         </td>
         <td>
             <el-input v-model="item.name" type="text" placeholder="Name" :disabled="operation === 'view'"/>
@@ -61,6 +62,7 @@ export default {
     data() {
         return {
             myCustomClass: 'text-start',
+            isNewItem: false,
         };
     },
     mounted() {
@@ -68,6 +70,9 @@ export default {
     },
     created() {  },
     methods: {
+        skuChangeHandler() {
+            console.log('skuChangeHandler');
+        },
         calculateTotal() {
             this.item.total = parseFloat(this.item.rate) * parseFloat(this.item.quantity);
             let summation = this.bill.items.reduce((total, element) => total + element.total, 0);
@@ -87,12 +92,25 @@ export default {
         },
 
         querySearch(queryString, cb) {
+            if(this.item.sku){
+                this.isNewItem = true;
+
+                this.item.name = '';
+                this.item.rate = 0.00;
+                this.item.unit = '';
+                this.item.description = '';
+                this.item.quantity = 0;
+            }else{
+                this.isNewItem = false;
+            }
             // var productArray = Object.values(this.products)
             const products = Object.values(this.products);
             const results = queryString
                 ? products.filter(this.createFilter(queryString))
                 : products;
-            console.log('results', results, queryString);
+            console.log('results', results);
+            console.log('queryString', queryString);
+            console.log('skuuuuu', this.item.sku);
             // call callback function to return suggestions
             cb(results);
         },
@@ -102,6 +120,7 @@ export default {
             };
         },
         handleSelect(product) {
+            this.isNewItem = false;
             // console.log('handleSelect:', product, this.billItems);
             if (this.billItems &&  this.itemExist(product)) {
                 ElNotification({
@@ -120,6 +139,9 @@ export default {
                 this.item.sku = product.sku;
                 this.item.name = product.name;
                 this.item.rate = product.rate;
+                this.item.unit = product.unit;
+                this.item.description = product.description;
+                this.item.quantity = product.quantity;
             }
             this.calculateTotal();
         },
