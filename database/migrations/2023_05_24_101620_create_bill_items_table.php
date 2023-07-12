@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('bill_id');
             $table->string('sku')->nullalbe();
+            $table->string('description')->nullalbe();
             $table->integer('quantity')->default(0);
             $table->double('rate')->default(0);
             $table->double('total')->default(0);

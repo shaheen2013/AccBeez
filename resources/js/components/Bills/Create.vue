@@ -27,20 +27,30 @@
               placeholder="Pick a date"
               format="YYYY-MM-DD"
               value-format="YYYY-MM-DD"
-              style="width: 100%;"
+              style="width: 100%"
               :disabled="operation === 'view'"
             />
           </el-form-item>
         </el-col>
         <el-col :span="8">
-            <el-form-item label="Vendor Name">
-                <el-input label="Vendor Name" placeholder="Write Your Vendor Name"></el-input>
-            </el-form-item>
+          <el-form-item label="Vendor Name">
+            <el-input
+              v-model="bill.vendor_name"
+              type="string"
+              label="Vendor Name"
+              placeholder="Write Your Vendor Name"
+            />
+          </el-form-item>
         </el-col>
         <el-col :span="8">
-            <el-form-item label="Bill Number">
-                <el-input label="Bill Number" placeholder="Bill Number"></el-input>
-            </el-form-item>
+          <el-form-item label="Bill Number">
+            <el-input
+              v-model="bill.bill_number"
+              label="Bill Number"
+              type="string"
+              placeholder="Bill Number"
+            />
+          </el-form-item>
         </el-col>
       </el-row>
       <el-form-item label="Description" prop="description">
@@ -190,6 +200,8 @@ export default {
       bill: {
         id: null,
         description: "",
+        vendor_name: "",
+        bill_number: "s3a",
         invoice_total: 0,
         invoice_number: 0,
         date: "",
