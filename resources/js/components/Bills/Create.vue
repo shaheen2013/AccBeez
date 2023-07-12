@@ -19,6 +19,17 @@
     <el-card class="box-card">
       <el-row :gutter="12">
         <el-col :span="8">
+          <el-form-item label="Vendor Name">
+            <el-input
+              v-model="bill.vendor_name"
+              type="string"
+              label="Vendor Name"
+              placeholder="Write Your Vendor Name"
+              :disabled="operation === 'view'"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
           <el-form-item label="Date">
             <el-date-picker
               v-model="bill.date"
@@ -28,17 +39,6 @@
               format="YYYY-MM-DD"
               value-format="YYYY-MM-DD"
               style="width: 100%"
-              :disabled="operation === 'view'"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="Vendor Name">
-            <el-input
-              v-model="bill.vendor_name"
-              type="string"
-              label="Vendor Name"
-              placeholder="Write Your Vendor Name"
               :disabled="operation === 'view'"
             />
           </el-form-item>
@@ -55,7 +55,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-form-item label="Description" prop="description">
+      <el-form-item label="Bill Description" prop="description">
         <el-input
           v-model="bill.description"
           type="textarea"
@@ -349,4 +349,4 @@ th {
   color: red;
   margin-right: 3px;
 }
-</style>>
+</style>
