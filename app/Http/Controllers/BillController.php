@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\BillResource;
 use Exception;
 use App\Models\Bill;
 use App\Models\BillItem;
 use Illuminate\Http\Request;
 use App\Http\Requests\BillRequest;
+use App\Models\Company;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Arr;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\Log;
 
 class BillController extends Controller
 {
@@ -26,18 +29,24 @@ class BillController extends Controller
         // dd('hi index', $searchParams);
         $limit = Arr::get($searchParams, 'limit', 5);
         $keyword = Arr::get($searchParams, 'keyword', '');
+
+        $company_id = getCompanyIdBySlug($searchParams['slug']);
         $billsQuery = DB::table('bills')
+                        ->where('company_id', $company_id)
                         ->when(!empty($keyword), function (Builder $query) use ($keyword) {
                             return $query->where('description', 'LIKE', '%' . $keyword . '%');
-                        });
+                        })->latest();
 
         return response()->json($billsQuery->paginate($limit));
     }
 
     public function store(BillRequest $request)
     {
+        $company_id = getCompanyIdBySlug($request->slug);
+        
         try {
             $billData = $request->only('description', 'date', 'invoice_total');
+            $billData['company_id'] = $company_id;
             DB::beginTransaction();
             $bill = Bill::create($billData);
             $bill->invoice_number = mt_rand(10000, 99999).'-'.$bill->id;
@@ -45,6 +54,7 @@ class BillController extends Controller
             // dd('store', $request->all(), $billData);
             foreach($request->items as $item){
                 $item['bill_id'] = $bill->id;
+                $item['company_id'] = $company_id;
                 BillItem::create($item);
             }
             DB::commit();
@@ -118,6 +128,15 @@ class BillController extends Controller
         }
     }
 
+    public function downloadBillsInPdf()
+    {
+        $bill = Bill::latest()->get();
+
+        $pdf = Pdf::loadView('bills.list', ['bills' => $bill]);
+        // dd($pdf);
+        return $pdf->download('bill-list.pdf');
+    }
+
     public function downloadPdf($id)
     {
 
@@ -145,6 +164,17 @@ class BillController extends Controller
         } catch (Exception $ex) {
             DB::rollBack();
             return 'Delete Failed';
+        }
+    }
+
+    public function exportData(){
+        try{
+            $data = BillResource::collection(Bill::latest()->get());
+
+            return response()->successResponse('Bill list', $data);
+        }catch (Exception $exception){
+            Log::info($exception->getMessage());
+            return response()->errorResponse();
         }
     }
 

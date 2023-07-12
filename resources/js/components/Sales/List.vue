@@ -4,7 +4,7 @@
 
         <h1>
             Sale List
-            <router-link to="/sales/create" style="text-decoration: none; color: inherit;">
+            <router-link :to="'/' + $route.params.slug + '/sales/create'" style="text-decoration: none; color: inherit;">
                 <el-button type="primary" v-if="logged_in_user && logged_in_user.role === 'Super-Admin'" style="float: right;">
                     Create
                 </el-button>
@@ -23,18 +23,41 @@
                 </el-icon>
                 <span style="vertical-align: middle"> Search </span>
             </el-button>
-            <el-button type="primary" @click="exportToExcel">
+            <el-button type="primary" @click="exportData('xls')">
                 <el-icon style="vertical-align: middle">
                     <Download />
                 </el-icon>
                 <span style="vertical-align: middle"> Export to Excel </span>
             </el-button>
+
+            <el-button type="primary" @click="exportData('csv')">
+                <el-icon style="vertical-align: middle">
+                    <Download />
+                </el-icon>
+                <span style="vertical-align: middle"> Export to Csv </span>
+            </el-button>
+
             <el-button type="danger" @click="handleBulkDelete">
                 <el-icon style="vertical-align: middle">
                     <Delete />
                 </el-icon>
                 <span style="vertical-align: middle">Delete Selecteds</span>
             </el-button>
+
+            <el-upload
+                v-model:file-list="fileList"
+                class="upload-demo"
+                action="/api/sale/import"
+                multiple
+                :on-preview="handlePreview"
+                :on-remove="handleRemove"
+                :on-success="handleSuccess"
+                :before-remove="beforeRemove"
+                :limit="3"
+                :on-exceed="handleExceed"
+            >
+                <el-button type="primary">Import to CSV</el-button>
+            </el-upload>
             <!-- <el-button
                 :loading="downloading"
                 class="filter-item"
@@ -59,12 +82,12 @@
             </el-table-column>
             <el-table-column prop="id" label="Operations" >
                 <template  #default="scope">
-                    <router-link :to="'/sales/edit/'+scope.row.id"  v-if="logged_in_user && logged_in_user.role === 'Super-Admin'">
+                    <router-link :to="'/' + $route.params.slug + '/sales/edit/'+scope.row.id"  v-if="logged_in_user && logged_in_user.role === 'Super-Admin'">
                         <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px" >
                             <Edit />
                         </el-icon>
                     </router-link>
-                    <router-link :to="'/sales/view/'+scope.row.id">
+                    <router-link :to="'/' + $route.params.slug + '/sales/view/'+scope.row.id">
                         <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px" >
                             <View />
                         </el-icon>
@@ -104,6 +127,7 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 
 import { ElMessage, ElMessageBox } from 'element-plus'
+import {excelParser} from "../../utils/excel-parser.js";
 
 export default {
     name: 'SaleList',
@@ -216,6 +240,7 @@ export default {
                 limit: this.pageSize,
                 keyword: this.query.keyword,
                 page: this.query.page,
+                slug: this.$route.params.slug
             }
             console.log('params', params);
             await axios.get(`/api/sales`, {params}).
@@ -241,6 +266,16 @@ export default {
             this.multipleSelection = val;
         },
 
+        async exportData(format){
+            try {
+                await axios.get(`/api/sales/exported-data`).
+                then(({data}) => {
+                    excelParser().exportDataFromJSON(data.data, 'sales-list', format);
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        },
         // Export Excel file
         exportToExcel() {
             console.log('filteredRegisters', this.sales);
@@ -281,6 +316,9 @@ export default {
             const words = str.split('_');
             const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
             return capitalizedWords.join(' ');
+        },
+        handleSuccess() {
+            ElMessage.success('File has already imported!')
         }
     },
     computed: {

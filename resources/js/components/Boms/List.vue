@@ -3,7 +3,7 @@
     <div style="padding: 10px;">
         <h1>
             Bom List
-            <router-link to="/boms/create" style="text-decoration: none; color: inherit;">
+            <router-link :to="'/' + $route.params.slug + '/boms/create'" style="text-decoration: none; color: inherit;">
                 <el-button type="primary" v-if="logged_in_user && logged_in_user.role === 'Super-Admin'" style="float: right;">
                     Create
                 </el-button>
@@ -22,18 +22,41 @@
                 </el-icon>
                 <span style="vertical-align: middle"> Search </span>
             </el-button>
-            <el-button type="primary" @click="exportToExcel">
+            <el-button type="primary" @click="exportData('xls')">
                 <el-icon style="vertical-align: middle">
                     <Download />
                 </el-icon>
                 <span style="vertical-align: middle"> Export to Excel </span>
             </el-button>
+
+            <el-button type="primary" @click="exportData('csv')">
+                <el-icon style="vertical-align: middle">
+                    <Download />
+                </el-icon>
+                <span style="vertical-align: middle"> Export to CSV </span>
+            </el-button>
+
             <el-button type="danger" @click="handleBulkDelete">
                 <el-icon style="vertical-align: middle">
                     <Delete />
                 </el-icon>
                 <span style="vertical-align: middle">Delete Selecteds</span>
             </el-button>
+            <el-upload
+                v-model:file-list="fileList"
+                class="upload-demo"
+                action="/api/bom/import"
+                multiple
+                :on-preview="handlePreview"
+                :on-remove="handleRemove"
+                :on-success="handleSuccess"
+                :before-remove="beforeRemove"
+                :limit="3"
+                :on-exceed="handleExceed"
+            >
+                <el-button type="primary">Import to CSV</el-button>
+            </el-upload>
+
         </div>
 
         <el-table :data="boms"
@@ -49,12 +72,12 @@
             <el-table-column prop="id" label="Operations" >
 
                 <template  #default="scope">
-                    <router-link :to="'/boms/edit/'+scope.row.id">
+                    <router-link :to="'/' + $route.params.slug + '/boms/edit/'+scope.row.id">
                         <el-icon :size="20" :color="color" style="width: 1em; height: 1em; margin-right: 8px"  v-if="logged_in_user && logged_in_user.role === 'Super-Admin'">
                             <Edit />
                         </el-icon>
                     </router-link>
-                    <router-link :to="'/boms/view/'+scope.row.id">
+                    <router-link :to="'/' + $route.params.slug + '/boms/view/'+scope.row.id">
                         <el-icon :size="20" :color="color" style="width: 1em; height: 1em; margin-right: 8px" >
                             <View />
                         </el-icon>
@@ -92,6 +115,7 @@
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { excelParser } from "../../utils/excel-parser";
 
 export default {
     name: 'BomList',
@@ -201,6 +225,7 @@ export default {
                 limit: this.pageSize,
                 keyword: this.query.keyword,
                 page: this.query.page,
+                slug: this.$route.params.slug
             }
             // console.log('params', params);
             await axios.get(`/api/boms`, {params}).
@@ -225,6 +250,16 @@ export default {
             this.multipleSelection = val;
         },
 
+        async exportData(format){
+            try {
+                await axios.get(`/api/boms/exported-data`).
+                then(({data}) => {
+                    excelParser().exportDataFromJSON(data.data, 'bom-list', format);
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        },
 
         // Export Excel file
         exportToExcel() {
@@ -266,6 +301,9 @@ export default {
             const words = str.split('_');
             const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
             return capitalizedWords.join(' ');
+        },
+        handleSuccess(res) {
+            ElMessage.success('File has already imported!')
         }
     },
     computed: {
@@ -285,5 +323,9 @@ a href{
 }
 .filter-container {
   padding-bottom: 10px;
+}
+.upload-demo {
+    display: inline;
+    margin-left: 12px;
 }
 </style>

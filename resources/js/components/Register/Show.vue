@@ -14,9 +14,29 @@
         </div>
 
         <h4>
+            <el-button type="primary" @click="exportBalanceSheet(bill_item.id, 'xls')">
+                <el-icon style="vertical-align: middle">
+                    <Download />
+                </el-icon>
+                <span style="vertical-align: middle"> Export to Excel </span>
+            </el-button>
+
+            <el-button type="primary" @click="exportBalanceSheet(bill_item.id, 'xls')">
+                <el-icon style="vertical-align: middle">
+                    <Download />
+                </el-icon>
+                <span style="vertical-align: middle"> Export to Excel </span>
+            </el-button>
+
+            <el-button type="primary" @click="exportBalanceSheet(bill_item.id, 'pdf')">
+                <el-icon style="vertical-align: middle">
+                    <Download />
+                </el-icon>
+                <span style="vertical-align: middle"> Download pdf </span>
+            </el-button>
+
             <!-- Raw Material Register -->
             <div style="float:right">
-                <el-button type="info" class="me-1" @click="closeDate">Close Register</el-button>
                 <el-button v-if="isMounted && bill_item.closing_dates && bill_item.closing_dates.length>0"
                         type="info" class="me-1" @click="undoDate">
                     Undo Register
@@ -90,7 +110,7 @@
 
                 <el-row>
                     <el-col>
-                        <router-link :to="'/registers'">
+                        <router-link :to="'/'+ $route.params.slug + '/registers'">
                             <el-button type="info" class="me-2">Back</el-button>
                         </router-link>
                         <!-- <el-button type="primary" @click="downloadPdf" class="me-2">Download PDF</el-button> -->
@@ -121,7 +141,7 @@ export default {
                 }]
             },
             query: {
-                year: '',
+                year: new Date().getFullYear(),
             },
             register_rows: [],
             bill_item: null,
@@ -130,9 +150,7 @@ export default {
         };
     },
     async created() {
-        let paths = this.$route.path.split("/");
-        this.register.id = paths[3];
-        console.log('Route Name: ', this.$route.name);
+        this.register.id = this.$route.params.id;
         await this.getList();
         this.isMounted = true;
     },
@@ -143,9 +161,11 @@ export default {
         async getList(){
             let params = {
                 year: this.query.year,
+                slug: this.$route.params.slug
             }
             await axios.get(`/api/registers/view/`+this.register.id, {params}).
                 then((res) => {
+                console.log(res.data)
                     this.register.id = res.data.bill_item.id;
                     this.register.items = res.data.mergedItems;
                     this.register_rows = res.data.mergedItems;
@@ -204,6 +224,10 @@ export default {
         },
         handleInvoiceClick(invoice){
             window.location.href = `/bills/download-pdf/`+invoice.split('-')[1];
+        },
+
+        exportBalanceSheet(id, format){
+            window.location.href = `/api/register/${id}/export-balance-sheet/${format}`;
         },
 
     },

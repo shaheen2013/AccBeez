@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\BillResource;
+use App\Http\Resources\SalesResource;
+use App\Models\Bill;
 use Exception;
 use Carbon\Carbon;
 use App\Models\Sale;
@@ -13,6 +16,7 @@ use App\Http\Requests\SaleRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\Log;
 
 class SaleController extends Controller
 {
@@ -25,12 +29,14 @@ class SaleController extends Controller
     {
         $searchParams = $request->all();
         // dd('hi index', $searchParams);
+        $company_id = getCompanyIdBySlug($searchParams['slug']);
         $limit = Arr::get($searchParams, 'limit', 5);
         $keyword = Arr::get($searchParams, 'keyword', '');
         $salesQuery = DB::table('sales')
+                        ->where('company_id', $company_id)
                         ->when(!empty($keyword), function (Builder $query) use ($keyword) {
                             return $query->where('description', 'LIKE', '%' . $keyword . '%');
-                        });
+                        })->latest();
 
         return response()->json($salesQuery->paginate($limit));
     }
@@ -38,7 +44,10 @@ class SaleController extends Controller
     public function store(SaleRequest $request)
     {
         try {
-            $saleData = $request->only('description', 'date', 'invoice_total');
+            $saleData = $request->only('description', 'date', 'invoice_total', 'slug');
+            $company_id = getCompanyIdBySlug($saleData['slug']);
+
+            $saleData['company_id'] = $company_id;
             DB::beginTransaction();
             $sale = Sale::create($saleData);
             $now = Carbon::now();
@@ -49,6 +58,7 @@ class SaleController extends Controller
             // dd('store', $request->all(), $saleData);
             foreach($request->items as $item){
                 $item['sale_id'] = $sale->id;
+                $item['company_id'] = $company_id;
                 SaleItem::create($item);
             }
             DB::commit();
@@ -149,6 +159,17 @@ class SaleController extends Controller
         } catch (Exception $ex) {
             DB::rollBack();
             return 'Delete Failed';
+        }
+    }
+
+    public function exportData(){
+        try{
+            $data = SalesResource::collection(Sale::latest()->get());
+
+            return response()->successResponse('Sales list', $data);
+        }catch (Exception $exception){
+            Log::info($exception->getMessage());
+            return response()->errorResponse();
         }
     }
 

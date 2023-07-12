@@ -12,6 +12,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Mail\SendVerificationCodeMail;
 use App\Events\EmailVerificationCodeEvent;
+use App\Models\CompanyUser;
+use App\Models\UserAssign;
+use App\Notifications\UserAuthenticationNotification;
+use Illuminate\View\View;
 use Spatie\Permission\Models\Role;
 
 use function PHPSTORM_META\type;
@@ -26,7 +30,7 @@ class UserController extends Controller
     public function index()
     {
         // dd('hi index');
-        $users = User::all();
+        $users = User::latest()->get();
         $roles = Role::all()->pluck('name');
         foreach($users as $user){
             if($user->hasAnyRole($roles->toArray())){
@@ -43,17 +47,20 @@ class UserController extends Controller
     {
         // dd(config('app.url'));
         try {
-            $userData = $request->only('name', 'email','role');
-
+            $userData = $request->only('name', 'email','role', 'user_type');
             DB::beginTransaction();
-            $userData['invitation_token'] = random_int(100000, 999999);
-            $userData['password'] = Hash::make('123456');
-            $userData['role'] = 'user';
+            $userData['invitation_token'] = $this->generateToken();
+            $userRole = $request->user_type ? $request->user_type : 'User';
             $user = User::create($userData);
-            // event(new SendVerificationCode($user->email, $user->invitation_token));
-            // dd('store', $request->all(), $userData);
+            $user->assignRole($userRole);
+            if($request->user_type =='User'){
+                $user->company()->create([
+                    'user_id' => $user->id,
+                    'company_id' => $request->company_id
+                ]);
+            }
+            $user->notify(new UserAuthenticationNotification($user->name,$user->email,$user->invitation_token));
             DB::commit();
-            SendVerificationCode::dispatch($user['email'], $user['invitation_token']);
             return $user;
         } catch (Exception $ex) {
             DB::rollBack();
@@ -61,14 +68,22 @@ class UserController extends Controller
         }
     }
 
+    private function generateToken()
+    {
+        return md5(rand(1, 10) . microtime());
+    }
+
 
     public function edit($id)
     {
         // dd('hi index');
         $user = User::find($id);
-
+        $roles = $user->getRoleNames();
         // Return the customers as a response
-        return response()->json($user);
+        return response()->json([
+            'user' => $user,
+            'roles' => $roles
+        ]);
     }
 
 
@@ -78,6 +93,12 @@ class UserController extends Controller
             $userData = $request->only('name', 'email','role');
             $user = User::find($id);
             $user->update($userData);
+
+            if($request->user_type =='User'){
+                $user->company()->update([
+                    'company_id' => $request->company_id
+                ]);
+            }
             return $user;
         } catch (Exception $ex) {
             return response()->json( new \Illuminate\Support\MessageBag(['catch_exception'=>$ex->getMessage()]), 403);
@@ -119,6 +140,42 @@ class UserController extends Controller
         return redirect()->route('login');
     }
 
+    public function getUsersByRole(){
+        $admins = User::whereHas('roles', function($query){
+            $query->where('name', 'Admin');
+        })->get();
+        $users = User::whereHas('roles', function($query){
+            $query->where('name', 'User');
+        })->get();
+
+        return response()->json(
+        [
+            'admins' => $admins,
+            'users' => $users
+        ]);
+    }
+
+    public function assignUser(Request $request) {
+        $admin = $request->admin;
+        $users = $request->user;
+
+        // admin create
+        UserAssign::create([
+            'admin_id' => $admin,
+            'user_id' => null,
+            'user_type' => 'Admin'
+        ]);
+        // users create
+        foreach($users as $user_id){
+            UserAssign::create([
+                'admin_id' => $admin,
+                'user_id' => $user_id,
+                'user_type' => 'User'
+            ]);
+        }
+
+        return "inserted successfully";
+    }
 
     public function logged_in_user(Request $request)
     {
@@ -126,6 +183,43 @@ class UserController extends Controller
         $logged_in_user = User::find($logged_in_user->id);
         $logged_in_user->role = $logged_in_user->getRoleNames()[0];
         return response()->json($logged_in_user);
+    }
+
+    /**
+     * Show the password Store page.
+     * @param Request $request
+     * 
+     * @return View
+     */
+    function showPasswordPage(Request $request) :View
+    {
+        if (! $request->hasValidSignature()) {
+            abort(401);
+        }
+        if (User::where('invitation_token', request()->token)->doesntExist()) {
+            abort(401);
+        }
+
+        return view('auth.password', ['request' => $request]);
+    }
+
+    /**
+     * Store the password.
+     * @param Request $request
+     * 
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    function passwordStore(Request $request)
+    {
+        $request->validate([
+            'password' => 'required|string|confirmed',
+        ]);
+        $user = User::where('invitation_token', request()->token)->first();
+        $user->password = Hash::make(request()->password);
+        $user->invitation_token = null;
+        $user->status = 1;
+        $user->save();
+        return redirect()->route('login');    
     }
 
 }

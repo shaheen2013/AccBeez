@@ -16,6 +16,9 @@ return new class extends Migration
             $table->string('sku');
             $table->string('date');
             $table->boolean('status')->default(0);
+            $table->integer('company_id');
+            $table->integer('created_by')->nullable();
+            $table->integer('updated_by')->nullable();
             $table->timestamps();
         });
     }

@@ -41,7 +41,7 @@
 
             <el-row>
                 <el-col>
-                    <router-link :to="'/boms'">
+                    <router-link :to="'/' + $route.params.slug + '/boms'">
                         <el-button type="info" class="me-2">Back</el-button>
                     </router-link>
                     <el-button type="primary" @click="downloadPdf" class="me-2">Download PDF</el-button>
@@ -72,10 +72,8 @@ export default {
         };
     },
     async created() {
-        let paths = this.$route.path.split("/");
-        this.bom.id = paths[3];
-        console.log('Route Name: ', this.$route.name);
-        await axios.get(`/api/boms/edit/`+this.bom.id).
+        this.bom.id = this.$route.params.id;
+        await axios.get(`/api/boms/edit/`+this.$route.params.id).
                 then((res) => {
                     console.log('res:', res);
                     this.bom.id = res.data.id;

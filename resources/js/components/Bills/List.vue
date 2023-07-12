@@ -4,7 +4,7 @@
 
         <h1>
             Bill List
-            <router-link to="/bills/create" style="text-decoration: none; color: inherit;">
+            <router-link :to=" '/' + $route.params.slug + '/bills/create'" style="text-decoration: none; color: inherit;">
                 <el-button type="primary" v-if="logged_in_user && logged_in_user.role === 'Super-Admin'" style="float: right;">
                     Create
                 </el-button>
@@ -23,18 +23,47 @@
                 </el-icon>
                 <span style="vertical-align: middle"> Search </span>
             </el-button>
-            <el-button type="primary" @click="exportToExcel">
+            <el-button type="primary" @click="exportData('xls')">
                 <el-icon style="vertical-align: middle">
                     <Download />
                 </el-icon>
                 <span style="vertical-align: middle"> Export to Excel </span>
             </el-button>
+
+            <el-button type="primary" @click="exportData('csv')">
+                <el-icon style="vertical-align: middle">
+                    <Download />
+                </el-icon>
+                <span style="vertical-align: middle"> Export to CSV </span>
+            </el-button>
+
+            <el-button type="primary" @click="downloadPdf">
+                <el-icon style="vertical-align: middle">
+                    <Download />
+                </el-icon>
+                <span style="vertical-align: middle"> Download Pdf </span>
+            </el-button>
+
             <el-button type="danger" @click="handleBulkDelete">
                 <el-icon style="vertical-align: middle">
                     <Delete />
                 </el-icon>
                 <span style="vertical-align: middle">Delete Selecteds</span>
             </el-button>
+            <el-upload
+                v-model:file-list="fileList"
+                class="upload-demo"
+                action="/api/bill/import"
+                multiple
+                :on-preview="handlePreview"
+                :on-remove="handleRemove"
+                :on-success="handleSuccess"
+                :before-remove="beforeRemove"
+                :limit="3"
+                :on-exceed="handleExceed"
+            >
+                <el-button type="primary">Import to CSV</el-button>
+            </el-upload>
         </div>
 
 
@@ -51,12 +80,12 @@
             </el-table-column>
             <el-table-column prop="id" label="Operations" >
                 <template  #default="scope">
-                    <router-link :to="'/bills/edit/'+scope.row.id"  v-if="logged_in_user && logged_in_user.role === 'Super-Admin'">
+                    <router-link :to="'/' + $route.params.slug + '/bills/edit/'+scope.row.id"  v-if="logged_in_user && logged_in_user.role === 'Super-Admin'">
                         <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px" >
                             <Edit />
                         </el-icon>
                     </router-link>
-                    <router-link :to="'/bills/view/'+scope.row.id">
+                    <router-link :to="'/' + $route.params.slug + '/bills/view/'+scope.row.id">
                         <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px" >
                             <View />
                         </el-icon>
@@ -95,6 +124,12 @@
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 
+import { genFileId } from 'element-plus'
+
+import { excelParser } from "../../utils/excel-parser";
+import {mapState, mapActions} from "vuex";
+
+
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 export default {
@@ -115,6 +150,7 @@ export default {
             pageSize: 5,
             multipleSelection: [],
             bulkDeleteIds: [],
+            upload: null,
         };
     },
     async created() {
@@ -125,6 +161,7 @@ export default {
                         this.logged_in_user = res.data;
                         console.log('logged_in_user:', this.logged_in_user);
                     });
+            this.upload = this.$refs.upload
         } catch (error) {
             console.error(error);
         }
@@ -208,6 +245,7 @@ export default {
                 limit: this.pageSize,
                 keyword: this.query.keyword,
                 page: this.query.page,
+                slug: this.$route.params.slug
             }
             console.log('params', params);
             await axios.get(`/api/bills`, {params}).
@@ -268,11 +306,45 @@ export default {
             const dataBlob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
             saveAs(dataBlob, 'exported_data.xlsx');
         },
+
+        async exportData(format){
+            try {
+                await axios.get(`/api/bills/exported-data`).
+                then(({data}) => {
+                    const bills = data.data.map((bill)=>{
+                        return {
+                            Date: bill.date,
+                            Description: bill.description,
+                            Invoice_Total: bill.invoice_total,
+                        }
+                    })
+
+                    excelParser().exportDataFromJSON(bills, 'Bill list', format);
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        async downloadPdf(){
+            window.location.href = `/bills/download-bills/`;
+        },
+
+
         capitalizeFirstLetter(str) {
             const words = str.split('_');
             const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
             return capitalizedWords.join(' ');
-        }
+        },
+        handleExceed(files) {
+            this.upload.clearFiles()
+            const file = files[0]
+            file.uid = genFileId()
+            this.upload.handleStart(file)
+        },
+        handleSuccess() {
+            ElMessage.success('File has already imported!')
+        },
     },
     computed: {
         formattedInvoiceTotal() {
@@ -284,11 +356,24 @@ export default {
 };
 </script>
 
+
+
+
+
+
+
+
+
+
 <style scoped>
 .filter-container {
   padding-bottom: 10px;
 }
 .demo-pagination-block  {
   margin-top: 10px;
+}
+.upload-demo {
+    display: inline;
+    margin-left: 12px;
 }
 </style>

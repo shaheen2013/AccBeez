@@ -24,7 +24,9 @@ class BomSaleController extends Controller
         // dd('hi index', $searchParams);
         $limit = Arr::get($searchParams, 'limit', 5);
         $keyword = Arr::get($searchParams, 'keyword', '');
+        $company_id = getCompanyIdBySlug($searchParams['slug']);
         $bomSalesQuery = DB::table('bom_sales')
+                        ->where('company_id', $company_id)
                         ->when(!empty($keyword), function (Builder $query) use ($keyword) {
                             return $query->where('description', 'LIKE', '%' . $keyword . '%');
                         });
@@ -36,14 +38,17 @@ class BomSaleController extends Controller
     {
         try {
             // dd($request->all());
-            $bomSaleData = $request->only('description', 'date', 'invoice_total');
+            $bomSaleData = $request->only('description', 'date', 'invoice_total', 'slug');
+            $company_id = getCompanyIdBySlug($bomSaleData['slug']);
             DB::beginTransaction();
+            $bomSaleData['company_id'] = $company_id;
             $bomSale = BomSale::create($bomSaleData);
             $bomSale->invoice_number = mt_rand(10000, 99999).'-'.$bomSale->id;
             $bomSale->save();
             // dd('store', $request->all(), $bomSaleData);
             foreach($request->items as $item){
                 $item['bom_sale_id'] = $bomSale->id;
+                $item['company_id'] = $company_id;
                 $data = BomSaleItem::create($item);
                 $this->bomSales($data->toArray(),$item['quantity'],$bomSale);
                 // $this->salesEntry($item);

@@ -18,6 +18,9 @@ return new class extends Migration
             $table->integer('quantity')->default(0);
             $table->double('rate')->default(0);
             $table->double('total')->default(0);
+            $table->integer('company_id');
+            $table->integer('created_by')->nullable();
+            $table->integer('updated_by')->nullable();
             $table->timestamps();
         });
     }

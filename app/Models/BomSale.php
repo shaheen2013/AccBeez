@@ -9,7 +9,7 @@ class BomSale extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['description', 'date', 'invoice_total', 'invoice_number'];
+    protected $fillable = ['description', 'date', 'invoice_total', 'invoice_number', 'company_id'];
     public function bomSaleItems(){
         return $this->hasMany(BomSaleItem::class,'bom_sale_id','id');
     }

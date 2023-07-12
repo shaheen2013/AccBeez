@@ -87,7 +87,7 @@
                 <el-col>
                     <el-button v-if="operation === 'create'" type="primary" @click="createBill" class="me-2">Create</el-button>
                     <el-button v-if="operation === 'edit'" type="primary" @click="updateBill" class="me-2">Update</el-button>
-                    <router-link :to="'/bills'">
+                    <router-link :to=" '/' + $route.params.slug + '/bills'">
                         <el-button type="info" class="me-2">Back</el-button>
                     </router-link>
 
@@ -147,11 +147,11 @@ export default {
         } else if(this.$route.name == 'BillEdit'){
             this.operation = 'edit';
             let paths = this.$route.path.split("/");
-            this.bill.id = paths[3];
+            this.bill.id = this.$route.params.id;
         } else {
             this.operation = 'view';
             let paths = this.$route.path.split("/");
-            this.bill.id = paths[3];
+            this.bill.id = this.$route.params.id;
         }
         console.log('Route Name: ', this.$route.name);
         if(this.bill.id){
@@ -168,7 +168,7 @@ export default {
         }
 
 
-        await axios.get(`/api/products`).
+        await axios.get(`/api/products?slug=` + this.$route.params.slug).
                 then((res) => {
                     this.products = res.data;
                     console.log('products:', this.products);
@@ -189,11 +189,12 @@ export default {
         },
         async createBill() {
             console.log('createBill:', this.bill)
+            this.bill.slug = this.$route.params.slug;
             try {
                 await axios.post(`/api/bills`, this.bill).
                         then((res) => {
                             console.log('res:', res, this.$router);
-                            this.$router.push('/bills');
+                            this.$router.push('/' + this.$route.params.slug + '/bills');
                         });
             } catch (error) {
                 showErrors(error);
@@ -207,7 +208,7 @@ export default {
                 await axios.post(`/api/bills/`+this.bill.id, this.bill).
                         then((res) => {
                             console.log('res:', res, this.$router);
-                            this.$router.push('/bills');
+                            this.$router.push('/' + this.$route.params.slug + '/bills');
                         });
             } catch (error) {
                 showErrors(error);
