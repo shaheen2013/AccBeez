@@ -1,7 +1,7 @@
 
 <template>
     <div style="padding:20px;">
-        <h1>Register List</h1>
+        <h1>Register List {{ months }}</h1>
 
         <div class="filter-container">
             <el-input
@@ -52,16 +52,33 @@
         </div>
 
 
+      <pre>
+        {{registers}}
+      </pre>
+
+
         <el-table :data="registers" class="small-font-table">
             <el-table-column fixed prop="name" label="Name" />
             <el-table-column fixed prop="sku" label="SKU" />
-            <template v-for="month in months">
-                <el-table-column :prop="`month-${month}`" :label="original_months[month.split('-')[1] - 1]+'-'+month.split('-')[0]">
-                    <template #default="scope">
-                            <!-- {{ month.split('-')[1] }}  -->
-                            <!-- {{original_months[month.split('-')[1] - 1]}} -->
+
+            <template v-for="(month, i) in Object.values(months)" :key="i">
+                <el-table-column :label="original_months[month.split('-')[1] - 1]+'-'+month.split('-')[0]">
+                  <el-table-column  label="Value" >
+                    {{ `month-${month}` }}
+                  </el-table-column>
+                  <el-table-column  prop="quantity" label="Quantity" >
+                    month-{{month}}
+                  </el-table-column>
+
+
+
+<!--                    <template #default="scope">
+                            &lt;!&ndash; {{ month.split('-')[1] }}  &ndash;&gt;
+                            &lt;!&ndash; {{original_months[month.split('-')[1] - 1]}} &ndash;&gt;
+
                         {{ formattedAverage(scope.row[`month-${month}`]) }}
-                    </template>
+                    </template>-->
+
                 </el-table-column>
             </template>
 
@@ -106,7 +123,9 @@ export default {
     data() {
         return {
             registers: [],
+
             months: [],
+
             original_months: [
                 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
                 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
@@ -122,7 +141,10 @@ export default {
             pageSize: 10,
             year: null,
             selectedYear: null,
+
         };
+
+
     },
     async mounted() {
         try {
@@ -240,9 +262,12 @@ export default {
 };
 </script>
 
-<style>
+<style >
 .small-font-table .el-table__header,
 .small-font-table .el-table__body {
   font-size: 10px; /* Adjust the font size as needed */
+}
+.small-font-table. cell{
+  text-align: center !important;
 }
 </style>
