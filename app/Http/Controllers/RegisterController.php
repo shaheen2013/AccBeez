@@ -86,7 +86,7 @@ class RegisterController extends Controller
 
          $simpleList = $grouped->map(function ($items) use ($distinctMonths) {
             $groupedItemsByMonth = $items->keyBy('month');
-            error_log(json_encode($groupedItemsByMonth));
+            // error_log(json_encode($groupedItemsByMonth));
             $outputItem['name'] = $items[0]['name'];
             $outputItem['sku'] = $items[0]['sku'];
             $outputItem['bill_item_id'] = $items[0]['bill_item_id'];
