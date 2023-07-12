@@ -19,6 +19,9 @@
             <el-input v-model="item.name" type="text" placeholder="Name" :disabled="operation === 'view'"/>
         </td>
         <td>
+            <el-input v-model="item.description" type="text" placeholder="Description" :disabled="operation === 'view'"/>
+        </td>
+        <td>
             <!-- <el-input v-model="formattedRate" type="number" placeholder="Rate" :disabled="operation === 'view'"
                         @blur="calculateTotal" /> -->
             <el-input-number v-model="item.rate" type="text" placeholder="Rate" :disabled="operation === 'view'"

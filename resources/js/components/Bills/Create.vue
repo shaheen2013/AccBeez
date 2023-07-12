@@ -39,6 +39,7 @@
               type="string"
               label="Vendor Name"
               placeholder="Write Your Vendor Name"
+              :disabled="operation === 'view'"
             />
           </el-form-item>
         </el-col>
@@ -49,6 +50,7 @@
               label="Bill Number"
               type="string"
               placeholder="Bill Number"
+              :disabled="operation === 'view'"
             />
           </el-form-item>
         </el-col>
@@ -76,31 +78,38 @@
                   >
                   <span>SKU</span>
                 </th>
-                <th width="15%">
+                <th>
                   <span class="required-indicator" v-if="operation !== 'view'"
                     >*</span
                   >
-                  <span>Name</span>
+                  <span>Product Name</span>
                 </th>
-                <th width="15%">
+                <th>
+                  <span
+                    class="required-indicator"
+                    v-if="operation !== 'view'"
+                  ></span>
+                  <span>Description</span>
+                </th>
+                <th>
                   <span class="required-indicator" v-if="operation !== 'view'"
                     >*</span
                   >
                   <span>Rate</span>
                 </th>
-                <th width="15%">
+                <th>
                   <span class="required-indicator" v-if="operation !== 'view'"
                     >*</span
                   >
                   <span>Unit</span>
                 </th>
-                <th width="15%">
+                <th>
                   <span class="required-indicator" v-if="operation !== 'view'"
                     >*</span
                   >
                   <span>Quantity</span>
                 </th>
-                <th width="15%">
+                <th>
                   <span class="required-indicator" v-if="operation !== 'view'"
                     >*</span
                   >
@@ -201,7 +210,7 @@ export default {
         id: null,
         description: "",
         vendor_name: "",
-        bill_number: "s3a",
+        bill_number: "BI-" + this.generateInvoiceNumber(5),
         invoice_total: 0,
         invoice_number: 0,
         date: "",
@@ -209,6 +218,7 @@ export default {
           {
             sku: null,
             name: "",
+            description: "",
             rate: 0,
             unit: "",
             quantity: 0,
@@ -299,6 +309,19 @@ export default {
 
     downloadPdf() {
       window.location.href = `/bills/download-pdf/` + this.bill.id;
+    },
+    generateInvoiceNumber(length) {
+      let result = "";
+      const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      const charactersLength = characters.length;
+
+      for (let i = 0; i < length; i++) {
+        result += characters.charAt(
+          Math.floor(Math.random() * charactersLength)
+        );
+      }
+
+      return result;
     },
   },
   computed: {
