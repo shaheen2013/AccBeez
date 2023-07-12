@@ -59,7 +59,7 @@
 
 
           <template #default="scope" >
-            <div class="d-flex  justify-content-center border ">
+            <div class="d-flex  justify-content-center  ">
             <span class=" pe-4  ps-4 border-end">
               {{ getqty(scope.row[`month-${month}`]) }}
             </span>
@@ -88,7 +88,7 @@
     </el-table>
 
 
-    <div class="demo-pagination-block">
+    <div class="demo-pagination-block mt-3">
       <el-pagination
           v-show="total>0"
           :page-size="query.limit"

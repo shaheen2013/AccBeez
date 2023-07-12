@@ -72,7 +72,8 @@
                                 <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px">
                                     <CreditCard />
                                 </el-icon>
-                                Bom Sales
+
+                              Production
                             </el-menu-item>
                         </router-link>
                         <router-link :to="'/' + $route.params.slug + '/cogs'" style="text-decoration: none;"

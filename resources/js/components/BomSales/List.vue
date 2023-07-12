@@ -3,7 +3,7 @@
     <div style="padding: 10px;">
 
         <h1>
-            BomSale List
+          Production List
             <router-link :to="'/'+ $route.params.slug + '/bomSales/create'" style="text-decoration: none; color: inherit;">
                 <el-button type="primary" v-if="logged_in_user && logged_in_user.role === 'Super-Admin'" style="float: right;">
                     Create
