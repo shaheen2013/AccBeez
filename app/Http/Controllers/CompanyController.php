@@ -9,6 +9,8 @@ use App\Models\CompanyUser;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class CompanyController extends Controller
@@ -18,10 +20,26 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $role =Auth::user()->getRoleNames()->toArray();     
-        $companies = Company::when(in_array("User",$role),function($q){
-            $q->whereIn('id',CompanyUser::where('user_id',Auth::id())->pluck('company_id'));
-        })->latest()->withCount('bills', 'boms', 'sales', 'bomSales', 'companyUsers')->with('companyUsers.user')->get();
+        // $user = Auth::user();  
+        // $role = User::find($user->id)->getRoleNames()[0];     
+        // $companies = Company::when(in_array("User",$role),function($q){
+        //     $q->whereIn('id',CompanyUser::where('user_id',Auth::id())->pluck('company_id'));
+        // })->latest()->withCount('bills', 'boms', 'sales', 'bomSales', 'companyUsers')->with('companyUsers.user')->get();
+
+        $companies = Company::latest()->withCount('bills', 'boms', 'sales', 'bomSales', 'companyUsers')->with('companyUsers.user')->get();
+
+        return response()->successResponse('Company list', $companies);
+    }
+
+    public function getAll()
+    {
+        // $user = Auth::user();  
+        // $role = User::find($user->id)->getRoleNames()[0];     
+        // $companies = Company::when(in_array("User",$role),function($q){
+        //     $q->whereIn('id',CompanyUser::where('user_id',Auth::id())->pluck('company_id'));
+        // })->latest()->withCount('bills', 'boms', 'sales', 'bomSales', 'companyUsers')->with('companyUsers.user')->get();
+
+        $companies = Company::withTrashed()->latest()->withCount('bills', 'boms', 'sales', 'bomSales', 'companyUsers')->with('companyUsers.user')->get();
 
         return response()->successResponse('Company list', $companies);
     }
@@ -77,8 +95,34 @@ class CompanyController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            
+            $company = Company::find($id);
+            $company->delete();  
+    
+            return response()->json(['status'=>true,'data'=>$company],200);   
+        } catch (\Throwable $th) {
+            //throw $th;
+            Log::error('companycontroller destroy method : ',$th->getTrace());
+            return response()->json(['status'=>false,'message'=>'Something wrong! Please try again. '],400);   
+        }
     }
+
+    public function restore(string $id)
+    {
+        try {
+            
+            DB::table('companies')->where('id',$id)->update(['deleted_at'=>null]);
+            $company = Company::find($id);  
+    
+            return response()->json(['status'=>true,'data'=>$company],200);   
+        } catch (\Throwable $th) {
+            //throw $th;
+            Log::error('companycontroller restore method : ',$th->getTrace());
+            return response()->json(['status'=>false,'message'=>'Something wrong! Please try again. '],400);   
+        }
+    }
+
     public function companyOverview(Request $request)
     {
         $company = Company::where('slug', $request->slug)
