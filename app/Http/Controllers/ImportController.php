@@ -10,11 +10,13 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ImportController extends Controller
 {
-    public function billImport() 
+    public function billImport(Request $request) 
     {
-        $file = request()->file('file');
+        $company_id = getCompanyIdBySlug($request->slug);
 
-        Excel::import(new BillsImport, $file);
+        $file = $request->file('file');
+
+        Excel::import(new BillsImport($company_id), $file);
 
         return response()->json([
             'success' => true,

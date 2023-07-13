@@ -53,7 +53,7 @@
             <el-upload
                 v-model:file-list="fileList"
                 class="upload-demo"
-                action="/api/bill/import"
+                :action="'/api/bill/import?slug=' + $route.params.slug"
                 multiple
                 :on-preview="handlePreview"
                 :on-remove="handleRemove"
@@ -62,7 +62,7 @@
                 :limit="3"
                 :on-exceed="handleExceed"
             >
-                <el-button type="primary">Import to CSV</el-button>
+                <el-button type="primary">Import CSV</el-button>
             </el-upload>
         </div>
 
