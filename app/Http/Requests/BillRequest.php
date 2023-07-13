@@ -23,10 +23,13 @@ class BillRequest extends FormRequest
     {
         $rules = [
             'date' => 'required',
-            'description' => 'string',
+            'description' => 'nullable|string',
+            'vendor_name' => 'nullable|string',
+            'bill_number' => 'nullable|string',
             'items.0' => 'required|min:1',
             'items.*.sku' =>  'required|string',
             'items.*.rate' =>  'required|numeric',
+            'items.*.description' => 'nullable|string',
             'items.*.quantity' =>  'required|numeric',
         ];
         return $rules;
