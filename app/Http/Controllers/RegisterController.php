@@ -35,7 +35,6 @@ class RegisterController extends Controller
 
          $distinctMonths = DB::table('bills')
                             ->select(DB::raw("DATE_FORMAT(bills.date, '%Y-%m') as month"))
-                            ->where('company_id', $company_id)
                             ->when(!empty($year), function (Builder $query) use ($year) {
                                 return $query->whereRaw('YEAR(bills.date) = ?', [$year]);
                             })
@@ -164,6 +163,8 @@ class RegisterController extends Controller
                 "bill_item_id" => $item->bill_item_id,
                 "name" => $item->name,
                 "sku" => $item->sku,
+                "total_items" => $item->total_items,
+                "total_cost" => $item->total_cost,
                 "avg_cost" => $item->avg_cost,
                 "month" => $item->month,
                 "year" => $item->year,
@@ -180,7 +181,7 @@ class RegisterController extends Controller
 
             foreach ($distinctMonths as $month) {
                 if ($groupedItemsByMonth->has($month)) {
-                    $outputItem['month-'.$month] = $groupedItemsByMonth[$month]['avg_cost'];
+                    $outputItem['month-'.$month] = $groupedItemsByMonth[$month]['total_items'] . '|' . $groupedItemsByMonth[$month]['total_cost'];
                 } else {
                     $outputItem['month-'.$month] = null;
                 }
