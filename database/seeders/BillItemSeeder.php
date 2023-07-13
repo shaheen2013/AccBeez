@@ -71,6 +71,7 @@ class BillItemSeeder extends Seeder
                     'bill_id' => $billId,
                     'sku' => $item.'-'.rand(1,3),
                     'name' => $item,
+                    'description' => 'Bill description ' . $i,
                     'rate' => $rate,
                     'unit' => $unit,
                     'quantity' => $quantity,

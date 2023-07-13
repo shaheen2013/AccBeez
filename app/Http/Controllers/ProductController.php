@@ -16,7 +16,7 @@ class ProductController extends Controller
                                 $query->select('id', 'sku', 'date')->orderBy('date', 'desc');
                             }])
                             ->where('company_id', $company_id)
-                            ->select('sku', 'name', 'rate', 'bill_items.id as id')
+                            ->select('sku', 'name', 'rate', 'bill_items.id as id', 'unit', 'description', 'quantity')
                             ->orderBy('sku', 'asc')
                             ->orderBy('id', 'desc')
                             ->get()
