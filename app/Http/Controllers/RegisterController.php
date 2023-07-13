@@ -120,17 +120,11 @@ class RegisterController extends Controller
 
     public function exportData(Request $request){
          $year = $request->has('year') ? $request->year : Carbon::now()->format('Y');
-//        $searchParams = $request->all();
-//        $limit = Arr::get($searchParams, 'limit', 10);
-//        $keyword = Arr::get($searchParams, 'keyword', '');
-//        $year = Arr::get($searchParams, 'year', '');
-//        $perPage = $request->input('limit') ?? 10;
-//        $page = $request->input('page') ?? 1;
-//        $startAt = ($perPage * ($page-1));
-        // dd($searchParams, $perPage, $page, $startAt, $year);
+         $company_id = getCompanyIdBySlug($request->slug);
 
         $distinctMonths = DB::table('bills')
             ->select(DB::raw("DATE_FORMAT(bills.date, '%Y-%m') as month"))
+            ->where('company_id', $company_id)
             ->when(!empty($year), function (Builder $query) use ($year) {
                 return $query->whereRaw('YEAR(bills.date) = ?', [$year]);
             })
@@ -148,7 +142,7 @@ class RegisterController extends Controller
                 // DB::raw('MONTH(bills.date) as month')
                 DB::raw("DATE_FORMAT(bills.date, '%Y-%m') as month")
             )
-
+            ->where('bills.company_id', $company_id)
             ->when(!empty($year), function (Builder $query) use ($year) {
                 return $query->whereRaw('YEAR(bills.date) = ?', [$year]);
             })
@@ -164,6 +158,8 @@ class RegisterController extends Controller
                 "bill_item_id" => $item->bill_item_id,
                 "name" => $item->name,
                 "sku" => $item->sku,
+                "total_items" => $item->total_items,
+                "total_cost" => $item->total_cost,
                 "avg_cost" => $item->avg_cost,
                 "month" => $item->month,
                 "year" => $item->year,
@@ -180,7 +176,7 @@ class RegisterController extends Controller
 
             foreach ($distinctMonths as $month) {
                 if ($groupedItemsByMonth->has($month)) {
-                    $outputItem['month-'.$month] = $groupedItemsByMonth[$month]['avg_cost'];
+                    $outputItem['month-'.$month] = $groupedItemsByMonth[$month]['total_items'] . '|' . $groupedItemsByMonth[$month]['total_cost'];
                 } else {
                     $outputItem['month-'.$month] = null;
                 }

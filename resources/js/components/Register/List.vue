@@ -15,21 +15,21 @@
         <span style="vertical-align: middle"> Search </span>
       </el-button>
 
-      <el-button type="primary" @click="exportData('xls')">
+      <el-button type="primary" @click="exportData('xls', $route.params.slug)">
         <el-icon style="vertical-align: middle">
           <Download/>
         </el-icon>
         <span style="vertical-align: middle"> Export to Excel </span>
       </el-button>
 
-      <el-button type="primary" @click="exportData('csv')">
+      <el-button type="primary" @click="exportData('csv', $route.params.slug)">
         <el-icon style="vertical-align: middle">
           <Download/>
         </el-icon>
         <span style="vertical-align: middle"> Export to csv </span>
       </el-button>
 
-      <el-button type="primary" @click="exportData('pdf')">
+      <el-button type="primary" @click="exportData('pdf', $route.params.slug)">
         <el-icon style="vertical-align: middle">
           <Download/>
         </el-icon>
@@ -54,7 +54,7 @@
     <el-table :data="registers" class="small-font-table">
       <el-table-column fixed prop="name" label="Name"/>
       <el-table-column fixed prop="sku" label="SKU"/>
-      <template v-for="month in months">
+      <template v-for="(month, index) in months" :key="index">
         <el-table-column :label="original_months[month.split('-')[1] - 1]+'-'+month.split('-')[0]">
 
 
@@ -210,8 +210,8 @@ export default {
 
 
     // Export Excel file
-    exportData(format) {
-      window.location.href = `/api/register/exported-data/${format}`;
+    exportData(format, slug = null) {
+      window.location.href = `/api/register/exported-data/${format}?slug=${slug}`;
       // try {
       //     await axios.get(`/api/register/exported-data`).
       //     then(({data}) => {
