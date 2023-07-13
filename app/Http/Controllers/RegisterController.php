@@ -120,11 +120,17 @@ class RegisterController extends Controller
 
     public function exportData(Request $request){
          $year = $request->has('year') ? $request->year : Carbon::now()->format('Y');
-         $company_id = getCompanyIdBySlug($request->slug);
+//        $searchParams = $request->all();
+//        $limit = Arr::get($searchParams, 'limit', 10);
+//        $keyword = Arr::get($searchParams, 'keyword', '');
+//        $year = Arr::get($searchParams, 'year', '');
+//        $perPage = $request->input('limit') ?? 10;
+//        $page = $request->input('page') ?? 1;
+//        $startAt = ($perPage * ($page-1));
+        // dd($searchParams, $perPage, $page, $startAt, $year);
 
         $distinctMonths = DB::table('bills')
             ->select(DB::raw("DATE_FORMAT(bills.date, '%Y-%m') as month"))
-            ->where('company_id', $company_id)
             ->when(!empty($year), function (Builder $query) use ($year) {
                 return $query->whereRaw('YEAR(bills.date) = ?', [$year]);
             })
@@ -142,7 +148,7 @@ class RegisterController extends Controller
                 // DB::raw('MONTH(bills.date) as month')
                 DB::raw("DATE_FORMAT(bills.date, '%Y-%m') as month")
             )
-            ->where('bills.company_id', $company_id)
+
             ->when(!empty($year), function (Builder $query) use ($year) {
                 return $query->whereRaw('YEAR(bills.date) = ?', [$year]);
             })
@@ -158,8 +164,6 @@ class RegisterController extends Controller
                 "bill_item_id" => $item->bill_item_id,
                 "name" => $item->name,
                 "sku" => $item->sku,
-                "total_items" => $item->total_items,
-                "total_cost" => $item->total_cost,
                 "avg_cost" => $item->avg_cost,
                 "month" => $item->month,
                 "year" => $item->year,
@@ -176,7 +180,7 @@ class RegisterController extends Controller
 
             foreach ($distinctMonths as $month) {
                 if ($groupedItemsByMonth->has($month)) {
-                    $outputItem['month-'.$month] = $groupedItemsByMonth[$month]['total_items'] . '|' . $groupedItemsByMonth[$month]['total_cost'];
+                    $outputItem['month-'.$month] = $groupedItemsByMonth[$month]['avg_cost'];
                 } else {
                     $outputItem['month-'.$month] = null;
                 }
@@ -377,7 +381,6 @@ class RegisterController extends Controller
             // dd($mergedItem);
             $mergedArray[] = $mergedItem;
         }
-        // return response()->json($mergedArray);
 
 
         $closingRate = 0;
@@ -390,7 +393,8 @@ class RegisterController extends Controller
         $sale_item_sum_quantity = 0;
         $sale_item_sum_total = 0;
         // dump($mergedArray);
-        // return response()->json($mergedArray);
+
+
         foreach ($mergedArray as &$item) {
             if( $item['opening_date'] ){
                 // dump($item['opening_date']);
@@ -421,14 +425,7 @@ class RegisterController extends Controller
                 $item['closing_date_rate'] = $closingRate;
                 $item['closing_date_quantity'] = $closingQuantity;
                 $item['closing_date_total'] = $closingTotal;
-                if($item['opening_date'] == true){
-                    $item['opening_date_quantity'] = $closingQuantity;
-                    $item['opening_date_total'] = $closingTotal;
-                    $item['opening_date_rate'] = $closingRate;
-                    $item['bill_item_quantity'] = null;
-                    $item['bill_item_total'] = null;
-                    $item['bill_item_rate'] = null;
-                }
+                // dump($item);
             }
             elseif (isset($item['sale_item_quantity'])) {
                 // $item['sale_item_rate'] = $closingRate;
