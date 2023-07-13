@@ -23,14 +23,14 @@
                 </el-icon>
                 <span style="vertical-align: middle"> Search </span>
             </el-button>
-            <el-button type="primary" @click="exportData('xls')">
+            <el-button type="primary" @click="exportData('xls', $route.params.slug)">
                 <el-icon style="vertical-align: middle">
                     <Download />
                 </el-icon>
                 <span style="vertical-align: middle"> Export to Excel </span>
             </el-button>
 
-            <el-button type="primary" @click="exportData('csv')">
+            <el-button type="primary" @click="exportData('csv', $route.params.slug)">
                 <el-icon style="vertical-align: middle">
                     <Download />
                 </el-icon>
@@ -307,9 +307,9 @@ export default {
             saveAs(dataBlob, 'exported_data.xlsx');
         },
 
-        async exportData(format){
+        async exportData(format, slug = null){
             try {
-                await axios.get(`/api/bills/exported-data`).
+                await axios.get(`/api/bills/exported-data?slug=${slug}`).
                 then(({data}) => {
                     const bills = data.data.map((bill)=>{
                         return {
@@ -327,7 +327,7 @@ export default {
         },
 
         async downloadPdf(){
-            window.location.href = `/bills/download-bills/`;
+            window.location.href = `/bills/download-bills/?slug=${this.$route.params.slug}`;
         },
 
 
