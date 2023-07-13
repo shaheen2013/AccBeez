@@ -7,8 +7,8 @@
     </h1>
     <div class="border  rounded mt-3 border-bottom-0 ">
     <div class="d-flex align-items-center justify-content-between p-3 border-bottom header-bg">
-     <h3 class="fs-5 fw-bold">Company Name</h3>
-      <h3 class="fs-5 fw-bold">Action</h3>
+     <h3 class="fs-5 fw-bold mb-0">Company Name</h3>
+      <h3 class="fs-5 fw-bold mb-0">Action</h3>
     </div>
       <ul class=" list-unstyled ">
         <li class="d-flex align-items-center justify-content-between  border-bottom pb-3 pt-3" v-for="(list,i) in companyList" key={i}>
