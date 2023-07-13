@@ -21,6 +21,7 @@ import BomSaleList from './components/BomSales/List.vue';
 import BomSaleCreate from './components/BomSales/Create.vue';
 import BomSaleShow from './components/BomSales/Show.vue';
 import CogsList from './components/Cogs/List.vue';
+import CompaniesShow from './components/Companies/Show.vue'
 import DashboardLayout from './layout/DashboardLayout.vue'
 import getLogedInUser from "./helper";
 
@@ -163,6 +164,10 @@ const routes = [
                 path: '/:slug/cogs',
                 name: 'CogsList',
                 component: CogsList
+            }, {
+                path: '/:slug/companies',
+                name: 'CogsList',
+                component: CompaniesShow
             },
 
         ]
