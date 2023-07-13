@@ -46,7 +46,8 @@ class RegisterController extends Controller
 
            $registers = DB::table('bill_items')
                         ->leftJoin('bills', 'bill_items.bill_id', '=', 'bills.id')
-                        ->select('name', 'sku', 'bill_items.id as bill_item_id', DB::raw('SUM(quantity) as total_items'),
+                        ->select('name', 'sku', 'bill_items.id as bill_item_id', 
+                                            DB::raw('SUM(quantity) as total_items'),
                                             DB::raw('SUM(total) as total_cost'),
                                             DB::raw('round(SUM(total) / SUM(quantity),2) as avg_cost'),
                                             DB::raw('YEAR(bills.date) as year'),
@@ -66,22 +67,26 @@ class RegisterController extends Controller
                         ->orderBy('month')
                         ->get();
         // $registers = $registerQuery->paginate($limit);
+        
 
          $grouped = $registers->mapToGroups(function ($item) {
             return [$item->sku => [
                 "bill_item_id" => $item->bill_item_id,
                 "name" => $item->name,
                 "sku" => $item->sku,
+                "total_items" => $item->total_items,
+                "total_cost" => $item->total_cost,
                 "avg_cost" => $item->avg_cost,
                 "month" => $item->month,
                 "year" => $item->year,
             ]];
         });
-
+        // dd($registers->toArray());
 
 
          $simpleList = $grouped->map(function ($items) use ($distinctMonths) {
             $groupedItemsByMonth = $items->keyBy('month');
+            // error_log(json_encode($groupedItemsByMonth));
             $outputItem['name'] = $items[0]['name'];
             $outputItem['sku'] = $items[0]['sku'];
             $outputItem['bill_item_id'] = $items[0]['bill_item_id'];
@@ -89,6 +94,10 @@ class RegisterController extends Controller
             foreach ($distinctMonths as $month) {
                 if ($groupedItemsByMonth->has($month)) {
                     $outputItem['month-'.$month] = $groupedItemsByMonth[$month]['avg_cost'];
+                    $outputItem['month-'.$month] = [
+                        "total_items" => $groupedItemsByMonth[$month]['total_items'],
+                        "total_cost" => $groupedItemsByMonth[$month]['total_cost']
+                    ];
                 } else {
                     $outputItem['month-'.$month] = null;
                 }

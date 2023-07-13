@@ -24,6 +24,7 @@ export const useCompanyStore = defineStore("CompanyStore", {
                 .then(({data})=>{
                     this.companies=data.data;
                     this.totalCompany = data.data.length
+                    console.log(data.data);
                 })
                 .catch((error)=>{
                     console.log(error);

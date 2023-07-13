@@ -132,6 +132,10 @@ Route::delete('/permissions/delete/{id}',[RolePermissionController::class,'permi
 // user role management routes
 Route::put('/users/roles/update/{id}', [App\Http\Controllers\UserController::class, 'assignUserRole']);
 
+// company route 
 Route::get('/company/overview', [CompanyController::class, 'companyOverview']);
+Route::get('/company/list',[CompanyController::class, 'getAll']);
+Route::delete('/company/delete/{id}',[CompanyController::class, 'destroy']);
+Route::put('/company/restore/{id}',[CompanyController::class, 'restore']);
 
 

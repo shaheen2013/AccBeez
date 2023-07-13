@@ -31,8 +31,8 @@
         style="text-decoration: none"
       >
         <el-card shadow="always">
-          <div class="card-subtitle">
-            <p class="card-subtitle-font">{{ company.name }}</p>
+          <div class="align-items-center card-subtitle d-flex justify-content-between mb-3">
+            <p class="card-subtitle-font mb-0">{{ company.name }}</p>
           </div>
 
           <div class="card-box-section">
@@ -129,9 +129,11 @@ export default {
     displayUser(user) {
       console.log("user:", user);
       return user?.name;
-    }
+    },
   },
 };
+
+
 </script>
 
 <style>
