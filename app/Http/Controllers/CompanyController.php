@@ -20,14 +20,8 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        // $user = Auth::user();  
-        // $role = User::find($user->id)->getRoleNames()[0];     
-        // $companies = Company::when(in_array("User",$role),function($q){
-        //     $q->whereIn('id',CompanyUser::where('user_id',Auth::id())->pluck('company_id'));
-        // })->latest()->withCount('bills', 'boms', 'sales', 'bomSales', 'companyUsers')->with('companyUsers.user')->get();
 
         $companies = Company::latest()->withCount('bills', 'boms', 'sales', 'bomSales', 'companyUsers')->with('companyUsers.user')->get();
-
         return response()->successResponse('Company list', $companies);
     }
 
@@ -39,9 +33,15 @@ class CompanyController extends Controller
         //     $q->whereIn('id',CompanyUser::where('user_id',Auth::id())->pluck('company_id'));
         // })->latest()->withCount('bills', 'boms', 'sales', 'bomSales', 'companyUsers')->with('companyUsers.user')->get();
 
-        $companies = Company::withTrashed()->latest()->withCount('bills', 'boms', 'sales', 'bomSales', 'companyUsers')->with('companyUsers.user')->get();
+        $companies = Company::all();
+        $deletedCompanies = Company::onlyTrashed()->latest()->get();
 
-        return response()->successResponse('Company list', $companies);
+
+        return response()->json([
+            'companies'=>$companies,
+            'deletedCompanies'=>$deletedCompanies
+
+        ]);
     }
 
     /**
@@ -93,7 +93,7 @@ class CompanyController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
         try {
             
@@ -108,7 +108,7 @@ class CompanyController extends Controller
         }
     }
 
-    public function restore(string $id)
+    public function restore($id)
     {
         try {
             

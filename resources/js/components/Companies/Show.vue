@@ -9,10 +9,19 @@
       <h3 class="fs-5">Action</h3>
 
     </div>
+      <pre>
+        {{companyList}}
+
+      </pre>
+      =======================================
+      <pre>
+        {{deletedCompanyList}}
+      </pre>
+
       <ul class="mt-3 list-unstyled ">
-        <li class="d-flex align-items-center justify-content-between">
-          <p class="fw-bold fs-6">New company</p>
-          <button class="btn btn-danger fw-bolder">Delete</button>
+        <li class="d-flex align-items-center justify-content-between mb-3" v-for="(list,i) in companyList" key={i}>
+          <p class="fw-bold fs-6">{{list.name}}</p>
+          <button class="btn btn-danger fw-bolder"   @click=handleDelete(list.id) >Delete</button>
         </li>
       </ul>
     </div>
@@ -25,35 +34,45 @@ export default {
   name: 'Companies',
   data() {
     return {
-      registers: [],
-
-
-
+      companyList: [],
+      deletedCompanyList:[],
     };
-
 
   },
   async mounted() {
     try {
-      await this.getList();
+      await this.getCompanyList();
     } catch (error) {
       console.error(error);
     }
   },
   methods: {
 
-    getqty(value) {
-      let qty = this.formattedAverage(value);
-      if (qty) {
-        console.log(qty[1])
-        return qty[1] ?? 1;
-      }
-    },
 
-    getvalue(value) {
-      let qty = this.formattedAverage(value);
-      if (qty) {
-        return qty[0];
+    async getCompanyList() {
+      await axios.get(`/api/company/list`).then((res) => {
+        this.companyList=res.data.companies;
+        this.deletedCompanyList=res.data.deletedCompanies;
+
+      });
+    },
+    // async handleDelete(companyId) {
+    //   console.log('company',companyId)
+    //   await axios.delete(` /api/company/delete/${companyId}`).then((res) => {
+    //   this.getCompanyList();
+    //     console.log(res.data)
+    //
+    //   });
+    // },
+    async handleDelete(companyId) {
+      console.log('company', companyId);
+      try {
+        const response = await axios.delete(`/api/company/delete/${companyId}`);
+        console.log(response.data);
+        this.getCompanyList();
+      } catch (error) {
+        console.error(error);
+        // Handle any error that occurred during the DELETE request
       }
     },
 
