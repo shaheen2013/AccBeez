@@ -35,6 +35,7 @@ class RegisterController extends Controller
 
          $distinctMonths = DB::table('bills')
                             ->select(DB::raw("DATE_FORMAT(bills.date, '%Y-%m') as month"))
+                            ->where('company_id', $company_id)
                             ->when(!empty($year), function (Builder $query) use ($year) {
                                 return $query->whereRaw('YEAR(bills.date) = ?', [$year]);
                             })

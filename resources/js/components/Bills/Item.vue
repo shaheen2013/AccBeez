@@ -139,9 +139,7 @@ export default {
                 this.item.sku = product.sku;
                 this.item.name = product.name;
                 this.item.rate = product.rate;
-                this.item.unit = product.unit;
                 this.item.description = product.description;
-                this.item.quantity = product.quantity;
             }
             this.calculateTotal();
         },
