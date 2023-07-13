@@ -120,17 +120,11 @@ class RegisterController extends Controller
 
     public function exportData(Request $request){
          $year = $request->has('year') ? $request->year : Carbon::now()->format('Y');
-//        $searchParams = $request->all();
-//        $limit = Arr::get($searchParams, 'limit', 10);
-//        $keyword = Arr::get($searchParams, 'keyword', '');
-//        $year = Arr::get($searchParams, 'year', '');
-//        $perPage = $request->input('limit') ?? 10;
-//        $page = $request->input('page') ?? 1;
-//        $startAt = ($perPage * ($page-1));
-        // dd($searchParams, $perPage, $page, $startAt, $year);
+         $company_id = getCompanyIdBySlug($request->slug);
 
         $distinctMonths = DB::table('bills')
             ->select(DB::raw("DATE_FORMAT(bills.date, '%Y-%m') as month"))
+            ->where('company_id', $company_id)
             ->when(!empty($year), function (Builder $query) use ($year) {
                 return $query->whereRaw('YEAR(bills.date) = ?', [$year]);
             })
@@ -148,7 +142,7 @@ class RegisterController extends Controller
                 // DB::raw('MONTH(bills.date) as month')
                 DB::raw("DATE_FORMAT(bills.date, '%Y-%m') as month")
             )
-
+            ->where('bills.company_id', $company_id)
             ->when(!empty($year), function (Builder $query) use ($year) {
                 return $query->whereRaw('YEAR(bills.date) = ?', [$year]);
             })

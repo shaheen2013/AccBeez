@@ -5,7 +5,7 @@
         <h1>
             Bill List
             <router-link :to=" '/' + $route.params.slug + '/bills/create'" style="text-decoration: none; color: inherit;">
-                <el-button type="primary" v-if="logged_in_user && logged_in_user.role === 'Super-Admin'" style="float: right;">
+                <el-button type="primary" v-if="logged_in_user && logged_in_user.role !== 'User'" style="float: right;">
                     Create
                 </el-button>
             </router-link>
