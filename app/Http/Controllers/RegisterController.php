@@ -381,6 +381,7 @@ class RegisterController extends Controller
             // dd($mergedItem);
             $mergedArray[] = $mergedItem;
         }
+        // return response()->json($mergedArray);
 
 
         $closingRate = 0;
@@ -393,8 +394,7 @@ class RegisterController extends Controller
         $sale_item_sum_quantity = 0;
         $sale_item_sum_total = 0;
         // dump($mergedArray);
-
-
+        // return response()->json($mergedArray);
         foreach ($mergedArray as &$item) {
             if( $item['opening_date'] ){
                 // dump($item['opening_date']);
@@ -425,7 +425,14 @@ class RegisterController extends Controller
                 $item['closing_date_rate'] = $closingRate;
                 $item['closing_date_quantity'] = $closingQuantity;
                 $item['closing_date_total'] = $closingTotal;
-                // dump($item);
+                if($item['opening_date'] == true){
+                    $item['opening_date_quantity'] = $closingQuantity;
+                    $item['opening_date_total'] = $closingTotal;
+                    $item['opening_date_rate'] = $closingRate;
+                    $item['bill_item_quantity'] = null;
+                    $item['bill_item_total'] = null;
+                    $item['bill_item_rate'] = null;
+                }
             }
             elseif (isset($item['sale_item_quantity'])) {
                 // $item['sale_item_rate'] = $closingRate;
