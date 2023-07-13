@@ -7,13 +7,15 @@
           v-model="query.keyword"
           placeholder="Keyword"
           style="width: 200px;"
+          class="mb-xl-0 mb-2"
       />
-      <el-button type="primary" @click="handleFilter">
+      <el-button class="mb-xl-0 mb-2" type="primary" @click="handleFilter">
         <el-icon style="vertical-align: middle">
           <Search/>
         </el-icon>
         <span style="vertical-align: middle"> Search </span>
       </el-button>
+
 
       <el-button type="primary" @click="exportData('xls', $route.params.slug)">
         <el-icon style="vertical-align: middle">
@@ -22,12 +24,14 @@
         <span style="vertical-align: middle"> Export to Excel </span>
       </el-button>
 
+
       <el-button type="primary" @click="exportData('csv', $route.params.slug)">
         <el-icon style="vertical-align: middle">
           <Download/>
         </el-icon>
         <span style="vertical-align: middle"> Export to csv </span>
       </el-button>
+
 
       <el-button type="primary" @click="exportData('pdf', $route.params.slug)">
         <el-icon style="vertical-align: middle">
@@ -37,8 +41,8 @@
       </el-button>
 
 
-      <div style="float: right;">
-        <span style="vertical-align: middle;  font-size:16px;">Year</span>
+      <div style="float: right; margin-top: 16px; margin-bottom: 16px;">
+        <span style="vertical-align: middle;  font-size:16px; margin-right: 8px;">Year</span>
         <el-date-picker
             v-model="year"
             type="year"
@@ -60,13 +64,13 @@
 
           <template #default="scope" >
             <div class="d-flex  justify-content-center  ">
-            <span class=" pe-4  ps-4 border-end">
+            <div class=" pe-2  ps-2 border-end fw-bold fs-6 text-success text-nowrap">
               {{ getqty(scope.row[`month-${month}`]) }}
-            </span>
-            <span class="ps-4 pe-4">
+            </div>
+            <div class="ps-2 pe-2 fw-bold fs-6 text-nowrap">
 
               {{ getvalue(scope.row[`month-${month}`]) }}
-            </span>
+            </div>
             </div>
 
 
