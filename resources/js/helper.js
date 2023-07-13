@@ -5,4 +5,9 @@ function getLogedInUser(){
     });
 };
 
+function exportData(format, slug, url)
+{
+    console.log('log');
+}
+
 export default getLogedInUser;

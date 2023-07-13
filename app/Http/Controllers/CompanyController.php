@@ -21,7 +21,11 @@ class CompanyController extends Controller
     public function index()
     {
 
-        $companies = Company::latest()->withCount('bills', 'boms', 'sales', 'bomSales', 'companyUsers')->with('companyUsers.user')->get();
+        $user = Auth::user();  
+        $role = User::find($user->id)->getRoleNames()->toArray();     
+        $companies = Company::when(in_array("User",$role),function($q){
+            $q->whereIn('id',CompanyUser::where('user_id',Auth::id())->pluck('company_id'));
+        })->latest()->withCount('bills', 'boms', 'sales', 'bomSales', 'companyUsers')->with('companyUsers.user')->get();
         return response()->successResponse('Company list', $companies);
     }
 
