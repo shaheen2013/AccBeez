@@ -119,96 +119,93 @@ class RegisterController extends Controller
     }
 
     public function exportData(Request $request){
-         $year = $request->has('year') ? $request->year : Carbon::now()->format('Y');
-//        $searchParams = $request->all();
-//        $limit = Arr::get($searchParams, 'limit', 10);
-//        $keyword = Arr::get($searchParams, 'keyword', '');
-//        $year = Arr::get($searchParams, 'year', '');
-//        $perPage = $request->input('limit') ?? 10;
-//        $page = $request->input('page') ?? 1;
-//        $startAt = ($perPage * ($page-1));
-        // dd($searchParams, $perPage, $page, $startAt, $year);
+        $year = $request->has('year') ? $request->year : Carbon::now()->format('Y');
+        $company_id = getCompanyIdBySlug($request->slug);
 
-        $distinctMonths = DB::table('bills')
-            ->select(DB::raw("DATE_FORMAT(bills.date, '%Y-%m') as month"))
-            ->when(!empty($year), function (Builder $query) use ($year) {
-                return $query->whereRaw('YEAR(bills.date) = ?', [$year]);
-            })
-            ->orderBy('month')
-            ->pluck('month', 'month')
-            ->unique()
-            ->toArray();
+       $distinctMonths = DB::table('bills')
+           ->select(DB::raw("DATE_FORMAT(bills.date, '%Y-%m') as month"))
+           ->where('company_id', $company_id)
+           ->when(!empty($year), function (Builder $query) use ($year) {
+               return $query->whereRaw('YEAR(bills.date) = ?', [$year]);
+           })
+           ->orderBy('month')
+           ->pluck('month', 'month')
+           ->unique()
+           ->toArray();
 
-        $registers = DB::table('bill_items')
-            ->leftJoin('bills', 'bill_items.bill_id', '=', 'bills.id')
-            ->select('name', 'sku', 'bill_items.id as bill_item_id', DB::raw('SUM(quantity) as total_items'),
-                DB::raw('SUM(total) as total_cost'),
-                DB::raw('round(SUM(total) / SUM(quantity),2) as avg_cost'),
-                DB::raw('YEAR(bills.date) as year'),
-                // DB::raw('MONTH(bills.date) as month')
-                DB::raw("DATE_FORMAT(bills.date, '%Y-%m') as month")
-            )
+       $registers = DB::table('bill_items')
+           ->leftJoin('bills', 'bill_items.bill_id', '=', 'bills.id')
+           ->select('name', 'sku', 'bill_items.id as bill_item_id', DB::raw('SUM(quantity) as total_items'),
+               DB::raw('SUM(total) as total_cost'),
+               DB::raw('round(SUM(total) / SUM(quantity),2) as avg_cost'),
+               DB::raw('YEAR(bills.date) as year'),
+               // DB::raw('MONTH(bills.date) as month')
+               DB::raw("DATE_FORMAT(bills.date, '%Y-%m') as month")
+           )
+           ->where('bills.company_id', $company_id)
+           ->when(!empty($year), function (Builder $query) use ($year) {
+               return $query->whereRaw('YEAR(bills.date) = ?', [$year]);
+           })
+           ->groupBy(['sku', 'month', 'year'])
+           ->orderBy('sku')
+           ->orderBy('year')
+           ->orderBy('month')
+           ->get();
+       // $registers = $registerQuery->paginate($limit);
 
-            ->when(!empty($year), function (Builder $query) use ($year) {
-                return $query->whereRaw('YEAR(bills.date) = ?', [$year]);
-            })
-            ->groupBy(['sku', 'month', 'year'])
-            ->orderBy('sku')
-            ->orderBy('year')
-            ->orderBy('month')
-            ->get();
-        // $registers = $registerQuery->paginate($limit);
-
-        $grouped = $registers->mapToGroups(function ($item) {
-            return [$item->sku => [
-                "bill_item_id" => $item->bill_item_id,
-                "name" => $item->name,
-                "sku" => $item->sku,
-                "avg_cost" => $item->avg_cost,
-                "month" => $item->month,
-                "year" => $item->year,
-            ]];
-        });
+       $grouped = $registers->mapToGroups(function ($item) {
+           return [$item->sku => [
+               "bill_item_id" => $item->bill_item_id,
+               "name" => $item->name,
+               "sku" => $item->sku,
+               "total_items" => $item->total_items,
+               "total_cost" => $item->total_cost,
+               "avg_cost" => $item->avg_cost,
+               "month" => $item->month,
+               "year" => $item->year,
+           ]];
+       });
 
 
 
-        $simpleList = $grouped->map(function ($items) use ($distinctMonths) {
-            $groupedItemsByMonth = $items->keyBy('month');
-            $outputItem['name'] = $items[0]['name'];
-            $outputItem['sku'] = $items[0]['sku'];
-            $outputItem['bill_item_id'] = $items[0]['bill_item_id'];
+       $simpleList = $grouped->map(function ($items) use ($distinctMonths) {
+           $groupedItemsByMonth = $items->keyBy('month');
+           $outputItem['name'] = $items[0]['name'];
+           $outputItem['sku'] = $items[0]['sku'];
+           $outputItem['bill_item_id'] = $items[0]['bill_item_id'];
 
-            foreach ($distinctMonths as $month) {
-                if ($groupedItemsByMonth->has($month)) {
-                    $outputItem['month-'.$month] = $groupedItemsByMonth[$month]['avg_cost'];
-                } else {
-                    $outputItem['month-'.$month] = null;
-                }
-            }
-            return $outputItem;
-        })->toArray();
-        // $spliced = array_splice($simpleList, $startAt, $perPage);
-        // dd($spliced);
+           foreach ($distinctMonths as $month) {
+               if ($groupedItemsByMonth->has($month)) {
+                   $outputItem['month-'.$month] = $groupedItemsByMonth[$month]['total_items'] . '|' . $groupedItemsByMonth[$month]['total_cost'];
+               } else {
+                   $outputItem['month-'.$month] = null;
+               }
+           }
+           return $outputItem;
+       })->toArray();
+       // $spliced = array_splice($simpleList, $startAt, $perPage);
+       // dd($spliced);
 
-          $data = [
-            'distinct_months' => $distinctMonths,
-            // 'grouped' => $grouped,
-            'total' => count($simpleList),
-            //'register_list' => array_values(array_splice($simpleList, $startAt, $perPage)),
-             'register_list' => array_values($simpleList),
-        ];
+         $data = [
+           'distinct_months' => $distinctMonths,
+           // 'grouped' => $grouped,
+           'total' => count($simpleList),
+           //'register_list' => array_values(array_splice($simpleList, $startAt, $perPage)),
+            'register_list' => array_values($simpleList),
+       ];
 
-          if($request->fileType === 'pdf'){
-              $pdf = Pdf::loadView('register.export-data', $data);
-              return $pdf->download('invoice.pdf');
-          }else{
-              $exporter = new RegisterBladeExport($data);
-              $file_name = 'Register_'.date('U').'.'.$request->fileType;
-              return Excel::download($exporter, $file_name);
-          }
+         if($request->fileType === 'pdf'){
+             $pdf = Pdf::loadView('register.export-data', $data);
+             return $pdf->download('invoice.pdf');
+         }else{
+             $exporter = new RegisterBladeExport($data);
+             $file_name = 'Register_'.date('U').'.'.$request->fileType;
+             return Excel::download($exporter, $file_name);
+         }
 
-        //return view('', $data);
-    }
+       //return view('', $data);
+   }
+
 
     public function close(Request $request)
     {

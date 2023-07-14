@@ -16,21 +16,21 @@
         <span style="vertical-align: middle"> Search </span>
       </el-button>
 
-      <el-button class="mb-xl-0 mb-2" type="primary" @click="exportData('xls')">
+      <el-button class="mb-xl-0 mb-2" type="primary" @click="exportData('xls', $route.params.slug)">
         <el-icon style="vertical-align: middle">
           <Download/>
         </el-icon>
         <span style="vertical-align: middle"> Export to Excel </span>
       </el-button>
 
-      <el-button class="mb-xl-0 mb-2" type="primary" @click="exportData('csv')">
+      <el-button class="mb-xl-0 mb-2" type="primary" @click="exportData('csv', $route.params.slug)">
         <el-icon style="vertical-align: middle">
           <Download/>
         </el-icon>
         <span style="vertical-align: middle"> Export to csv </span>
       </el-button>
 
-      <el-button class="mb-xl-0 mb-2" type="primary" @click="exportData('pdf')">
+      <el-button class="mb-xl-0 mb-2" type="primary" @click="exportData('pdf', $route.params.slug)">
         <el-icon style="vertical-align: middle">
           <Download/>
         </el-icon>
@@ -211,8 +211,8 @@ export default {
 
 
     // Export Excel file
-    exportData(format) {
-      window.location.href = `/api/register/exported-data/${format}`;
+    exportData(format, slug = null) {
+      window.location.href = `/api/register/exported-data/${format}?slug=${slug}`;
       // try {
       //     await axios.get(`/api/register/exported-data`).
       //     then(({data}) => {

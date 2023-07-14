@@ -17,11 +17,9 @@ class ProductController extends Controller
                                 $query->select('id', 'sku', 'date')->orderBy('date', 'desc');
                             }])
                             ->where('company_id', $company_id)
-                            ->select('sku', 'name', 'rate', 'bill_items.id as id', 'unit', 'description', 'quantity')
-                            ->orderBy('sku', 'asc')
-                            ->orderBy('id', 'desc')
-                            ->get()
-                            ->unique('sku');
+                            ->select('sku', 'name', 'bill_items.id as id', 'unit', 'description', 'quantity', DB::raw('SUM(total) / SUM(quantity) as rate'))
+                            ->groupBy('sku')
+                            ->get();
 
 
 

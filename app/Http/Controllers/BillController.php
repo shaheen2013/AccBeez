@@ -127,9 +127,10 @@ class BillController extends Controller
         }
     }
 
-    public function downloadBillsInPdf()
+    public function downloadBillsInPdf(Request $request)
     {
-        $bill = Bill::latest()->get();
+        $company_id = getCompanyIdBySlug($request->slug);
+        $bill = Bill::where('company_id', $company_id)->latest()->get();
 
         $pdf = Pdf::loadView('bills.list', ['bills' => $bill]);
         // dd($pdf);
@@ -166,9 +167,10 @@ class BillController extends Controller
         }
     }
 
-    public function exportData(){
+    public function exportData(Request $request){
+        $company_id = getCompanyIdBySlug($request->slug);
         try{
-            $data = BillResource::collection(Bill::latest()->get());
+            $data = BillResource::collection(Bill::where('company_id', $company_id)->latest()->get());
 
             return response()->successResponse('Bill list', $data);
         }catch (Exception $exception){
