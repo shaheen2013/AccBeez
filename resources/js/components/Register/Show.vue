@@ -257,8 +257,13 @@ export default {
     },
 
     handleSubmit() {
+    const anyValue=[
+      {
+        a:'',
+        b:''
+      }
+    ]
 
-      console.log(this.addValue,this.addQuantity);
     }
 
   },
