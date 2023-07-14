@@ -200,7 +200,6 @@ export default {
     getqty(value) {
       let qty = this.formattedAverage(value);
       if (qty) {
-        console.log(qty[1])
         return qty[1] ?? 1;
       }
     },

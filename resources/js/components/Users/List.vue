@@ -54,6 +54,13 @@ export default {
         };
     },
     async mounted() {
+
+        if(this.$route?.query?.message){
+          ElMessage({
+            type: 'success',
+            message: this.$route?.query?.message,
+          })
+        }
         try {
             await axios.get(`/api/users`).
                     then((res) => {
