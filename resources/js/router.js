@@ -25,6 +25,7 @@ import CompaniesShow from './components/Companies/Show.vue'
 import DashboardLayout from './layout/DashboardLayout.vue'
 import FcRegister from './components/FcRegister/Show.vue'
 import FcRegisterList from './components/FcRegister/List.vue'
+import FcRegisterShow from './components/FcRegister/Show.vue'
 import getLogedInUser from "./helper";
 
 import { useAuthUserStore } from "@/stores/AuthUser";
@@ -174,6 +175,11 @@ const routes = [
                 path: '/:slug/fc-register',
                 name: 'FcRegister',
                 component: FcRegisterList
+            },
+            {
+                path: '/:slug/fc-registers/view/:id',
+                name: 'FcRegisterShow',
+                component: FcRegisterShow,
             },
 
         ]

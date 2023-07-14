@@ -86,8 +86,8 @@
             <el-table-column prop="opening_date_quantity" label="Quantity" width="100%"/>
             <el-table-column prop="opening_date_total" label="Value"/>
           </el-table-column>
-          <el-table-column label="Purchase">
-            <!-- <el-table-column prop="bill_item_rate" label="Rate" /> -->
+<!--          <el-table-column label="Purchase">
+            &lt;!&ndash; <el-table-column prop="bill_item_rate" label="Rate" /> &ndash;&gt;
             <el-table-column prop="bill_item_rate" label="Rate">
               <template #default="scope">
                 {{ formattedData(scope.row.bill_item_rate) }}
@@ -95,7 +95,7 @@
             </el-table-column>
             <el-table-column prop="bill_item_quantity" label="Quantity"/>
             <el-table-column prop="bill_item_total" label="Value"/>
-          </el-table-column>
+          </el-table-column>-->
           <el-table-column label="Sale">
             <!-- <el-table-column prop="sale_item_rate" label="Rate" width="100%" /> -->
             <el-table-column prop="sale_item_rate" label="Rate">
