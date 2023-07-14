@@ -52,10 +52,10 @@
     </div>
 
 
-    <el-table :data="registers" class="small-font-table">
+    <el-table :data="registers" class="small-font-table" v-loading="this.loading">
       <el-table-column fixed prop="name" label="Name"/>
       <el-table-column fixed prop="sku" label="SKU"/>
-      <template v-for="month in months">
+      <template v-for="month in months" >
         <el-table-column :label="original_months[month.split('-')[1] - 1]+'-'+month.split('-')[0]">
 
 
@@ -116,7 +116,7 @@ export default {
   data() {
     return {
       registers: [],
-
+      loading:true,
       months: [],
 
       original_months: [
@@ -142,6 +142,9 @@ export default {
   async mounted() {
     try {
       await this.getList();
+      if (this.registers.length > 0){
+        this.loading=false
+      }
     } catch (error) {
       console.error(error);
     }
