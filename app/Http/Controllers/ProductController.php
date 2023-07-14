@@ -12,6 +12,7 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $company_id = getCompanyIdBySlug($request->slug);
+        // company average updated
         $products = BillItem::with(['closingDates' => function ($query) {
                                 $query->select('id', 'sku', 'date')->orderBy('date', 'desc');
                             }])
@@ -21,6 +22,8 @@ class ProductController extends Controller
                             ->orderBy('id', 'desc')
                             ->get()
                             ->unique('sku');
+
+
 
         return response()->json($products);
     }

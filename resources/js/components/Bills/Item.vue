@@ -14,7 +14,7 @@
                     <div class="value">{{ item.sku }}</div>
                 </template>
             </el-autocomplete>
-            <el-text class="mx-1 text-warning" v-if="isNewItem">This will create new item</el-text>
+            <el-text class="mx-1 text-danger" v-if="isNewItem">This will create a new item</el-text>
         </td>
         <td>
             <el-input v-model="item.name" type="text" placeholder="Name" :disabled="operation === 'view'"/>

@@ -96,7 +96,7 @@ export default {
     confirmDelete(id) {
       Swal.fire({
         title: 'Are you sure?',
-        text: 'Once deleted, you will able to recover this data!',
+        text: 'Once deleted, you will be able to recover this data!',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',

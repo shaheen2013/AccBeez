@@ -53,7 +53,7 @@
             <el-upload
                 v-model:file-list="fileList"
                 class="upload-demo"
-                action="/api/bill/import"
+                :action="'/api/bill/import?slug=' + $route.params.slug"
                 multiple
                 :on-preview="handlePreview"
                 :on-remove="handleRemove"
@@ -62,7 +62,7 @@
                 :limit="3"
                 :on-exceed="handleExceed"
             >
-                <el-button type="primary">Import to CSV</el-button>
+                <el-button type="primary">Import CSV</el-button>
             </el-upload>
         </div>
 
@@ -72,6 +72,7 @@
         >
             <el-table-column type="selection" width="55" />
             <el-table-column prop="date" label="Date" />
+            <el-table-column prop="vendor_name" label="Vendor" />
             <el-table-column prop="description" label="Description" />
             <el-table-column prop="invoice_total" label="Invoice Total">
                 <template #default="scope">
