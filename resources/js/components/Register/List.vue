@@ -1,6 +1,6 @@
 <template>
   <div style="padding:20px;">
-    <h1>Register List </h1>
+    <h1>RM Register List </h1>
 
     <div class="filter-container">
       <el-input
