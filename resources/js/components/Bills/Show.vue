@@ -8,6 +8,7 @@
 
         <el-card class="box-card">
             <h4>Invoice for AccBeez</h4>
+            <p><strong>Vendor:</strong> {{ bill.vendor }}</p>
             <p><strong>Description:</strong> {{ bill.description }}</p>
             <p><strong>Date:</strong> {{ bill.date }}</p>
 
@@ -62,6 +63,7 @@ export default {
         return {
             bill : {
                 id: null,
+                vendor:'',
                 description: '',
                 invoice_total: 0,
                 date: '',
@@ -86,6 +88,7 @@ export default {
                     this.bill.invoice_total = res.data.invoice_total;
                     this.bill.date = res.data.date;
                     this.bill.items = res.data.bill_items;
+                    this.bill.vendor = res.data.vendor_name;
                 });
     },
     methods: {

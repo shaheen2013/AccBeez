@@ -72,6 +72,7 @@
         >
             <el-table-column type="selection" width="55" />
             <el-table-column prop="date" label="Date" />
+            <el-table-column prop="vendor_name" label="Vendor" />
             <el-table-column prop="description" label="Description" />
             <el-table-column prop="invoice_total" label="Invoice Total">
                 <template #default="scope">
