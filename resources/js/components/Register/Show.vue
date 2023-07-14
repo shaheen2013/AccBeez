@@ -71,7 +71,7 @@
     </div>
 
     <!-- <el-card class="box-card" v-if="isMounted"> -->
-    <div class="el-table-wrapper" v-if="isMounted">
+    <div class="el-table-wrapper" v-if="isMounted" v-loading="loading">
       <h3 class="text-center mb-3 font-weight-bold">{{ bill_item.name }} ({{ bill_item.sku }})</h3>
       <div class="table-body" style="max-height: 75vh;">
         <el-table :data="register_rows" style="width: 100%">
@@ -174,6 +174,7 @@ export default {
       isMounted    : false,
       year         : null,
       dialogVisible: false,
+      loading:false,
       addValue     : '',
       addQuantity  : ''
     };
@@ -182,12 +183,15 @@ export default {
     this.register.id = this.$route.params.id;
     await this.getList();
     this.isMounted = true;
+
+
   },
   methods: {
     downloadPdf() {
       window.location.href = `/registers/download-pdf/` + this.register.id;
     },
     async getList() {
+
       let params = {
         year: this.query.year,
         slug: this.$route.params.slug
@@ -199,7 +203,13 @@ export default {
         this.register_rows  = res.data.mergedItems;
         this.bill_item      = res.data.bill_item;
         console.log('res:', res.data, this.bill_item);
+
+
+
       });
+
+
+
     },
     handleYearFilter() {
       this.query.year = new Date(this.year).getFullYear();
