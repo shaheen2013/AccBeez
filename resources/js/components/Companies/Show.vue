@@ -10,7 +10,7 @@
      <h3 class="fs-5 fw-bold mb-0">Company Name</h3>
       <h3 class="fs-5 fw-bold mb-0">Action</h3>
     </div>
-      <ul class=" list-unstyled ">
+      <ul class=" list-unstyled " v-loading="loading" >
         <li class="d-flex align-items-center justify-content-between  border-bottom pb-3 pt-3" v-for="(list,i) in companyList" key={i}>
           <p class="fw-bold fs-6 mb-0 ms-3">{{list.name}}</p>
           <div class="dropdown me-3">
@@ -54,12 +54,14 @@ export default {
     return {
       companyList: [],
       deletedCompanyList:[],
+      loading:true
     };
 
   },
   async mounted() {
     try {
       await this.getCompanyList();
+
     } catch (error) {
       console.error(error);
     }
@@ -71,6 +73,9 @@ export default {
       await axios.get(`/api/company/list`).then((res) => {
         this.companyList=res.data.companies;
         this.deletedCompanyList=res.data.deletedCompanies;
+        if (this.companyList.length > 0){
+          this.loading=false
+        }
 
       });
     },
