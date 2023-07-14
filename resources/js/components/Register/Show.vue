@@ -34,7 +34,7 @@
         </el-icon>
         <span style="vertical-align: middle"> Download pdf </span>
       </el-button>
-      <el-button type="primary"  @click="dialogVisible = true">
+      <el-button type="primary" @click="dialogVisible = true">
         <span style="vertical-align: middle"> Opening Inventory </span>
       </el-button>
 
@@ -42,15 +42,19 @@
 
         <!-- Modal -->
 
-        <el-dialog v-model="dialogVisible" title="Number field" width="30%" >
-          <template>
-            <el-input v-model="input" placeholder="Please input" />
-          </template>
+        <el-dialog v-model="dialogVisible" title="Number field" width="30%">
+          <div>
+            <h5 class="fs-6">Add Value</h5>
+            <el-input class="mb-3" v-model="addValue" placeholder="Add your value"/>
+            <h5 class="fs-6">Add Quantity</h5>
+            <el-input v-model="addQuantity" placeholder="Add your quantity"/>
+          </div>
+
           <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="dialogVisible = false">
-          Confirm
+        <el-button type="primary"  @click="handleSubmit">
+        Add
         </el-button>
       </span>
           </template>
@@ -169,8 +173,9 @@ export default {
       bill_item    : null,
       isMounted    : false,
       year         : null,
-      dialogVisible:false,
-      input:''
+      dialogVisible: false,
+      addValue     : '',
+      addQuantity  : ''
     };
   },
   async created() {
@@ -250,6 +255,11 @@ export default {
     exportBalanceSheet(id, format) {
       window.location.href = `/api/register/${id}/export-balance-sheet/${format}`;
     },
+
+    handleSubmit() {
+
+      console.log(this.addValue,this.addQuantity);
+    }
 
   },
 };
