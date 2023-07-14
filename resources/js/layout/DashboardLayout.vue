@@ -41,7 +41,7 @@
                 >
                   <List/>
                 </el-icon>
-                Register
+               RM Register
               </el-menu-item>
             </router-link>
             <router-link
