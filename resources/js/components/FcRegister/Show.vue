@@ -71,7 +71,7 @@
     </div>
 
     <!-- <el-card class="box-card" v-if="isMounted"> -->
-    <div class="el-table-wrapper" v-if="isMounted" v-loading="loading">
+    <div class="el-table-wrapper" v-if="isMounted">
       <h3 class="text-center mb-3 font-weight-bold">{{ bill_item.name }} ({{ bill_item.sku }})</h3>
       <div class="table-body" style="max-height: 75vh;">
         <el-table :data="register_rows" style="width: 100%">
@@ -86,8 +86,8 @@
             <el-table-column prop="opening_date_quantity" label="Quantity" width="100%"/>
             <el-table-column prop="opening_date_total" label="Value"/>
           </el-table-column>
-          <el-table-column label="Purchase">
-            <!-- <el-table-column prop="bill_item_rate" label="Rate" /> -->
+<!--          <el-table-column label="Purchase">
+            &lt;!&ndash; <el-table-column prop="bill_item_rate" label="Rate" /> &ndash;&gt;
             <el-table-column prop="bill_item_rate" label="Rate">
               <template #default="scope">
                 {{ formattedData(scope.row.bill_item_rate) }}
@@ -95,7 +95,7 @@
             </el-table-column>
             <el-table-column prop="bill_item_quantity" label="Quantity"/>
             <el-table-column prop="bill_item_total" label="Value"/>
-          </el-table-column>
+          </el-table-column>-->
           <el-table-column label="Sale">
             <!-- <el-table-column prop="sale_item_rate" label="Rate" width="100%" /> -->
             <el-table-column prop="sale_item_rate" label="Rate">
@@ -174,7 +174,6 @@ export default {
       isMounted    : false,
       year         : null,
       dialogVisible: false,
-      loading:false,
       addValue     : '',
       addQuantity  : ''
     };
@@ -183,15 +182,12 @@ export default {
     this.register.id = this.$route.params.id;
     await this.getList();
     this.isMounted = true;
-
-
   },
   methods: {
     downloadPdf() {
       window.location.href = `/registers/download-pdf/` + this.register.id;
     },
     async getList() {
-
       let params = {
         year: this.query.year,
         slug: this.$route.params.slug
@@ -203,13 +199,7 @@ export default {
         this.register_rows  = res.data.mergedItems;
         this.bill_item      = res.data.bill_item;
         console.log('res:', res.data, this.bill_item);
-
-
-
       });
-
-
-
     },
     handleYearFilter() {
       this.query.year = new Date(this.year).getFullYear();
@@ -267,12 +257,12 @@ export default {
     },
 
     handleSubmit() {
-    const anyValue=[
-      {
-        a:'',
-        b:''
-      }
-    ]
+      const anyValue=[
+        {
+          a:'',
+          b:''
+        }
+      ]
 
     }
 

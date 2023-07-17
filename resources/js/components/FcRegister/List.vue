@@ -1,6 +1,6 @@
 <template>
   <div style="padding:20px;">
-    <h1>RM Register List </h1>
+    <h1>FC Register List </h1>
 
     <div class="filter-container">
       <el-input
@@ -16,21 +16,21 @@
         <span style="vertical-align: middle"> Search </span>
       </el-button>
 
-      <el-button class="mb-xl-0 mb-2" type="primary" @click="exportData('xls', $route.params.slug)">
+      <el-button class="mb-xl-0 mb-2" type="primary" @click="exportData('xls')">
         <el-icon style="vertical-align: middle">
           <Download/>
         </el-icon>
         <span style="vertical-align: middle"> Export to Excel </span>
       </el-button>
 
-      <el-button class="mb-xl-0 mb-2" type="primary" @click="exportData('csv', $route.params.slug)">
+      <el-button class="mb-xl-0 mb-2" type="primary" @click="exportData('csv')">
         <el-icon style="vertical-align: middle">
           <Download/>
         </el-icon>
         <span style="vertical-align: middle"> Export to csv </span>
       </el-button>
 
-      <el-button class="mb-xl-0 mb-2" type="primary" @click="exportData('pdf', $route.params.slug)">
+      <el-button class="mb-xl-0 mb-2" type="primary" @click="exportData('pdf')">
         <el-icon style="vertical-align: middle">
           <Download/>
         </el-icon>
@@ -52,22 +52,22 @@
     </div>
 
 
-    <el-table :data="registers" class="small-font-table" v-loading="this.loading">
+    <el-table :data="registers" class="small-font-table" v-loading="loading">
       <el-table-column fixed prop="name" label="Name"/>
       <el-table-column fixed prop="sku" label="SKU"/>
-      <template v-for="month in months" >
+      <template v-for="month in months">
         <el-table-column :label="original_months[month.split('-')[1] - 1]+'-'+month.split('-')[0]">
 
 
           <template #default="scope" >
             <div class="d-flex  justify-content-center  ">
-            <div class=" pe-2  ps-2 border-end fw-bold fs-6 text-success text-nowrap">
-              {{ getqty(scope.row[`month-${month}`]) }}
-            </div>
-            <div class="ps-2 pe-2 fw-bold fs-6 text-nowrap">
+              <div class=" pe-2  ps-2 border-end fw-bold fs-6 text-success text-nowrap">
+                {{ getqty(scope.row[`month-${month}`]) }}
+              </div>
+              <div class="ps-2 pe-2 fw-bold fs-6 text-nowrap">
 
-              {{ getvalue(scope.row[`month-${month}`]) }}
-            </div>
+                {{ getvalue(scope.row[`month-${month}`]) }}
+              </div>
             </div>
 
 
@@ -79,7 +79,7 @@
 
       <el-table-column fixed='right' prop="bill_item_id" label="Operations">
         <template #default="scope">
-          <router-link :to="'/' + $route.params.slug + '/registers/view/'+scope.row.bill_item_id">
+          <router-link :to="'/' + $route.params.slug + '/fc-registers/view/'+scope.row.bill_item_id">
             <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px">
               <View/>
             </el-icon>
@@ -200,6 +200,7 @@ export default {
     getqty(value) {
       let qty = this.formattedAverage(value);
       if (qty) {
+        console.log(qty[1])
         return qty[1] ?? 1;
       }
     },
@@ -213,8 +214,8 @@ export default {
 
 
     // Export Excel file
-    exportData(format, slug = null) {
-      window.location.href = `/api/register/exported-data/${format}?slug=${slug}`;
+    exportData(format) {
+      window.location.href = `/api/register/exported-data/${format}`;
       // try {
       //     await axios.get(`/api/register/exported-data`).
       //     then(({data}) => {
@@ -282,11 +283,11 @@ export default {
   font-size : 10px; /* Adjust the font size as needed */
 }
 
- .cell {
+.cell {
   text-align : center !important;
 }
 
- .table-padding{
-   padding: 10px 0;
- }
+.table-padding{
+  padding: 10px 0;
+}
 </style>
