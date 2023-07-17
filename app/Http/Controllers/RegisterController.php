@@ -401,7 +401,7 @@ class RegisterController extends Controller
         // dump($mergedArray);
 
 
-        foreach ($mergedArray as &$item) {
+        foreach ($mergedArray as $index => &$item) {
             if( $item['opening_date'] ){
                 // dump($item['opening_date']);
                 $item['opening_date_rate'] = $closingRate;
@@ -415,8 +415,10 @@ class RegisterController extends Controller
                 $saleQuantity = (float) $item['sale_item_quantity'];
                 $billTotal = (float) $item['bill_item_total'];
                 $saleTotal = (float) $item['sale_item_total'];
-                $closingTotal = $closingQuantity + $billTotal - $saleTotal;
+                
+                $closingTotal = $closingTotal + $billTotal - $saleTotal;
                 $closingQuantity = $closingQuantity + $billQuantity - $saleQuantity;
+                
                 if($closingQuantity == 0){
                     $closingRate = 0;
                 }else{
