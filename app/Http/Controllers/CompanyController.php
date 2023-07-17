@@ -20,19 +20,12 @@ class CompanyController extends Controller
      */
     public function index()
     {
-
         $companies = Company::latest()->withCount('bills', 'boms', 'sales', 'bomSales', 'companyUsers')->with('companyUsers.user')->get();
         return response()->successResponse('Company list', $companies);
     }
 
     public function getAll()
     {
-        // $user = Auth::user();  
-        // $role = User::find($user->id)->getRoleNames()[0];     
-        // $companies = Company::when(in_array("User",$role),function($q){
-        //     $q->whereIn('id',CompanyUser::where('user_id',Auth::id())->pluck('company_id'));
-        // })->latest()->withCount('bills', 'boms', 'sales', 'bomSales', 'companyUsers')->with('companyUsers.user')->get();
-
         $companies = Company::all();
         $deletedCompanies = Company::onlyTrashed()->latest()->get();
 
@@ -42,14 +35,6 @@ class CompanyController extends Controller
             'deletedCompanies'=>$deletedCompanies
 
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -93,14 +78,21 @@ class CompanyController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(Request $request,$id)
     {
         try {
-            
-            $company = Company::find($id);
-            $company->delete();  
+            $hard = null;
+            if($request->has('hard')){
+                $company = DB::table('companies')->where('id',$id)->delete();
+                $hard = 'Company permanently removed!';
+            }
+            else{
+                $company = Company::find($id);
+                $company->delete();  
+                
+            }
     
-            return response()->json(['status'=>true,'data'=>$company],200);   
+            return response()->json(['status'=>true,'data'=>((!$hard)?$company:$hard)],200);   
         } catch (\Throwable $th) {
             //throw $th;
             Log::error('companycontroller destroy method : ',$th->getTrace());
@@ -131,5 +123,13 @@ class CompanyController extends Controller
         return response()->json([
             'company' => $company
         ]);
+    }
+
+    protected function reserveCode(){
+        // $user = Auth::user();  
+        // $role = User::find($user->id)->getRoleNames()[0];     
+        // $companies = Company::when(in_array("User",$role),function($q){
+        //     $q->whereIn('id',CompanyUser::where('user_id',Auth::id())->pluck('company_id'));
+        // })->latest()->withCount('bills', 'boms', 'sales', 'bomSales', 'companyUsers')->with('companyUsers.user')->get();
     }
 }

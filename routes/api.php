@@ -86,6 +86,7 @@ Route::get('/registers', [App\Http\Controllers\RegisterController::class, 'index
 Route::get('/registers/view/{id}', [App\Http\Controllers\RegisterController::class, 'view'])->name('registers.view');
 Route::post('/registers/close/', [App\Http\Controllers\RegisterController::class, 'close'])->name('registers.close');
 Route::post('/registers/undo/', [App\Http\Controllers\RegisterController::class, 'undo'])->name('registers.undo');
+Route::post('/register/opening/inventory', [App\Http\Controllers\InventoryController::class, 'store']);
 
 
 // export routes

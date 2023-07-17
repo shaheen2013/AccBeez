@@ -44,16 +44,24 @@
 
         <el-dialog v-model="dialogVisible" title="Number field" width="30%">
           <div>
+            <h5 class="fs-6">Add Date</h5>
+            <el-date-picker
+                class="w-100 mb-3"
+                v-model="addDate"
+                type="datetime"
+                placeholder="Pick a Date"
+                format="YYYY-MM-DD"
+            />
             <h5 class="fs-6">Add Value</h5>
-            <el-input class="mb-3" v-model="addValue" placeholder="Add your value"/>
+            <el-input class="mb-3" v-model="addValue" placeholder="Add your value" type="number"/>
             <h5 class="fs-6">Add Quantity</h5>
-            <el-input v-model="addQuantity" placeholder="Add your quantity"/>
+            <el-input v-model="addQuantity"  placeholder="Add your quantity" type="number"/>
           </div>
 
           <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogVisible = false">Cancel</el-button>
-        <el-button type="primary"  @click="handleSubmit">
+        <el-button type="primary" @click="handleSubmitInventory">
         Add
         </el-button>
       </span>
@@ -150,6 +158,8 @@
 </template>
 
 <script>
+import {ElMessage} from "element-plus";
+
 export default {
   name: 'RegisterShow',
   data() {
@@ -174,9 +184,10 @@ export default {
       isMounted    : false,
       year         : null,
       dialogVisible: false,
-      loading:false,
+      loading      : false,
       addValue     : '',
-      addQuantity  : ''
+      addQuantity  : '',
+      addDate:''
     };
   },
   async created() {
@@ -186,6 +197,7 @@ export default {
 
 
   },
+
   methods: {
     downloadPdf() {
       window.location.href = `/registers/download-pdf/` + this.register.id;
@@ -204,11 +216,7 @@ export default {
         this.bill_item      = res.data.bill_item;
         console.log('res:', res.data, this.bill_item);
 
-
-
       });
-
-
 
     },
     handleYearFilter() {
@@ -238,7 +246,7 @@ export default {
             type             : 'warning',
           }
       ).then(() => {
-        axios.post(`/api/registers/undo`, {sku: this.bill_item.sku}).then((res) => {
+        axios.post(`/api/registers/undo`, {sku: this.$route.params.slug}).then((res) => {
           console.log('res:', res, this.$router);
           this.$router.push('/registers');
           ElMessage({
@@ -266,15 +274,28 @@ export default {
       window.location.href = `/api/register/${id}/export-balance-sheet/${format}`;
     },
 
-    handleSubmit() {
-    const anyValue=[
-      {
-        a:'',
-        b:''
-      }
-    ]
+    handleSubmitInventory() {
+      axios.post(`/api/register/opening/inventory?slug=`+this.$route.params.slug, {
 
+        sku:this.bill_item.sku,
+        value:this.addValue,
+        quantity:this.addQuantity,
+        date:this.addDate
+
+      }).then((res) => {
+       this.dialogVisible=false
+        ElMessage({
+          type   : 'success',
+          message: ' Successful',
+        })
+        window.location.reload();
+
+
+      });
     }
+
+
+
 
   },
 };
