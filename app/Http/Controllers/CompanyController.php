@@ -34,7 +34,13 @@ class CompanyController extends Controller
         // })->latest()->withCount('bills', 'boms', 'sales', 'bomSales', 'companyUsers')->with('companyUsers.user')->get();
 
         $companies = Company::all();
-        $deletedCompanies = Company::onlyTrashed()->latest()->get();
+        $deletedCompanies = Company::onlyTrashed()->with('timeRemaining')->latest()->get();
+
+        // foreach ($deletedCompanies as &$deletedCompany) {
+        //     $deleteTime = date("Y-m-d H:i:s",strtotime($deletedCompany->deleted_at));
+        //     $currentTime = date("Y-m-d H:i:s");
+        //     $deletedCompany['timeRemains'] = 
+        // }
 
 
         return response()->json([

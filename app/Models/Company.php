@@ -32,4 +32,12 @@ class Company extends Model
     {
         return $this->hasMany(CompanyUser::class);
     }
+
+    // public function timeRemaining(){
+    //     $deletedTime = date("Y-m-d H:i:s",strtotime($this->deleted_at));
+    //     $currentTime = date("Y-m-d H:i:s",strtotime(now()));
+    //     $remaining = $currentTime - $deletedTime;
+    //     $remDays = date("d",strtotime($remaining));
+    //     return $remDays;
+    // }
 }
