@@ -15,7 +15,7 @@ class InventoryController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            // 'date' => 'required',
+            'date' => 'required',
             // 'description' => 'nullable|string',
             // 'vendor_name' => 'nullable|string',
             // 'bill_number' => 'nullable|string',
@@ -31,7 +31,7 @@ class InventoryController extends Controller
             $billData['company_id'] = $company_id;
             $billData['bill_number'] = 'BOI'. mt_rand(1000,9999);
             $billData['invoice_total'] = $request->value;
-            $billData['date'] = date("Y-m-d",strtotime(date("Y-m-").'01'));
+            // $billData['date'] = date("Y-m-d",strtotime(date("Y-m-").'01'));
 
             DB::beginTransaction();
             $bill = Bill::create($billData);
@@ -39,6 +39,7 @@ class InventoryController extends Controller
             $bill->save();
             // dd('store', $request->all(), $billData);
             $item = [
+                'name' => explode('-',$request->sku)[0],
                 'sku' => $request->sku,
                 'total' => $request->value, 
                 'quantity' => $request->quantity

@@ -33,7 +33,7 @@
 
           <div class="d-flex align-items-center gap-3">
           <p class="fw-bold fs-6 mb-0 ms-3">{{list.name}}</p>
-            <small class="text-danger">25 Days Remaining</small>
+            <small class="text-danger">{{ list.remaining_time }} Days Remaining</small>
           </div>
           <button class="btn btn-success  me-3" @click=confirmRestore(list.id)>
             <svg xmlns="http://www.w3.org/2000/svg" fill="#fff" width="24px" height="24px" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="16px" y="16px" viewBox="0 0 100 125" enable-background="new 0 0 100 100" xml:space="preserve"><path d="M61.832,49.584c0-4.814-3.902-8.717-8.717-8.717s-8.717,3.902-8.717,8.717s3.902,8.717,8.717,8.717  S61.832,54.398,61.832,49.584z M53.115,13.5c-20.127,0-36.5,16.374-36.5,36.5h-6.23l10.564,13.22L31.514,50h-7.898  c0-16.267,13.232-29.5,29.5-29.5c16.266,0,29.5,13.233,29.5,29.5s-13.234,29.5-29.5,29.5c-7.939,0-15.389-3.108-20.973-8.754  l-4.977,4.924c6.91,6.983,16.125,10.83,25.949,10.83c20.125,0,36.5-16.374,36.5-36.5S73.24,13.5,53.115,13.5z"/></svg>  Restore</button>
