@@ -44,11 +44,11 @@
 
         <el-dialog v-model="dialogVisible" title="Number field" width="30%">
           <div>
-            <h5 class="fs-6">Add Date</h5>
-            <el-date-picker
-                class="w-100 mb-3"
+            <h5 class="fs-6">Add Date {{addDate}}</h5>
+            <input
+                class="w-100 mb-3 custom-input-date border rounded px-2"
                 v-model="addDate"
-                type="datetime"
+                type="date"
                 placeholder="Pick a Date"
                 format="YYYY-MM-DD"
             />
@@ -289,8 +289,6 @@ export default {
           message: ' Successful',
         })
         window.location.reload();
-
-
       });
     }
 
@@ -321,5 +319,11 @@ export default {
   top      : 0 !important;
   z-index  : 1;
   /*background-color: green !important;*/
+}
+.custom-input-date{
+  height: 30px;
+
+
+
 }
 </style>>
