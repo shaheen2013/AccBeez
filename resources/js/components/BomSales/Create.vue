@@ -83,7 +83,7 @@
                 <el-col>
                     <el-button v-if="operation === 'create'" type="primary" @click="createBomSale" class="me-2">Create</el-button>
                     <el-button v-if="operation === 'edit'" type="primary" @click="updateBomSale" class="me-2">Update</el-button>
-                    <router-link :to="'/bomSales'">
+                    <router-link :to="'/' + $route.params.slug + '/bomSales'">
                         <el-button type="info" class="me-2">Back</el-button>
                     </router-link>
 
@@ -140,12 +140,10 @@ export default {
             this.operation = 'create';
         } else if(this.$route.name == 'BomSaleEdit'){
             this.operation = 'edit';
-            let paths = this.$route.path.split("/");
-            this.bomSale.id = paths[3];
+            this.bomSale.id = this.$route.params.id;
         } else {
             this.operation = 'view';
-            let paths = this.$route.path.split("/");
-            this.bomSale.id = paths[3];
+            this.bomSale.id = this.$route.params.id;
         }
         console.log('Route Name: ', this.$route.name);
         if(this.bomSale.id){
@@ -162,7 +160,7 @@ export default {
         }
 
 
-        await axios.get(`/api/boms/get-all-boms`).
+        await axios.get(`/api/boms/get-all-boms?slug=` + this.$route.params.slug).
                 then((res) => {
                     this.boms = res.data;
                     console.log('boms:', res, this.boms);
@@ -184,10 +182,10 @@ export default {
         async createBomSale() {
             console.log('createBomSale:', this.bomSale)
             try {
+                this.bomSale.slug = this.$route.params.slug;
                 await axios.post(`/api/bomSales`, this.bomSale).
                         then((res) => {
-                            console.log('res:', res, this.$router);
-                            this.$router.push('/bomSales');
+                            this.$router.push('/' + this.$route.params.slug + '/bomSales');
                         });
             } catch (error) {
                 showErrors(error);
@@ -196,12 +194,12 @@ export default {
         },
         async updateBomSale() {
             this.bomSale.deletedItemsID = this.deletedItemsID;
-            console.log('updateBomSale:', this.bomSale)
+            
             try {
                 await axios.post(`/api/bomSales/`+this.bomSale.id, this.bomSale).
                         then((res) => {
                             console.log('res:', res, this.$router);
-                            this.$router.push('/bomSales');
+                            this.$router.push('/' + this.$route.params.slug + '/bomSales');
                         });
             } catch (error) {
                 showErrors(error);

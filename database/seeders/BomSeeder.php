@@ -16,19 +16,23 @@ class BomSeeder extends Seeder
         DB::table('boms')->insert([
             [
                 'name' => 'Bom 01',
-                'invoice_total' => 10
+                'invoice_total' => 10,
+                'company_id' => rand(1, 5)
             ],
             [
                 'name' => 'Bom 02',
-                'invoice_total' => 30
+                'invoice_total' => 30,
+                'company_id' => rand(1, 5)
             ],
             [
                 'name' => 'Bom 03',
-                'invoice_total' => 60
+                'invoice_total' => 60,
+                'company_id' => rand(1, 5)
             ],
             [
                 'name' => 'Bom 04',
-                'invoice_total' => 108
+                'invoice_total' => 108,
+                'company_id' => rand(1, 5)
             ],
         ]);
     }

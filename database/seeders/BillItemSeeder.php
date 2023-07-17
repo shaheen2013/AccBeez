@@ -71,10 +71,12 @@ class BillItemSeeder extends Seeder
                     'bill_id' => $billId,
                     'sku' => $item.'-'.rand(1,3),
                     'name' => $item,
+                    'description' => 'Bill description ' . $i,
                     'rate' => $rate,
                     'unit' => $unit,
                     'quantity' => $quantity,
                     'total' => $total,
+                    'company_id' => rand(1, 5),
                     'created_at' => $createdAt,
                     'updated_at' => $updatedAt,
                 ]);

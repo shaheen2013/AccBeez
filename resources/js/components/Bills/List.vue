@@ -4,7 +4,7 @@
 
         <h1>
             Bill List
-            <router-link to="/bills/create" style="text-decoration: none; color: inherit;">
+            <router-link :to=" '/' + $route.params.slug + '/bills/create'" style="text-decoration: none; color: inherit;">
                 <el-button type="primary" v-if="logged_in_user && logged_in_user.role === 'Super-Admin'" style="float: right;">
                     Create
                 </el-button>
@@ -23,14 +23,14 @@
                 </el-icon>
                 <span style="vertical-align: middle"> Search </span>
             </el-button>
-            <el-button type="primary" @click="exportData('xls')">
+            <el-button type="primary" @click="exportData('xls', $route.params.slug)">
                 <el-icon style="vertical-align: middle">
                     <Download />
                 </el-icon>
                 <span style="vertical-align: middle"> Export to Excel </span>
             </el-button>
 
-            <el-button type="primary" @click="exportData('csv')">
+            <el-button type="primary" @click="exportData('csv', $route.params.slug)">
                 <el-icon style="vertical-align: middle">
                     <Download />
                 </el-icon>
@@ -53,7 +53,7 @@
             <el-upload
                 v-model:file-list="fileList"
                 class="upload-demo"
-                action="/api/bill/import"
+                :action="'/api/bill/import?slug=' + $route.params.slug"
                 multiple
                 :on-preview="handlePreview"
                 :on-remove="handleRemove"
@@ -62,7 +62,7 @@
                 :limit="3"
                 :on-exceed="handleExceed"
             >
-                <el-button type="primary">Import to CSV</el-button>
+                <el-button type="primary">Import CSV</el-button>
             </el-upload>
         </div>
 
@@ -72,6 +72,7 @@
         >
             <el-table-column type="selection" width="55" />
             <el-table-column prop="date" label="Date" />
+            <el-table-column prop="vendor_name" label="Vendor" />
             <el-table-column prop="description" label="Description" />
             <el-table-column prop="invoice_total" label="Invoice Total">
                 <template #default="scope">
@@ -80,12 +81,12 @@
             </el-table-column>
             <el-table-column prop="id" label="Operations" >
                 <template  #default="scope">
-                    <router-link :to="'/bills/edit/'+scope.row.id"  v-if="logged_in_user && logged_in_user.role === 'Super-Admin'">
+                    <router-link :to="'/' + $route.params.slug + '/bills/edit/'+scope.row.id"  v-if="logged_in_user && logged_in_user.role === 'Super-Admin'">
                         <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px" >
                             <Edit />
                         </el-icon>
                     </router-link>
-                    <router-link :to="'/bills/view/'+scope.row.id">
+                    <router-link :to="'/' + $route.params.slug + '/bills/view/'+scope.row.id">
                         <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px" >
                             <View />
                         </el-icon>
@@ -245,6 +246,7 @@ export default {
                 limit: this.pageSize,
                 keyword: this.query.keyword,
                 page: this.query.page,
+                slug: this.$route.params.slug
             }
             console.log('params', params);
             await axios.get(`/api/bills`, {params}).
@@ -306,9 +308,9 @@ export default {
             saveAs(dataBlob, 'exported_data.xlsx');
         },
 
-        async exportData(format){
+        async exportData(format,slug = null){
             try {
-                await axios.get(`/api/bills/exported-data`).
+                await axios.get(`/api/bills/exported-data?slug=${slug}`).
                 then(({data}) => {
                     const bills = data.data.map((bill)=>{
                         return {
@@ -326,7 +328,7 @@ export default {
         },
 
         async downloadPdf(){
-            window.location.href = `/bills/download-bills/`;
+            window.location.href = `/bills/download-bills?slug=${this.$route.params.slug}`;
         },
 
 

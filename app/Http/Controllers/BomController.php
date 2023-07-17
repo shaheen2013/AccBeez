@@ -19,10 +19,12 @@ class BomController extends Controller
     public function index(Request $request)
     {
         $searchParams = $request->all();
-        // dd('hi index', $searchParams);
         $limit = Arr::get($searchParams, 'limit', 5);
         $keyword = Arr::get($searchParams, 'keyword', '');
+        $company_id = getCompanyIdBySlug($searchParams['slug']);
+
         $bomsQuery = DB::table('boms')
+                        ->where('company_id', $company_id)
                         ->when(!empty($keyword), function (Builder $query) use ($keyword) {
                             return $query->where('name', 'LIKE', '%' . $keyword . '%');
                         })->latest();
@@ -33,11 +35,15 @@ class BomController extends Controller
     public function store(BomRequest $request)
     {
         try {
-            $bomData = $request->only('name', 'invoice_total');
+            $bomData = $request->only('name', 'invoice_total', 'slug');
+            $company_id = getCompanyIdBySlug($bomData['slug']);
+            $bomData['company_id'] = $company_id;
+
             DB::beginTransaction();
             $bom = Bom::create($bomData);
             foreach($request->items as $item){
                 $item['bom_id'] = $bom->id;
+                $item['company_id'] = $company_id;
                 BomItem::create($item);
             }
             DB::commit();
@@ -140,9 +146,11 @@ class BomController extends Controller
         }
     }
 
-    public function getAllBoms()
+    public function getAllBoms(Request $request)
     {
+        $company_id = getCompanyIdBySlug($request->slug);
         $boms = Bom::select('name', 'invoice_total')
+                            ->where('company_id', $company_id)
                             ->orderBy('name', 'asc')
                             ->get();
         return response()->json($boms);

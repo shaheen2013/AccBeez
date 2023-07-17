@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\COGSController;
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\ImportController;
 use App\Http\Controllers\RolePermissionController;
@@ -85,6 +86,7 @@ Route::get('/registers', [App\Http\Controllers\RegisterController::class, 'index
 Route::get('/registers/view/{id}', [App\Http\Controllers\RegisterController::class, 'view'])->name('registers.view');
 Route::post('/registers/close/', [App\Http\Controllers\RegisterController::class, 'close'])->name('registers.close');
 Route::post('/registers/undo/', [App\Http\Controllers\RegisterController::class, 'undo'])->name('registers.undo');
+Route::post('/register/opening/inventory', [App\Http\Controllers\InventoryController::class, 'store']);
 
 
 // export routes
@@ -130,4 +132,11 @@ Route::delete('/permissions/delete/{id}',[RolePermissionController::class,'permi
 
 // user role management routes
 Route::put('/users/roles/update/{id}', [App\Http\Controllers\UserController::class, 'assignUserRole']);
+
+// company route 
+Route::get('/company/overview', [CompanyController::class, 'companyOverview']);
+Route::get('/company/list',[CompanyController::class, 'getAll']);
+Route::delete('/company/delete/{id}',[CompanyController::class, 'destroy']);
+Route::put('/company/restore/{id}',[CompanyController::class, 'restore']);
+
 

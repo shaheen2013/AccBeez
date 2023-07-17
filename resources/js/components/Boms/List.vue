@@ -2,8 +2,8 @@
 <template>
     <div style="padding: 10px;">
         <h1>
-            Bom List
-            <router-link to="/boms/create" style="text-decoration: none; color: inherit;">
+            BOM List
+            <router-link :to="'/' + $route.params.slug + '/boms/create'" style="text-decoration: none; color: inherit;">
                 <el-button type="primary" v-if="logged_in_user && logged_in_user.role === 'Super-Admin'" style="float: right;">
                     Create
                 </el-button>
@@ -72,12 +72,12 @@
             <el-table-column prop="id" label="Operations" >
 
                 <template  #default="scope">
-                    <router-link :to="'/boms/edit/'+scope.row.id">
+                    <router-link :to="'/' + $route.params.slug + '/boms/edit/'+scope.row.id">
                         <el-icon :size="20" :color="color" style="width: 1em; height: 1em; margin-right: 8px"  v-if="logged_in_user && logged_in_user.role === 'Super-Admin'">
                             <Edit />
                         </el-icon>
                     </router-link>
-                    <router-link :to="'/boms/view/'+scope.row.id">
+                    <router-link :to="'/' + $route.params.slug + '/boms/view/'+scope.row.id">
                         <el-icon :size="20" :color="color" style="width: 1em; height: 1em; margin-right: 8px" >
                             <View />
                         </el-icon>
@@ -225,6 +225,7 @@ export default {
                 limit: this.pageSize,
                 keyword: this.query.keyword,
                 page: this.query.page,
+                slug: this.$route.params.slug
             }
             // console.log('params', params);
             await axios.get(`/api/boms`, {params}).

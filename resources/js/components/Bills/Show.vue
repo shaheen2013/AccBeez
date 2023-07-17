@@ -8,6 +8,7 @@
 
         <el-card class="box-card">
             <h4>Invoice for AccBeez</h4>
+            <p><strong>Vendor:</strong> {{ bill.vendor }}</p>
             <p><strong>Description:</strong> {{ bill.description }}</p>
             <p><strong>Date:</strong> {{ bill.date }}</p>
 
@@ -43,7 +44,7 @@
 
             <el-row>
                 <el-col>
-                    <router-link :to="'/bills'">
+                    <router-link :to="'/'+ $route.params.slug + '/bills'">
                         <el-button type="info" class="me-2">Back</el-button>
                     </router-link>
                     <el-button type="primary" @click="downloadPdf" class="me-2">Download PDF</el-button>
@@ -62,6 +63,7 @@ export default {
         return {
             bill : {
                 id: null,
+                vendor:'',
                 description: '',
                 invoice_total: 0,
                 date: '',
@@ -75,9 +77,8 @@ export default {
         };
     },
 
-    async created() {
-        let paths = this.$route.path.split("/");
-        this.bill.id = paths[3];
+    async created() {3
+        this.bill.id = this.$route.params.id;
         console.log('Route Name: ', this.$route.name);
         await axios.get(`/api/bills/edit/`+this.bill.id).
                 then((res) => {
@@ -87,6 +88,7 @@ export default {
                     this.bill.invoice_total = res.data.invoice_total;
                     this.bill.date = res.data.date;
                     this.bill.items = res.data.bill_items;
+                    this.bill.vendor = res.data.vendor_name;
                 });
     },
     methods: {

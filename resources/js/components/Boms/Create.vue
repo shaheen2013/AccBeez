@@ -88,7 +88,7 @@
 
                     <el-button v-if="operation === 'create'" type="primary" @click="createBom" class="me-2">Create</el-button>
                     <el-button v-if="operation === 'edit'" type="primary" @click="updateBom" class="me-2">Update</el-button>
-                    <router-link :to="'/boms'">
+                    <router-link :to="'/'+ $route.params.slug + '/boms'">
                         <el-button type="info" class="me-2">Back</el-button>
                     </router-link>
                 </el-col>
@@ -141,12 +141,10 @@ export default {
             this.operation = 'create';
         } else if(this.$route.name == 'BomEdit'){
             this.operation = 'edit';
-            let paths = this.$route.path.split("/");
-            this.bom.id = paths[3];
+            this.bom.id = this.$route.params.id;
         } else {
             this.operation = 'view';
-            let paths = this.$route.path.split("/");
-            this.bom.id = paths[3];
+            this.bom.id = this.$route.params.id;
         }
         if(this.bom.id){
             axios.get(`/api/boms/edit/`+this.bom.id).
@@ -160,7 +158,7 @@ export default {
             // console.log('BOM edit', this.bom)
         }
 
-        await axios.get(`/api/products`).
+        await axios.get(`/api/products?slug=` + this.$route.params.slug).
                 then((res) => {
                     this.products = res.data;
                 });
@@ -187,11 +185,12 @@ export default {
             try {
                 const hasAllElems = this.bom.items.every(elem => Object.values(this.products).some(product => product.sku === elem.sku));
                 console.log('hasAllElems', hasAllElems);
+                this.bom.slug = this.$route.params.slug;
                 if(hasAllElems) {
                     await axios.post(`/api/boms`, this.bom).
                             then((res) => {
                                 console.log('res:', res, this.$router);
-                                this.$router.push('/boms');
+                                this.$router.push('/' + this.$route.params.slug + '/boms');
                             });
                 } else {
                     ElNotification({
@@ -213,11 +212,12 @@ export default {
                     // console.log('elem', elem, this.products);
                     return Object.values(this.products).some(product => product.sku === elem.sku)
                 });
+                this.bom.slug = this.$route.params.slug;
                 if(hasAllElems) {
                     await axios.post(`/api/boms/`+this.bom.id, this.bom).
                             then((res) => {
                                 console.log('res:', res, this.$router);
-                                this.$router.push('/boms');
+                                this.$router.push('/' + this.$route.params.slug + '/boms');
                             });
                 } else {
                     ElNotification({

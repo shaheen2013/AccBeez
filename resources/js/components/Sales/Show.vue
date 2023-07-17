@@ -43,7 +43,7 @@
 
             <el-row>
                 <el-col>
-                    <router-link :to="'/sales'">
+                    <router-link :to="'/' + $route.params.slug + '/sales'">
                         <el-button type="info" class="me-2">Back</el-button>
                     </router-link>
                     <el-button type="primary" @click="downloadPdf" class="me-2">Download PDF</el-button>
@@ -75,9 +75,7 @@ export default {
         };
     },
     async created() {
-        let paths = this.$route.path.split("/");
-        this.sale.id = paths[3];
-        console.log('Route Name: ', this.$route.name);
+        this.sale.id = this.$route.params.id;
         await axios.get(`/api/sales/edit/`+this.sale.id).
                 then((res) => {
                     console.log('res:', res);
@@ -117,4 +115,4 @@ export default {
         border: 1px solid #ccc;
         padding: 8px;
     }
-</style>>
+</style>

@@ -11,21 +11,24 @@ import BomCreate from './components/Boms/Create.vue';
 import BomShow from './components/Boms/Show.vue';
 import UserCreate from './components/Users/Create.vue';
 import UserList from './components/Users/List.vue';
-import AssignUsers from './components/Users/AssignUsers.vue';
 import NotFoundPage from './components/NotFoundPage.vue';
 import Dashboard from './components/Dashboard.vue';
 import SaleCreate from './components/Sales/Create.vue';
 import SaleList from './components/Sales/List.vue';
 import SaleShow from './components/Sales/Show.vue';
 import ExlTable from "@/components/ExlTable/ExlTable.vue";
-
 import BomSaleList from './components/BomSales/List.vue';
 import BomSaleCreate from './components/BomSales/Create.vue';
 import BomSaleShow from './components/BomSales/Show.vue';
-
 import CogsList from './components/Cogs/List.vue';
-
+import CompaniesShow from './components/Companies/Show.vue'
 import DashboardLayout from './layout/DashboardLayout.vue'
+import FcRegister from './components/FcRegister/Show.vue'
+import FcRegisterList from './components/FcRegister/List.vue'
+import FcRegisterShow from './components/FcRegister/Show.vue'
+import getLogedInUser from "./helper";
+
+import { useAuthUserStore } from "@/stores/AuthUser";
 
 
 const routes = [
@@ -39,57 +42,58 @@ const routes = [
         name: 'dashboard',
         children: [
             {
-                path: '/dashboard',
+                path: '/:slug/dashboard',
                 component: Dashboard,
             },
             {
-                path: '/registers',
+                path: '/:slug/registers',
                 name: 'registers',
                 component: Register,
             },
             {
-                path: '/registers/view/:id',
+                path: '/:slug/registers/view/:id',
                 name: 'RegisterShow',
                 component: RegisterShow,
             },
             {
-                path: '/bills',
+                path: '/:slug/bills',
                 name: 'BillList',
-                component: BillList
+                component: BillList,
+                meta: { requiresAuth: true },
             },
             {
-                path: '/bills/create',
+                path: '/:slug/bills/create',
                 name: 'BillCreate',
                 component: BillCreate
             },
             {
-                path: '/bills/edit/:id',
+                path: '/:slug/bills/edit/:id',
                 name: 'BillEdit',
                 component: BillCreate
             },
             {
-                path: '/bills/view/:id',
+                path: '/:slug/bills/view/:id',
                 name: 'BillShow',
                 component: BillShow
             },
 
             {
-                path: '/boms',
+                path: '/:slug/boms',
                 name: 'BomList',
                 component: BomList
             },
             {
-                path: '/boms/create',
+                path: '/:slug/boms/create',
                 name: 'BomCreate',
                 component: BomCreate
             },
             {
-                path: '/boms/edit/:id',
+                path: '/:slug/boms/edit/:id',
                 name: 'BomEdit',
                 component: BomCreate
             },
             {
-                path: '/boms/view/:id',
+                path: '/:slug/boms/view/:id',
                 name: 'BomView',
                 component: BomShow
             },
@@ -98,11 +102,6 @@ const routes = [
                 path: '/users',
                 name: 'UserList',
                 component: UserList
-            },
-            {
-                path: '/assign-users',
-                name: 'AssignUsers',
-                component: AssignUsers
             },
             {
                 path: '/users/create',
@@ -120,7 +119,7 @@ const routes = [
                 component: UserCreate
             },
             {
-                path: '/sales',
+                path: '/:slug/sales',
                 name: 'SaleList',
                 component: SaleList
             }, {
@@ -129,45 +128,58 @@ const routes = [
                 component: ExlTable
             },
             {
-                path: '/sales/create',
+                path: '/:slug/sales/create',
                 name: 'SaleCreate',
                 component: SaleCreate
             },
             {
-                path: '/sales/edit/:id',
+                path: '/:slug/sales/edit/:id',
                 name: 'SaleEdit',
                 component: SaleCreate
             },
             {
-                path: '/sales/view/:id',
+                path: '/:slug/sales/view/:id',
                 name: 'SaleShow',
                 component: SaleShow
             },
 
             {
-                path: '/bomSales',
+                path: '/:slug/bomSales',
                 name: 'BomSaleList',
                 component: BomSaleList
             },
             {
-                path: '/bomSales/create',
+                path: '/:slug/bomSales/create',
                 name: 'BomSaleCreate',
                 component: BomSaleCreate
             },
             {
-                path: '/bomSales/edit/:id',
+                path: '/:slug/bomSales/edit/:id',
                 name: 'BomSaleEdit',
                 component: BomSaleCreate
             },
             {
-                path: '/bomSales/view/:id',
+                path: '/:slug/bomSales/view/:id',
                 name: 'BomSaleShow',
                 component: BomSaleShow
             },
             {
-                path: '/cogs',
+                path: '/:slug/cogs',
                 name: 'CogsList',
                 component: CogsList
+            }, {
+                path: '/:slug/companies',
+                name: 'CogsList',
+                component: CompaniesShow
+            },{
+                path: '/:slug/fc-register',
+                name: 'FcRegister',
+                component: FcRegisterList
+            },
+            {
+                path: '/:slug/fc-registers/view/:id',
+                name: 'FcRegisterShow',
+                component: FcRegisterShow,
             },
 
         ]
@@ -185,7 +197,23 @@ const router = createRouter({
     history: createWebHistory(),
     routes,
 });
+router.beforeEach((to, from) => {
+    const loggedUser = useAuthUserStore();
+    loggedUser.loggedUser();
 
+
+    const user = getLogedInUser();
+    console.log('user:', user);
+    console.log('to:', to);
+    if (to.meta.requiresAuth) {
+
+    //  window.location.href = '/login';
+     return;
+    //   return {
+    //     path: '/login',
+    //   }
+    }
+  });
 
 
 export default router;

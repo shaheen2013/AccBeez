@@ -8,6 +8,7 @@ use App\Models\Bill;
 use App\Models\BillItem;
 use Illuminate\Http\Request;
 use App\Http\Requests\BillRequest;
+use App\Models\Company;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -28,7 +29,10 @@ class BillController extends Controller
         // dd('hi index', $searchParams);
         $limit = Arr::get($searchParams, 'limit', 5);
         $keyword = Arr::get($searchParams, 'keyword', '');
+
+        $company_id = getCompanyIdBySlug($searchParams['slug']);
         $billsQuery = DB::table('bills')
+                        ->where('company_id', $company_id)
                         ->when(!empty($keyword), function (Builder $query) use ($keyword) {
                             return $query->where('description', 'LIKE', '%' . $keyword . '%');
                         })->latest();
@@ -38,8 +42,10 @@ class BillController extends Controller
 
     public function store(BillRequest $request)
     {
+        $company_id = getCompanyIdBySlug($request->slug);
         try {
-            $billData = $request->only('description', 'date', 'invoice_total');
+            $billData = $request->only('description', 'date', 'invoice_total', 'vendor_name', 'bill_number');
+            $billData['company_id'] = $company_id;
             DB::beginTransaction();
             $bill = Bill::create($billData);
             $bill->invoice_number = mt_rand(10000, 99999).'-'.$bill->id;
@@ -47,6 +53,7 @@ class BillController extends Controller
             // dd('store', $request->all(), $billData);
             foreach($request->items as $item){
                 $item['bill_id'] = $bill->id;
+                $item['company_id'] = $company_id;
                 BillItem::create($item);
             }
             DB::commit();
@@ -120,9 +127,10 @@ class BillController extends Controller
         }
     }
 
-    public function downloadBillsInPdf()
+    public function downloadBillsInPdf(Request $request)
     {
-        $bill = Bill::latest()->get();
+        $company_id = getCompanyIdBySlug($request->slug);
+        $bill = Bill::where('company_id', $company_id)->latest()->get();
 
         $pdf = Pdf::loadView('bills.list', ['bills' => $bill]);
         // dd($pdf);
@@ -133,7 +141,7 @@ class BillController extends Controller
     {
 
         $bill = Bill::with('billItems')->find($id);
-        $user = Auth::user()->toArray();
+        $user = Auth::user();
         // dd($bill);
         $data = [
             'bill' => $bill,
@@ -159,9 +167,10 @@ class BillController extends Controller
         }
     }
 
-    public function exportData(){
+    public function exportData(Request $request){
+        $company_id = getCompanyIdBySlug($request->slug);
         try{
-            $data = BillResource::collection(Bill::latest()->get());
+            $data = BillResource::collection(Bill::where('company_id', $company_id)->latest()->get());
 
             return response()->successResponse('Bill list', $data);
         }catch (Exception $exception){

@@ -20,6 +20,9 @@ return new class extends Migration
             $table->string('invoice_number')->nullable();
             $table->unsignedBigInteger('client_id')->nullable();
             $table->unsignedBigInteger('bom_sale_id')->nullable();
+            $table->integer('company_id');
+            $table->integer('created_by')->nullable();
+            $table->integer('updated_by')->nullable();
             $table->timestamps();
         });
     }

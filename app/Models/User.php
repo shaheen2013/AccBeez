@@ -12,7 +12,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, HasPermissions;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, HasPermissions,Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -48,5 +48,9 @@ class User extends Authenticatable
 
     public function adminUsers() {
         return $this->hasMany(UserAssign::class, 'admin_id', 'id')->whereNotNull('user_id');
+    }
+
+    public function company() {
+        return $this->hasOne(CompanyUser::class);
     }
 }

@@ -87,7 +87,7 @@
                 <el-col>
                     <el-button v-if="operation === 'create'" type="primary" @click="createSale" class="me-2">Create</el-button>
                     <el-button v-if="operation === 'edit'" type="primary" @click="updateSale" class="me-2">Update</el-button>
-                    <router-link :to="'/sales'">
+                    <router-link :to="'/'+ $route.params.slug + '/sales'">
                         <el-button type="info" class="me-2">Back</el-button>
                     </router-link>
 
@@ -146,14 +146,12 @@ export default {
             this.operation = 'create';
         } else if(this.$route.name == 'SaleEdit'){
             this.operation = 'edit';
-            let paths = this.$route.path.split("/");
-            this.sale.id = paths[3];
+            this.sale.id = this.$route.params.id;
         } else {
             this.operation = 'view';
             let paths = this.$route.path.split("/");
             this.sale.id = paths[3];
         }
-        console.log('Route Name: ', this.$route.name);
         if(this.sale.id){
             axios.get(`/api/sales/edit/`+this.sale.id).
                     then((res) => {
@@ -168,10 +166,9 @@ export default {
         }
 
 
-        await axios.get(`/api/products`).
+        await axios.get(`/api/products?slug=` + this.$route.params.slug).
                 then((res) => {
                     this.products = res.data;
-                    console.log('products:', this.products);
                 });
     },
     methods: {
@@ -189,11 +186,12 @@ export default {
         },
         async createSale() {
             console.log('createSale:', this.sale)
+            this.sale.slug = this.$route.params.slug;
             try {
                 await axios.post(`/api/sales`, this.sale).
                         then((res) => {
                             console.log('res:', res, this.$router);
-                            this.$router.push('/sales');
+                            this.$router.push('/'+ this.$route.params.slug + '/sales');
                         });
             } catch (error) {
                 showErrors(error);
@@ -207,7 +205,7 @@ export default {
                 await axios.post(`/api/sales/`+this.sale.id, this.sale).
                         then((res) => {
                             console.log('res:', res, this.$router);
-                            this.$router.push('/sales');
+                            this.$router.push('/'+ this.$route.params.slug + '/sales');
                         });
             } catch (error) {
                 showErrors(error);
