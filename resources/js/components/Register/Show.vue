@@ -45,15 +45,15 @@
         <el-dialog v-model="dialogVisible" title="Number field" width="30%">
           <div>
             <h5 class="fs-6">Add Value</h5>
-            <el-input class="mb-3" v-model="addValue" placeholder="Add your value"/>
+            <el-input class="mb-3" v-model="addValue" placeholder="Add your value" type="number"/>
             <h5 class="fs-6">Add Quantity</h5>
-            <el-input v-model="addQuantity" placeholder="Add your quantity"/>
+            <el-input v-model="addQuantity"  placeholder="Add your quantity" type="number"/>
           </div>
 
           <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogVisible = false">Cancel</el-button>
-        <el-button type="primary"  @click="handleSubmit">
+        <el-button type="primary" @click="handleSubmitInventory">
         Add
         </el-button>
       </span>
@@ -174,7 +174,7 @@ export default {
       isMounted    : false,
       year         : null,
       dialogVisible: false,
-      loading:false,
+      loading      : false,
       addValue     : '',
       addQuantity  : ''
     };
@@ -205,9 +205,7 @@ export default {
         console.log('res:', res.data, this.bill_item);
 
 
-
       });
-
 
 
     },
@@ -238,7 +236,7 @@ export default {
             type             : 'warning',
           }
       ).then(() => {
-        axios.post(`/api/registers/undo`, {sku: this.bill_item.sku}).then((res) => {
+        axios.post(`/api/registers/undo`, {sku: this.$route.params.slug}).then((res) => {
           console.log('res:', res, this.$router);
           this.$router.push('/registers');
           ElMessage({
@@ -266,15 +264,22 @@ export default {
       window.location.href = `/api/register/${id}/export-balance-sheet/${format}`;
     },
 
-    handleSubmit() {
-    const anyValue=[
-      {
-        a:'',
-        b:''
-      }
-    ]
+    handleSubmitInventory() {
+      console.log(this.bill_item)
+      axios.post(`/api/register/opening/inventory?slug=`+this.$route.params.slug, {
 
+        sku:this.bill_item.sku,
+        value:this.addValue,
+        quantity:this.addQuantity
+
+      }).then((res) => {
+        console.log('this is the response in the web site',res)
+
+      });
     }
+
+
+
 
   },
 };
