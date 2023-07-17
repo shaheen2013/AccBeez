@@ -43,31 +43,40 @@ class RegisterController extends Controller
                             ->pluck('month', 'month')
                             ->unique()
                             ->toArray();
+                            
 
-           $registers = DB::table('bill_items')
-                        ->leftJoin('bills', 'bill_items.bill_id', '=', 'bills.id')
-                        ->select('name', 'sku', 'bill_items.id as bill_item_id', 
-                                            DB::raw('SUM(quantity) as total_items'),
-                                            DB::raw('SUM(total) as total_cost'),
-                                            DB::raw('round(SUM(total) / SUM(quantity),2) as avg_cost'),
-                                            DB::raw('YEAR(bills.date) as year'),
-                                            // DB::raw('MONTH(bills.date) as month')
-                                            DB::raw("DATE_FORMAT(bills.date, '%Y-%m') as month")
-                        )
-                        ->when(!empty($keyword), function (Builder $query) use ($keyword) {
-                            return $query->where('sku', 'LIKE', '%' . $keyword . '%');
-                        })
-                        ->when(!empty($year), function (Builder $query) use ($year) {
-                            return $query->whereRaw('YEAR(bills.date) = ?', [$year]);
-                        })
-                        ->where('bills.company_id', $company_id)
-                        ->groupBy(['sku', 'month', 'year'])
-                        ->orderBy('sku')
-                        ->orderBy('year')
-                        ->orderBy('month')
-                        ->get();
+        $subquery = DB::table('sale_items')
+        ->select('sku', DB::raw('SUM(quantity) as total_quantity'), DB::raw('SUM(total) as total_cost'))
+        ->groupBy('sku')
+        ->toSql();
+        $registers = DB::table('bill_items')
+            ->leftJoin('bills', 'bill_items.bill_id', '=', 'bills.id')
+            ->leftJoin(DB::raw("($subquery) as sale_items"), function ($join) {
+                $join->on('bill_items.sku', '=', 'sale_items.sku');
+            })
+            ->select(
+                'bill_items.name',
+                'bill_items.sku',
+                'bill_items.id as bill_item_id',
+                DB::raw('SUM(bill_items.quantity) - IFNULL(sale_items.total_quantity, 0) as total_items'),
+                DB::raw('SUM(bill_items.total) - IFNULL(sale_items.total_cost, 0) as total_cost'),
+                DB::raw('ROUND(SUM(bill_items.total) / SUM(bill_items.quantity), 2) as avg_cost'),
+                DB::raw('YEAR(bills.date) as year'),
+                DB::raw("DATE_FORMAT(bills.date, '%Y-%m') as month")
+            )
+            ->when(!empty($keyword), function (Builder $query) use ($keyword) {
+                return $query->where('sku', 'LIKE', '%' . $keyword . '%');
+            })
+            ->when(!empty($year), function (Builder $query) use ($year) {
+                return $query->whereRaw('YEAR(bills.date) = ?', [$year]);
+            })
+            ->where('bills.company_id', $company_id)
+            ->groupBy('sku', 'month', 'year')
+            ->orderBy('sku')
+            ->orderBy('year')
+            ->orderBy('month')
+            ->get();
         // $registers = $registerQuery->paginate($limit);
-        
 
          $grouped = $registers->mapToGroups(function ($item) {
             return [$item->sku => [
@@ -408,7 +417,12 @@ class RegisterController extends Controller
                 $saleTotal = (float) $item['sale_item_total'];
                 $closingTotal = $closingQuantity + $billTotal - $saleTotal;
                 $closingQuantity = $closingQuantity + $billQuantity - $saleQuantity;
-                $closingRate = $closingTotal / $closingQuantity;
+                if($closingQuantity == 0){
+                    $closingRate = 0;
+                }else{
+                    $closingRate = $closingTotal / $closingQuantity;
+                }
+                
                 $item['closing_date_rate'] = $closingRate;
                 $item['closing_date_quantity'] = $closingQuantity;
                 $item['closing_date_total'] = $closingTotal;
@@ -423,6 +437,14 @@ class RegisterController extends Controller
                 $item['closing_date_quantity'] = $closingQuantity;
                 $item['closing_date_total'] = $closingTotal;
                 // dump($item);
+                if($item['opening_date'] == true){
+                    $item['opening_date_quantity'] = $closingQuantity;
+                    $item['opening_date_total'] = $closingTotal;
+                    $item['opening_date_rate'] = $closingRate;
+                    $item['bill_item_quantity'] = null;
+                    $item['bill_item_total'] = null;
+                    $item['bill_item_rate'] = null;
+                }
             }
             elseif (isset($item['sale_item_quantity'])) {
                 // $item['sale_item_rate'] = $closingRate;
@@ -430,7 +452,11 @@ class RegisterController extends Controller
                 $saleTotal = (float) $item['sale_item_total'];
                 $closingQuantity = $closingQuantity - $saleQuantity;
                 $closingTotal = $closingTotal - $saleTotal;
-                $closingRate = $closingTotal / $closingQuantity;
+                if($closingQuantity == 0) {
+                    $closingRate = 0;
+                }else{
+                    $closingRate = $closingTotal / $closingQuantity;
+                }
                 $item['closing_date_rate'] = $closingRate;
                 $item['closing_date_quantity'] = $closingQuantity;
                 $item['closing_date_total'] = $closingTotal;

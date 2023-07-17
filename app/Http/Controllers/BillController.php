@@ -141,7 +141,7 @@ class BillController extends Controller
     {
 
         $bill = Bill::with('billItems')->find($id);
-        $user = Auth::user()->toArray();
+        $user = Auth::user();
         // dd($bill);
         $data = [
             'bill' => $bill,
