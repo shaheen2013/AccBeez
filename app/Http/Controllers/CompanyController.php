@@ -20,27 +20,14 @@ class CompanyController extends Controller
      */
     public function index()
     {
-
         $companies = Company::latest()->withCount('bills', 'boms', 'sales', 'bomSales', 'companyUsers')->with('companyUsers.user')->get();
         return response()->successResponse('Company list', $companies);
     }
 
     public function getAll()
     {
-        // $user = Auth::user();  
-        // $role = User::find($user->id)->getRoleNames()[0];     
-        // $companies = Company::when(in_array("User",$role),function($q){
-        //     $q->whereIn('id',CompanyUser::where('user_id',Auth::id())->pluck('company_id'));
-        // })->latest()->withCount('bills', 'boms', 'sales', 'bomSales', 'companyUsers')->with('companyUsers.user')->get();
-
         $companies = Company::all();
-        $deletedCompanies = Company::onlyTrashed()->with('timeRemaining')->latest()->get();
-
-        // foreach ($deletedCompanies as &$deletedCompany) {
-        //     $deleteTime = date("Y-m-d H:i:s",strtotime($deletedCompany->deleted_at));
-        //     $currentTime = date("Y-m-d H:i:s");
-        //     $deletedCompany['timeRemains'] = 
-        // }
+        $deletedCompanies = Company::onlyTrashed()->latest()->get();
 
 
         return response()->json([
@@ -48,14 +35,6 @@ class CompanyController extends Controller
             'deletedCompanies'=>$deletedCompanies
 
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -144,5 +123,13 @@ class CompanyController extends Controller
         return response()->json([
             'company' => $company
         ]);
+    }
+
+    protected function reserveCode(){
+        // $user = Auth::user();  
+        // $role = User::find($user->id)->getRoleNames()[0];     
+        // $companies = Company::when(in_array("User",$role),function($q){
+        //     $q->whereIn('id',CompanyUser::where('user_id',Auth::id())->pluck('company_id'));
+        // })->latest()->withCount('bills', 'boms', 'sales', 'bomSales', 'companyUsers')->with('companyUsers.user')->get();
     }
 }

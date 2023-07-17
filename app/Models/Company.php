@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -11,6 +12,8 @@ class Company extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = ['name', 'slug'];
+
+    protected $appends = ['remaining_time'];
 
     public function bills() 
     {
@@ -33,11 +36,17 @@ class Company extends Model
         return $this->hasMany(CompanyUser::class);
     }
 
-    // public function timeRemaining(){
-    //     $deletedTime = date("Y-m-d H:i:s",strtotime($this->deleted_at));
-    //     $currentTime = date("Y-m-d H:i:s",strtotime(now()));
-    //     $remaining = $currentTime - $deletedTime;
-    //     $remDays = date("d",strtotime($remaining));
-    //     return $remDays;
-    // }
+    public function getRemainingTimeAttribute()
+    {
+        if ($this->deleted_at) {
+            $currentTime = Carbon::parse(now());
+            $deletedTime = Carbon::parse($this->deleted_at);
+            $deletedTime = $deletedTime->addDays(30);
+            $remaining = $currentTime->diff($deletedTime);
+
+            return $remaining->days;
+        }
+
+        return null; // Return null if deleted_at is not set
+    }
 }
