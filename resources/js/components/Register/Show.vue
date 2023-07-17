@@ -150,6 +150,8 @@
 </template>
 
 <script>
+import {ElMessage} from "element-plus";
+
 export default {
   name: 'RegisterShow',
   data() {
@@ -186,6 +188,14 @@ export default {
 
 
   },
+/* async mounted() {
+    if(this.$route?.query?.message){
+      ElMessage({
+        type: 'success',
+        message: this.$route?.query?.message,
+      })
+    }
+  },*/
   methods: {
     downloadPdf() {
       window.location.href = `/registers/download-pdf/` + this.register.id;
@@ -204,9 +214,7 @@ export default {
         this.bill_item      = res.data.bill_item;
         console.log('res:', res.data, this.bill_item);
 
-
       });
-
 
     },
     handleYearFilter() {
@@ -265,7 +273,6 @@ export default {
     },
 
     handleSubmitInventory() {
-      console.log(this.bill_item)
       axios.post(`/api/register/opening/inventory?slug=`+this.$route.params.slug, {
 
         sku:this.bill_item.sku,
@@ -273,7 +280,17 @@ export default {
         quantity:this.addQuantity
 
       }).then((res) => {
-        console.log('this is the response in the web site',res)
+       this.dialogVisible=false
+        console.log('this is the response ------',res.data)
+        const query = { message: 'User Created Successfully!' }
+        this.$router.push({ query : query});
+        window.location.reload();
+        if(this.$route?.query?.message){
+          ElMessage({
+            type: 'success',
+            message: this.$route?.query?.message,
+          })
+        }
 
       });
     }
