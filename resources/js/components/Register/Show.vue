@@ -188,14 +188,7 @@ export default {
 
 
   },
-/* async mounted() {
-    if(this.$route?.query?.message){
-      ElMessage({
-        type: 'success',
-        message: this.$route?.query?.message,
-      })
-    }
-  },*/
+
   methods: {
     downloadPdf() {
       window.location.href = `/registers/download-pdf/` + this.register.id;
@@ -282,15 +275,12 @@ export default {
       }).then((res) => {
        this.dialogVisible=false
         console.log('this is the response ------',res.data)
-        const query = { message: 'User Created Successfully!' }
-        this.$router.push({ query : query});
+        ElMessage({
+          type   : 'success',
+          message: ' Successful',
+        })
         window.location.reload();
-        if(this.$route?.query?.message){
-          ElMessage({
-            type: 'success',
-            message: this.$route?.query?.message,
-          })
-        }
+
 
       });
     }
