@@ -44,6 +44,14 @@
 
         <el-dialog v-model="dialogVisible" title="Number field" width="30%">
           <div>
+            <h5 class="fs-6">Add Date</h5>
+            <el-date-picker
+                class="w-100 mb-3"
+                v-model="addDate"
+                type="datetime"
+                placeholder="Pick a Date"
+                format="YYYY-MM-DD"
+            />
             <h5 class="fs-6">Add Value</h5>
             <el-input class="mb-3" v-model="addValue" placeholder="Add your value" type="number"/>
             <h5 class="fs-6">Add Quantity</h5>
@@ -178,7 +186,8 @@ export default {
       dialogVisible: false,
       loading      : false,
       addValue     : '',
-      addQuantity  : ''
+      addQuantity  : '',
+      addDate:''
     };
   },
   async created() {
@@ -270,11 +279,11 @@ export default {
 
         sku:this.bill_item.sku,
         value:this.addValue,
-        quantity:this.addQuantity
+        quantity:this.addQuantity,
+        date:this.addDate
 
       }).then((res) => {
        this.dialogVisible=false
-        console.log('this is the response ------',res.data)
         ElMessage({
           type   : 'success',
           message: ' Successful',
