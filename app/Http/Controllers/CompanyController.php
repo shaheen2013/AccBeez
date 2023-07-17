@@ -93,14 +93,21 @@ class CompanyController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(Request $request,$id)
     {
         try {
-            
-            $company = Company::find($id);
-            $company->delete();  
+            $hard = null;
+            if($request->has('hard')){
+                $company = DB::table('companies')->where('id',$id)->delete();
+                $hard = 'Company permanently removed!';
+            }
+            else{
+                $company = Company::find($id);
+                $company->delete();  
+                
+            }
     
-            return response()->json(['status'=>true,'data'=>$company],200);   
+            return response()->json(['status'=>true,'data'=>((!$hard)?$company:$hard)],200);   
         } catch (\Throwable $th) {
             //throw $th;
             Log::error('companycontroller destroy method : ',$th->getTrace());
