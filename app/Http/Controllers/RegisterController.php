@@ -423,6 +423,14 @@ class RegisterController extends Controller
                 $item['closing_date_quantity'] = $closingQuantity;
                 $item['closing_date_total'] = $closingTotal;
                 // dump($item);
+                if($item['opening_date'] == true){
+                    $item['opening_date_quantity'] = $closingQuantity;
+                    $item['opening_date_total'] = $closingTotal;
+                    $item['opening_date_rate'] = $closingRate;
+                    $item['bill_item_quantity'] = null;
+                    $item['bill_item_total'] = null;
+                    $item['bill_item_rate'] = null;
+                }
             }
             elseif (isset($item['sale_item_quantity'])) {
                 // $item['sale_item_rate'] = $closingRate;
