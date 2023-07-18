@@ -41,7 +41,7 @@
                 >
                   <List/>
                 </el-icon>
-                Register
+               RM Register
               </el-menu-item>
             </router-link>
             <router-link
@@ -117,9 +117,18 @@
                 Production
               </el-menu-item>
             </router-link>
-            <router-link :to="'/' + $route.params.slug + '/cogs'" style="text-decoration: none;"
-                         :style="[$route.path === '/cogs' ? {color: 'royalblue'} : {color: 'black'}]">
+            <router-link :to="'/' + $route.params.slug + '/fc-register'" style="text-decoration: none;"
+                         :style="[$route.path === '/fc-register' ? {color: 'royalblue'} : {color: 'black'}]">
               <el-menu-item index="7">
+                <!-- <el-icon><icon-menu /></el-icon> -->
+                <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px">
+                  <CreditCard/>
+                </el-icon>
+                FC Register
+              </el-menu-item>
+            </router-link><router-link :to="'/' + $route.params.slug + '/cogs'" style="text-decoration: none;"
+                         :style="[$route.path === '/cogs' ? {color: 'royalblue'} : {color: 'black'}]">
+              <el-menu-item index="8">
                 <!-- <el-icon><icon-menu /></el-icon> -->
                 <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px">
                   <CreditCard/>
@@ -129,7 +138,7 @@
             </router-link>
             <router-link :to="'/' + $route.params.slug + '/companies'" style="text-decoration: none;"
                          :style="[$route.path === '/companies' ? {color: 'royalblue'} : {color: 'black'}]">
-              <el-menu-item index="8">
+              <el-menu-item index="9">
                 <!-- <el-icon><icon-menu /></el-icon> -->
                 <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px">
                   <CreditCard/>

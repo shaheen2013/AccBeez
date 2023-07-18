@@ -44,7 +44,7 @@
 
                 <el-row>
                     <el-col>
-                        <el-button v-if="operation === 'create'" type="primary" @click="createUser" class="me-2">Create</el-button>
+                        <el-button v-if="operation === 'create'" type="primary" @click="createUser" :loading="isLoading" class="me-2" >Create</el-button>
                         <el-button v-if="operation === 'edit'" type="primary" @click="updateUser" class="me-2">Update</el-button>
                         <router-link :to="'/users'">
                             <el-button type="info" class="me-2">Back</el-button>
@@ -71,6 +71,7 @@ export default {
         return {
             routeName: '',
             operation: 'create',
+            isLoading: false,
             user : {
                 id: null,
                 name: '',
@@ -148,14 +149,18 @@ export default {
             console.log('createUser:', this.user)
 
             try {
+                this.isLoading = true;
                 await axios.post(`/api/users`, this.user).
                         then((res) => {
                             console.log('res:', res, this.$router);
-                            this.$router.push('/users');
+                            const query = { message: 'User Created Successfully!' }
+                            this.$router.push({path:'/users', query : query});
+                            this.isLoading = false;
                         });
             } catch (error) {
                 console.log(error);
                 showErrors(error);
+                this.isLoading = false;
                 console.error('error in response:', error.response.data);
             }
         },
@@ -184,5 +189,9 @@ export default {
     .el-form-item__label {
         font-weight:bold !important;
         color: #212529;
+    }
+    .el-icon.is-loading {
+     font-size: 24px;
+      color: black;
     }
 </style>

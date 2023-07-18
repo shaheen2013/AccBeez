@@ -44,24 +44,16 @@
 
         <el-dialog v-model="dialogVisible" title="Number field" width="30%">
           <div>
-            <h5 class="fs-6">Add Date</h5>
-            <el-date-picker
-                class="w-100 mb-3"
-                v-model="addDate"
-                type="datetime"
-                placeholder="Pick a Date"
-                format="YYYY-MM-DD"
-            />
             <h5 class="fs-6">Add Value</h5>
-            <el-input class="mb-3" v-model="addValue" placeholder="Add your value" type="number"/>
+            <el-input class="mb-3" v-model="addValue" placeholder="Add your value"/>
             <h5 class="fs-6">Add Quantity</h5>
-            <el-input v-model="addQuantity"  placeholder="Add your quantity" type="number"/>
+            <el-input v-model="addQuantity" placeholder="Add your quantity"/>
           </div>
 
           <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="handleSubmitInventory">
+        <el-button type="primary"  @click="handleSubmit">
         Add
         </el-button>
       </span>
@@ -79,7 +71,7 @@
     </div>
 
     <!-- <el-card class="box-card" v-if="isMounted"> -->
-    <div class="el-table-wrapper" v-if="isMounted" v-loading="loading">
+    <div class="el-table-wrapper" v-if="isMounted">
       <h3 class="text-center mb-3 font-weight-bold">{{ bill_item.name }} ({{ bill_item.sku }})</h3>
       <div class="table-body" style="max-height: 75vh;">
         <el-table :data="register_rows" style="width: 100%">
@@ -94,8 +86,8 @@
             <el-table-column prop="opening_date_quantity" label="Quantity" width="100%"/>
             <el-table-column prop="opening_date_total" label="Value"/>
           </el-table-column>
-          <el-table-column label="Purchase">
-            <!-- <el-table-column prop="bill_item_rate" label="Rate" /> -->
+<!--          <el-table-column label="Purchase">
+            &lt;!&ndash; <el-table-column prop="bill_item_rate" label="Rate" /> &ndash;&gt;
             <el-table-column prop="bill_item_rate" label="Rate">
               <template #default="scope">
                 {{ formattedData(scope.row.bill_item_rate) }}
@@ -103,7 +95,7 @@
             </el-table-column>
             <el-table-column prop="bill_item_quantity" label="Quantity"/>
             <el-table-column prop="bill_item_total" label="Value"/>
-          </el-table-column>
+          </el-table-column>-->
           <el-table-column label="Sale">
             <!-- <el-table-column prop="sale_item_rate" label="Rate" width="100%" /> -->
             <el-table-column prop="sale_item_rate" label="Rate">
@@ -158,8 +150,6 @@
 </template>
 
 <script>
-import {ElMessage} from "element-plus";
-
 export default {
   name: 'RegisterShow',
   data() {
@@ -184,26 +174,20 @@ export default {
       isMounted    : false,
       year         : null,
       dialogVisible: false,
-      loading      : false,
       addValue     : '',
-      addQuantity  : '',
-      addDate:''
+      addQuantity  : ''
     };
   },
   async created() {
     this.register.id = this.$route.params.id;
     await this.getList();
     this.isMounted = true;
-
-
   },
-
   methods: {
     downloadPdf() {
       window.location.href = `/registers/download-pdf/` + this.register.id;
     },
     async getList() {
-
       let params = {
         year: this.query.year,
         slug: this.$route.params.slug
@@ -215,9 +199,7 @@ export default {
         this.register_rows  = res.data.mergedItems;
         this.bill_item      = res.data.bill_item;
         console.log('res:', res.data, this.bill_item);
-
       });
-
     },
     handleYearFilter() {
       this.query.year = new Date(this.year).getFullYear();
@@ -246,7 +228,7 @@ export default {
             type             : 'warning',
           }
       ).then(() => {
-        axios.post(`/api/registers/undo`, {sku: this.$route.params.slug}).then((res) => {
+        axios.post(`/api/registers/undo`, {sku: this.bill_item.sku}).then((res) => {
           console.log('res:', res, this.$router);
           this.$router.push('/registers');
           ElMessage({
@@ -274,28 +256,15 @@ export default {
       window.location.href = `/api/register/${id}/export-balance-sheet/${format}`;
     },
 
-    handleSubmitInventory() {
-      axios.post(`/api/register/opening/inventory?slug=`+this.$route.params.slug, {
+    handleSubmit() {
+      const anyValue=[
+        {
+          a:'',
+          b:''
+        }
+      ]
 
-        sku:this.bill_item.sku,
-        value:this.addValue,
-        quantity:this.addQuantity,
-        date:this.addDate
-
-      }).then((res) => {
-       this.dialogVisible=false
-        ElMessage({
-          type   : 'success',
-          message: ' Successful',
-        })
-        window.location.reload();
-
-
-      });
     }
-
-
-
 
   },
 };

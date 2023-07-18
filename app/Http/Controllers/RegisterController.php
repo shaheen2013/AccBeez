@@ -398,7 +398,7 @@ class RegisterController extends Controller
         $sale_item_avg_rate = 0;
         $sale_item_sum_quantity = 0;
         $sale_item_sum_total = 0;
-        // dump($mergedArray);
+        dump($mergedArray);
 
 
         foreach ($mergedArray as $index => &$item) {
@@ -428,6 +428,8 @@ class RegisterController extends Controller
                 $item['closing_date_rate'] = $closingRate;
                 $item['closing_date_quantity'] = $closingQuantity;
                 $item['closing_date_total'] = $closingTotal;
+
+                
             }
             elseif ( isset($item['bill_item_quantity']) ) {
                 $billQuantity = (float) $item['bill_item_quantity'];
