@@ -18,19 +18,28 @@
                     <table class="table table-borderless">
                         <thead>
                             <tr>
-                                <th :style="operation === 'view' ? { 'width': '40%' } : { 'width': '30%' }">
-                                    <span class="required-indicator" v-if="operation !== 'view'">*</span>
-                                    <span>SKU</span>
+                                <th :style="operation === 'view' ? { 'width': '40%' } : { 'width': '10%' }">
+                                    <span>BOM SKU</span>
                                 </th>
-                                <th width="20%">
+                                <th :style="operation === 'view' ? { 'width': '10%' } : { 'width': '10%' }">
+                                    <span class="required-indicator" v-if="operation !== 'view'">*</span>
+                                    <span>RM SKU</span>
+                                </th>
+                                <th :style="operation === 'view' ? { 'width': '40%' } : { 'width': '10%' }">
+                                    <span>Name</span>
+                                </th>
+                                <th width="15%">
                                     <span class="required-indicator" v-if="operation !== 'view'">*</span>
                                     <span>Rate</span>
                                 </th>
-                                <th width="20%">
+                                <th :style="operation === 'view' ? { 'width': '40%' } : { 'width': '10%' }">
+                                    <span>Unit</span>
+                                </th>
+                                <th width="15%">
                                     <span class="required-indicator" v-if="operation !== 'view'">*</span>
                                     <span>Quantity</span>
                                 </th>
-                                <th width="20%">
+                                <th width="15%">
                                     <span class="required-indicator" v-if="operation !== 'view'">*</span>
                                     <span>Item Total</span>
                                 </th>
@@ -111,9 +120,12 @@ export default {
             routeName: '',
             operation: 'create',
             singleItem: {
+                'name': '',
+                'rm_sku': null,
                 'sku': null,
                 'quantity': 0,
                 'rate': 0,
+                'unit': 0,
                 'total': 0,
             },
             bom : {
@@ -123,6 +135,7 @@ export default {
                 subTotal: '',
                 estimatedProfit: 0,
                 items: [{
+                    'bom_item_sku': '',
                     'sku': null,
                     'quantity': 0,
                     'rate': 0,
@@ -261,4 +274,4 @@ export default {
         color: red;
         margin-right: 3px;
     }
-</style>>
+</style>

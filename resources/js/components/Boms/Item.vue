@@ -1,12 +1,16 @@
 <template>
     <tr>
         <td>
+            <el-input v-model="item.bom_item_sku" type="text" placeholder="BOM SKU" :disabled="operation === 'view'"
+                        @keyup="calculateTotal" />
+        </td>
+        <td>
             <!-- <el-input v-model="item.sku" type="text" placeholder="SKU" :disabled="operation === 'view'" /> -->
             <el-autocomplete
                 v-model="item.sku"
                 :fetch-suggestions="querySearch"
                 popper-class="my-autocomplete"
-                placeholder="SKU"
+                placeholder="RM SKU"
                 @select="handleSelect"
                 style="width:100%"
                 :disabled="operation === 'view'"
@@ -17,7 +21,15 @@
             </el-autocomplete>
         </td>
         <td>
+            <el-input v-model="item.name" type="text" placeholder="Name" :disabled="operation === 'view'"
+                        @keyup="calculateTotal" />
+        </td>
+        <td>
             <el-input v-model="formattedRate" type="number" placeholder="Rate" :disabled="operation === 'view'"
+                        @keyup="calculateTotal" />
+        </td>
+        <td>
+            <el-input v-model="item.unit" type="text" placeholder="Unit" :disabled="operation === 'view'"
                         @keyup="calculateTotal" />
         </td>
         <td>
