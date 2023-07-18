@@ -1,6 +1,6 @@
 <template>
   <div style="padding:20px;">
-    <h1>FC Register List </h1>
+    <h1>FG Register List </h1>
 
     <div class="filter-container">
       <el-input

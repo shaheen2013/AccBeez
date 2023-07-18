@@ -398,7 +398,7 @@ class RegisterController extends Controller
         $sale_item_avg_rate = 0;
         $sale_item_sum_quantity = 0;
         $sale_item_sum_total = 0;
-        dump($mergedArray);
+        // dump($mergedArray);
 
 
         foreach ($mergedArray as $index => &$item) {
