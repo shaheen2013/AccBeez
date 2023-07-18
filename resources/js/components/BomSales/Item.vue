@@ -20,24 +20,23 @@
             <el-input v-model="item.name" type="text" placeholder="Name" :disabled="operation === 'view'"/>
         </td> -->
         <td>
-            <el-input-number v-model="item.rate" type="text" placeholder="Rate" :disabled="operation === 'view'"
+            <el-input-number v-model="formattedRate" type="text" placeholder="Rate" :disabled="operation === 'view'"
                         :className="text-start"
                         :controls="false"
-                        :precision="2"
-                        @blur="calculateTotal" />
+                        :step="0.01"
+                        @keyup="calculateTotal" />
         </td>
         <td>
             <el-input v-model="item.unit" type="text" placeholder="Unit" :disabled="operation === 'view'"/>
         </td>
         <td>
             <el-input v-model="item.quantity" type="number" placeholder="Quantity" :disabled="operation === 'view'"
-                        @blur="calculateTotal" />
+                        @keyup="calculateTotal" step="0.01"/>
         </td>
         <td>
-            <el-input-number v-model="item.total" type="text" placeholder="Total" disabled
+            <el-input-number v-model="formattedTotal" type="number" placeholder="Total" disabled
                         :className="text-start"
-                        :controls="false"
-                        :precision="2" />
+                        :controls="false" />
         </td>
         <td v-if="operation !== 'view'">
             <el-button type="danger" @click="getDeletedItemsId(index, item.id)" style="width:100%; padding-right:0;">
@@ -60,7 +59,20 @@ export default {
         };
     },
     mounted() {
-        this.item.total = this.item.total.toFixed(2);
+        this.item.total = this.item.total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 });
+    },
+    computed: {
+        formattedRate: {
+            get() {
+                return this.item.rate.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 4}); // Apply precision formatting when retrieving the value
+            },
+            set(value) {
+                this.item.rate = Number(value); // Convert the input value back to a number
+            },
+        },
+        formattedTotal() {
+            return this.item.total.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 4}); // Apply precision formatting
+        }
     },
     created() {  },
     methods: {

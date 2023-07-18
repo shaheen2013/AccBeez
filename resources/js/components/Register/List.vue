@@ -55,7 +55,7 @@
     <el-table :data="registers" class="small-font-table" v-loading="this.loading">
       <el-table-column fixed prop="name" label="Name"/>
       <el-table-column fixed prop="sku" label="SKU"/>
-      <template v-for="month in months" >
+      <template v-for="(month, index) in months" :key="index">
         <el-table-column :label="original_months[month.split('-')[1] - 1]+'-'+month.split('-')[0]">
 
 
@@ -189,8 +189,8 @@ export default {
     formattedAverage(value) {
       if (value !== null) {
         return [
-          value.total_cost.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}),
-          value.total_items.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}),
+          value.total_cost.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 4}),
+          value.total_items.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 4}),
         ]
 
         // return value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });

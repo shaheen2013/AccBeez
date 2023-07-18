@@ -50,6 +50,7 @@ class BomSaleController extends Controller
             // dd('store', $request->all(), $bomSaleData);
             foreach($request->items as $item){
                 $bomItems = BomItem::where('bom_id', $item['id'])->get()->toArray();
+                
                 // Create sale
                 $sale = Sale::create([
                     'description' => 'Salling from Production',
@@ -75,7 +76,7 @@ class BomSaleController extends Controller
                 $item['bom_sale_id'] = $bomSale->id;
                 $item['company_id'] = $company_id;
                 $data = BomSaleItem::create($item);
-                $this->bomSales($data->toArray(),$item['quantity'],$bomSale);
+                // $this->bomSales($data->toArray(),$item['quantity'],$bomSale);
                 // $this->salesEntry($item);
             }
             DB::commit();

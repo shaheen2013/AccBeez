@@ -44,7 +44,7 @@ class BomController extends Controller
             foreach($request->items as $item){
                 $item['bom_id'] = $bom->id;
                 $item['company_id'] = $company_id;
-                BomItem::create($item);
+                $bomItem = BomItem::create($item);
             }
             DB::commit();
             return $bom;

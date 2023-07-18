@@ -309,7 +309,7 @@ export default {
     computed: {
         formattedInvoiceTotal() {
             return (val) => {
-                return val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                return val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 });
             };
         },
     }

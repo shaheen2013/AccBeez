@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->double('rate')->default(0);
             $table->string('unit')->nullable();
-            $table->integer('quantity')->default(0);
+            $table->float('quantity')->default(0.0000);
             $table->double('total')->default(0);
             $table->unsignedBigInteger('client_id')->nullable();
             $table->integer('company_id');

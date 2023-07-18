@@ -21,16 +21,24 @@
             </el-autocomplete>
         </td>
         <td>
-            <el-input v-model="item.name" type="text" placeholder="Name" :disabled="operation === 'view'"
-                        @keyup="calculateTotal" />
+            <el-input 
+                v-model="item.name" 
+                type="text" 
+                placeholder="Name" 
+                :disabled="operation === 'view'" 
+            />
         </td>
         <td>
             <el-input v-model="formattedRate" type="number" placeholder="Rate" :disabled="operation === 'view'"
                         @keyup="calculateTotal" />
         </td>
         <td>
-            <el-input v-model="item.unit" type="text" placeholder="Unit" :disabled="operation === 'view'"
-                        @keyup="calculateTotal" />
+            <el-input 
+                v-model="item.unit" 
+                type="text" 
+                placeholder="Unit" 
+                :disabled="operation === 'view'"
+            />
         </td>
         <td>
             <el-input v-model="item.quantity" type="number" placeholder="Quantity" :disabled="operation === 'view'"
@@ -117,14 +125,14 @@ export default {
     computed: {
         formattedRate: {
             get() {
-                return this.item.rate.toFixed(2); // Apply precision formatting when retrieving the value
+                return this.item.rate.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 4}); // Apply precision formatting when retrieving the value
             },
             set(value) {
                 this.item.rate = Number(value); // Convert the input value back to a number
             },
         },
         formattedTotal() {
-            return this.item.total.toFixed(2); // Apply precision formatting
+            return this.item.total.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 4}); // Apply precision formatting
         },
     }
 };

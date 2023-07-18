@@ -60,7 +60,7 @@ class RegisterController extends Controller
                 'bill_items.id as bill_item_id',
                 DB::raw('SUM(bill_items.quantity) - IFNULL(sale_items.total_quantity, 0) as total_items'),
                 DB::raw('SUM(bill_items.total) - IFNULL(sale_items.total_cost, 0) as total_cost'),
-                DB::raw('ROUND(SUM(bill_items.total) / SUM(bill_items.quantity), 2) as avg_cost'),
+                DB::raw('SUM(bill_items.total) / SUM(bill_items.quantity) as avg_cost'),
                 DB::raw('YEAR(bills.date) as year'),
                 DB::raw("DATE_FORMAT(bills.date, '%Y-%m') as month")
             )

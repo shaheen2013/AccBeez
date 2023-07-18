@@ -121,11 +121,11 @@ export default {
             operation: 'create',
             singleItem: {
                 'name': '',
-                'rm_sku': null,
+                'bom_item_sku': null,
                 'sku': null,
                 'quantity': 0,
                 'rate': 0,
-                'unit': 0,
+                'unit': '',
                 'total': 0,
             },
             bom : {
@@ -135,9 +135,11 @@ export default {
                 subTotal: '',
                 estimatedProfit: 0,
                 items: [{
+                    'name': '',
                     'bom_item_sku': '',
                     'sku': null,
                     'quantity': 0,
+                    'unit': '',
                     'rate': 0,
                     'total': 0,
                 }]

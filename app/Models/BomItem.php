@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class BomItem extends Model
 {
     use HasFactory;
-    protected $guarded = ['bom_id', 'quantity', 'rate', 'total', 'sku', 'company_id'];
+    protected $guarded = [];
     public function bom(){
         return $this->belongsTo(Bom::class);
     }

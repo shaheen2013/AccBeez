@@ -87,7 +87,7 @@ export default {
             window.location.href = `/boms/download-pdf/`+this.bom.id;
         },
         formatCurrency(value) {
-            return parseFloat(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            return parseFloat(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 });
         },
         exportBomXLS(){
             let format = 'xls';
