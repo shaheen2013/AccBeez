@@ -120,6 +120,7 @@ export default {
                 invoice_number: 0,
                 date: '',
                 items: [{
+                    id: null,
                     name: null,
                     rate: 0,
                     unit: '',

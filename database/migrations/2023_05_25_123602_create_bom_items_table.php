@@ -16,6 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('bom_id');
             $table->text('bom_item_sku')->nullable();
             $table->text('sku');
+            $table->string('name')->nullable();
+            $table->string('unit')->nullable();
             $table->integer('quantity')->default(0);
             $table->double('rate')->default(0);
             $table->double('total')->default(0);

@@ -1,6 +1,8 @@
 <template>
     <tr>
         <td>
+            <el-input v-model="item.id" type="hidden" placeholder="ID" :disabled="operation === 'view'"
+                        @blur="calculateTotal" />
             <el-autocomplete
                 v-model="item.name"
                 :fetch-suggestions="querySearch"
@@ -114,6 +116,7 @@ export default {
             } else {
                 this.item.name = bom.name;
                 this.item.rate = bom.invoice_total;
+                this.item.id = bom.id;
             }
             this.calculateTotal();
         },

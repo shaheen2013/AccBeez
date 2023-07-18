@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\BomSaleRequest;
 use App\Models\Bom;
+use App\Models\BomItem;
 use App\Models\BomSale;
 use App\Models\BomSaleItem;
 use App\Models\Sale;
 use App\Models\SaleItem;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -47,6 +49,29 @@ class BomSaleController extends Controller
             $bomSale->save();
             // dd('store', $request->all(), $bomSaleData);
             foreach($request->items as $item){
+                $bomItems = BomItem::where('bom_id', $item['id'])->get()->toArray();
+                // Create sale
+                $sale = Sale::create([
+                    'description' => 'Salling from Production',
+                    'date' => $bomSaleData['date'],
+                    'invoice_total' => $bomSaleData['invoice_total'],
+                    'company_id' => $company_id
+                ]);
+                foreach ($bomItems as $key => $bomItem) {
+                    // Create sale item
+                    $saleStorableData = [
+                        'company_id' => $company_id,
+                        'sale_id' => $sale->id,
+                        'sku' => $bomItem['sku'],
+                        'rate' => $bomItem['rate'],
+                        'quantity' => $bomItem['quantity'] * $item['quantity'],
+                        'total' => $bomItem['rate'] * ($bomItem['quantity'] * $item['quantity'])
+                    ];
+                    SaleItem::create($saleStorableData);
+                }
+
+
+
                 $item['bom_sale_id'] = $bomSale->id;
                 $item['company_id'] = $company_id;
                 $data = BomSaleItem::create($item);
