@@ -64,27 +64,31 @@
                 BOM
               </el-menu-item>
             </router-link>
-            <router-link
-                :to="'/users'"
-                style="text-decoration: none"
-                :style="[
-                $route.path === '/users'
-                  ? { color: 'royalblue' }
-                  : { color: 'black' },
-              ]"
-                v-if="user?.role === 'Super-Admin' || user?.role === 'Admin'"
-            >
-              <el-menu-item index="4">
+
+            <router-link :to="'/' + $route.params.slug + '/bomSales'" style="text-decoration: none;"
+                         :style="[$route.path === '/bomSales' ? {color: 'royalblue'} : {color: 'black'}]">
+              <el-menu-item index="6">
                 <!-- <el-icon><icon-menu /></el-icon> -->
-                <el-icon
-                    :size="20"
-                    style="width: 1em; height: 1em; margin-right: 8px"
-                >
-                  <User/>
+                <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px">
+                  <CreditCard/>
                 </el-icon>
-                Users
+
+                Production
               </el-menu-item>
             </router-link>
+
+
+            <router-link :to="'/' + $route.params.slug + '/fc-register'" style="text-decoration: none;"
+                         :style="[$route.path === '/fc-register' ? {color: 'royalblue'} : {color: 'black'}]">
+              <el-menu-item index="7">
+                <!-- <el-icon><icon-menu /></el-icon> -->
+                <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px">
+                  <CreditCard/>
+                </el-icon>
+                FG Register
+              </el-menu-item>
+            </router-link>
+ 
 
             <!-- <router-link to="/assign-users" style="text-decoration: none;"
                          :style="[$route.path === '/assign-users' ? {color: 'royalblue'} : {color: 'black'}]">
@@ -106,27 +110,7 @@
                 Sales
               </el-menu-item>
             </router-link>
-            <router-link :to="'/' + $route.params.slug + '/bomSales'" style="text-decoration: none;"
-                         :style="[$route.path === '/bomSales' ? {color: 'royalblue'} : {color: 'black'}]">
-              <el-menu-item index="6">
-                <!-- <el-icon><icon-menu /></el-icon> -->
-                <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px">
-                  <CreditCard/>
-                </el-icon>
-
-                Production
-              </el-menu-item>
-            </router-link>
-            <router-link :to="'/' + $route.params.slug + '/fc-register'" style="text-decoration: none;"
-                         :style="[$route.path === '/fc-register' ? {color: 'royalblue'} : {color: 'black'}]">
-              <el-menu-item index="7">
-                <!-- <el-icon><icon-menu /></el-icon> -->
-                <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px">
-                  <CreditCard/>
-                </el-icon>
-                FC Register
-              </el-menu-item>
-            </router-link><router-link :to="'/' + $route.params.slug + '/cogs'" style="text-decoration: none;"
+          <router-link :to="'/' + $route.params.slug + '/cogs'" style="text-decoration: none;"
                          :style="[$route.path === '/cogs' ? {color: 'royalblue'} : {color: 'black'}]">
               <el-menu-item index="8">
                 <!-- <el-icon><icon-menu /></el-icon> -->
@@ -154,6 +138,28 @@
                     Xl Table
                 </el-menu-item>
             </router-link> -->
+
+            <router-link
+                :to="'/users'"
+                style="text-decoration: none"
+                :style="[
+                $route.path === '/users'
+                  ? { color: 'royalblue' }
+                  : { color: 'black' },
+              ]"
+                v-if="user?.role === 'Super-Admin' || user?.role === 'Admin'"
+            >
+              <el-menu-item index="4">
+                <!-- <el-icon><icon-menu /></el-icon> -->
+                <el-icon
+                    :size="20"
+                    style="width: 1em; height: 1em; margin-right: 8px"
+                >
+                  <User/>
+                </el-icon>
+                Users
+              </el-menu-item>
+            </router-link>
           </el-menu>
         </el-scrollbar>
       </el-aside>
