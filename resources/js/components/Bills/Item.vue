@@ -44,13 +44,7 @@
                 @keyup="calculateTotal" />
         </td>
         <td>
-            <el-input-number 
-                v-model="formattedTotal" 
-                type="text" 
-                placeholder="Total" 
-                disabled
-                :className="text-start"
-                :controls="false" />
+            <el-input v-model="formattedTotal" type="text" placeholder="Total" disabled style="color: #000000" />
         </td>
         <td v-if="operation !== 'view'">
             <el-button type="danger" @click="getDeletedItemsId(index, item.id)" style="width:100%; padding-right:0;">
@@ -73,10 +67,6 @@ export default {
             isNewItem: false,
         };
     },
-    mounted() {
-        this.item.total = this.item.total.toFixed(2);
-    },
-    created() {  },
     methods: {
         skuChangeHandler() {
             console.log('skuChangeHandler');
@@ -168,7 +158,7 @@ export default {
             },
         },
         formattedTotal() {
-            return this.item.total.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 4}); // Apply precision formatting
+            return this.item.total ? this.item.total.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 4}) : '0.00'; // Apply precision formatting
         },
     }
 };
