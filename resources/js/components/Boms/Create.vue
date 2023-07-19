@@ -190,7 +190,7 @@ export default {
         id: null,
         invoice_total: 0,
         name: "",
-        subTotal: "",
+        sub_total: "",
         estimatedProfit: 0,
         items: [
           {
@@ -250,7 +250,7 @@ export default {
       //console.log(this.bom.estimatedProfit)
     },
     changeInvoiceTotal(val) {
-      this.bom.subTotal = val;
+      this.bom.sub_total = val;
       //console.log("totalss val", val)
       //this.bom.invoice_total = val;
     },
@@ -313,9 +313,9 @@ export default {
   computed: {
     formattedTotal() {
       this.bom.invoice_total =
-        this.bom.subTotal +
-        (this.bom.estimatedProfit * this.bom.subTotal) / 100;
-        const estimatedTotal = this.bom.subTotal + (this.bom.estimatedProfit * this.bom.subTotal) / 100;
+        this.bom.sub_total +
+        (this.bom.estimatedProfit * this.bom.sub_total) / 100;
+        const estimatedTotal = this.bom.sub_total + (this.bom.estimatedProfit * this.bom.sub_total) / 100;
       return estimatedTotal.toLocaleString('en-US',{minimumFractionDigits: 2, maximumFractionDigits: 4});
       //const invoiceTotal =
       //return  invoiceTotal; // Apply precision formatting
