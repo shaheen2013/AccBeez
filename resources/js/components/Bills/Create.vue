@@ -148,7 +148,7 @@
       <el-form-item label="Invoice Total">
         <el-input
           v-model="formattedTotal"
-          type="number"
+          type="text"
           placeholder="Invoice Total"
           disabled
         />

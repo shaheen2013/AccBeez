@@ -25,8 +25,7 @@
         <td>
             <!-- <el-input v-model="formattedRate" type="number" placeholder="Rate" :disabled="operation === 'view'"
                         @blur="calculateTotal" /> -->
-            <el-input-number v-model="item.rate" type="text" placeholder="Rate" :disabled="operation === 'view'"
-                        :className="text-start"
+            <el-input v-model="formattedRate" type="number" placeholder="Rate" :disabled="operation === 'view'"
                         :controls="false"
                         :step="0.01"
                         @keyup="calculateTotal" />
