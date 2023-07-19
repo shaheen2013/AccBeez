@@ -139,7 +139,7 @@
                 </el-menu-item>
             </router-link> -->
 
-            <router-link
+            <!-- <router-link
                 :to="'/users'"
                 style="text-decoration: none"
                 :style="[
@@ -150,7 +150,6 @@
                 v-if="user?.role === 'Super-Admin' || user?.role === 'Admin'"
             >
               <el-menu-item index="4">
-                <!-- <el-icon><icon-menu /></el-icon> -->
                 <el-icon
                     :size="20"
                     style="width: 1em; height: 1em; margin-right: 8px"
@@ -159,7 +158,7 @@
                 </el-icon>
                 Users
               </el-menu-item>
-            </router-link>
+            </router-link> -->
           </el-menu>
         </el-scrollbar>
       </el-aside>
