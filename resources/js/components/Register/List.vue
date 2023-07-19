@@ -62,7 +62,7 @@
           <template #default="scope" >
             <div class="d-flex  justify-content-center  ">
             <div class=" pe-2  ps-2 border-end fw-bold fs-6 text-success text-nowrap">
-              {{ getqty(scope.row[`month-${month}`]) }}
+              {{ getqty(scope.row[`month-${month}`]) }} {{ getUnit(scope.row[`month-${month}`]) }}
             </div>
             <div class="ps-2 pe-2 fw-bold fs-6 text-nowrap">
 
@@ -209,6 +209,9 @@ export default {
       if (qty) {
         return qty[0];
       }
+    },
+    getUnit(value) {
+      return !value.unit ? '' : value.unit
     },
 
 

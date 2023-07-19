@@ -44,7 +44,6 @@ class RegisterController extends Controller
                             ->unique()
                             ->toArray();
                             
-
         $subquery = DB::table('sale_items')
         ->select('sku', DB::raw('SUM(quantity) as total_quantity'), DB::raw('SUM(total) as total_cost'))
         ->groupBy('sku')
@@ -58,6 +57,7 @@ class RegisterController extends Controller
                 'bill_items.name',
                 'bill_items.sku',
                 'bill_items.id as bill_item_id',
+                'bill_items.unit',
                 DB::raw('SUM(bill_items.quantity) - IFNULL(sale_items.total_quantity, 0) as total_items'),
                 DB::raw('SUM(bill_items.total) - IFNULL(sale_items.total_cost, 0) as total_cost'),
                 DB::raw('SUM(bill_items.total) / SUM(bill_items.quantity) as avg_cost'),
@@ -77,12 +77,12 @@ class RegisterController extends Controller
             ->orderBy('month')
             ->get();
         // $registers = $registerQuery->paginate($limit);
-
          $grouped = $registers->mapToGroups(function ($item) {
             return [$item->sku => [
                 "bill_item_id" => $item->bill_item_id,
                 "name" => $item->name,
                 "sku" => $item->sku,
+                'unit' => $item->unit,
                 "total_items" => $item->total_items,
                 "total_cost" => $item->total_cost,
                 "avg_cost" => $item->avg_cost,
@@ -91,7 +91,6 @@ class RegisterController extends Controller
             ]];
         });
         // dd($registers->toArray());
-
 
          $simpleList = $grouped->map(function ($items) use ($distinctMonths) {
             $groupedItemsByMonth = $items->keyBy('month');
@@ -105,7 +104,8 @@ class RegisterController extends Controller
                     $outputItem['month-'.$month] = $groupedItemsByMonth[$month]['avg_cost'];
                     $outputItem['month-'.$month] = [
                         "total_items" => $groupedItemsByMonth[$month]['total_items'],
-                        "total_cost" => $groupedItemsByMonth[$month]['total_cost']
+                        "total_cost" => $groupedItemsByMonth[$month]['total_cost'],
+                        "unit" => $groupedItemsByMonth[$month]['unit']
                     ];
                 } else {
                     $outputItem['month-'.$month] = null;
