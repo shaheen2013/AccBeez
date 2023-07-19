@@ -19,7 +19,8 @@
                         <thead>
                             <tr>
                                 <th :style="operation === 'view' ? { 'width': '40%' } : { 'width': '10%' }">
-                                    <span>BOM SKU</span>
+                                    <span class="required-indicator" v-if="operation !== 'view'">*</span>
+                                    <span>SKU</span>
                                 </th>
                                 <th :style="operation === 'view' ? { 'width': '10%' } : { 'width': '10%' }">
                                     <span class="required-indicator" v-if="operation !== 'view'">*</span>
