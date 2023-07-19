@@ -37,6 +37,7 @@
       <el-input
         v-model="formattedRate"
         type="number"
+        :step="0.01"
         placeholder="Rate"
         :disabled="operation === 'view'"
         @keyup="calculateTotal"
@@ -54,6 +55,7 @@
       <el-input
         v-model="item.quantity"
         type="number"
+        :step="0.01"
         placeholder="Quantity"
         :disabled="operation === 'view'"
         @keyup="calculateTotal"
@@ -147,6 +149,7 @@ export default {
       } else {
         this.item.sku = product.sku;
         this.item.rate = product.rate;
+        this.item.name = product.name;
       }
     },
     itemExist(product) {
