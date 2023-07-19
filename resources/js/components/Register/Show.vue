@@ -126,10 +126,15 @@
           </el-table-column>
           <!-- <el-table-column  label="Invoice Number">
           </el-table-column> -->
+          <el-table-column prop="unit" label="Unit">
+              <template #default="scope">
+                  <h5>{{ scope.row.unit }}</h5>
+              </template>
+          </el-table-column>
           <el-table-column label="Invoice Number" width="150">
             <template v-slot="{ row }">
               <div v-if="row && row.invoices">
-                <div v-for="invoice in row.invoices.split(',')">
+                <div v-for="(invoice, index) in row.invoices.split(',')" :key="index">
                   <a href="#" class="router-link-styling" @click="handleInvoiceClick(invoice)">
                     {{ invoice }}
                   </a>

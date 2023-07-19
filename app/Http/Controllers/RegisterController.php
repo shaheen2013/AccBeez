@@ -251,7 +251,7 @@ class RegisterController extends Controller
         // Find unique dates in BillItem
         $billItemDates = Bill::leftJoin('bill_items', 'bills.id', '=', 'bill_items.bill_id')
                                 ->groupBy('date')
-                                ->select('bills.date', 'bill_items.sku', DB::raw("'billItem' as model"),
+                                ->select('bills.date', 'bill_items.sku', DB::raw("'billItem' as model"), 'bill_items.unit',
                                         DB::raw('SUM(quantity) as bill_item_quantity'),
                                         DB::raw('SUM(total) as bill_item_total'),
                                         DB::raw('SUM(total) / SUM(quantity) as bill_item_rate'),
@@ -268,7 +268,7 @@ class RegisterController extends Controller
                                 ->toArray();
         $saleItemDates = Sale::leftJoin('sale_items', 'sales.id', '=', 'sale_items.sale_id')
                                 ->groupBy('date')
-                                ->select('sales.date', 'sale_items.sku', DB::raw("'saleItem' as model"),
+                                ->select('sales.date', 'sale_items.sku', DB::raw("'saleItem' as model"), 'sale_items.unit',
                                         DB::raw('SUM(quantity) as sale_item_quantity'),
                                         DB::raw('SUM(total) as sale_item_total'),
                                         DB::raw('SUM(total) / SUM(quantity) as sale_item_rate'),
