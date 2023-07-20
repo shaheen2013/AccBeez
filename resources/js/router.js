@@ -168,7 +168,7 @@ const routes = [
                 name: 'CogsList',
                 component: CogsList
             }, {
-                path: '/:slug/companies',
+                path: '/companies',
                 name: 'CogsList',
                 component: CompaniesShow
             },{

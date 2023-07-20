@@ -55,6 +55,12 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="" onclick="event.preventDefault(); window.location.replace('/users');">
+                                        {{ __('Users') }}
+                                    </a>
+                                    <a class="dropdown-item" href="" onclick="event.preventDefault(); window.location.assign('/companies'); ">
+                                        {{ __('Companies') }}
+                                    </a>
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
