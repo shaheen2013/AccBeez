@@ -246,8 +246,7 @@ class RegisterController extends Controller
         $bill_item = BillItem::with('closingDates')->find($id);
         $closingDates = $bill_item->closingDates;
         $sku = $bill_item->sku;
-        // TODO company_id needs to be implement later
-        // $company_id = getCompanyIdBySlug($request->slug);
+        $company_id = getCompanyIdBySlug($request->slug);
         // Find unique dates in BillItem
         $billItemDates = Bill::leftJoin('bill_items', 'bills.id', '=', 'bill_items.bill_id')
                                 ->groupBy('date')
@@ -258,6 +257,7 @@ class RegisterController extends Controller
                                         DB::raw('0 as bill_item_avg_rate'),
                                         DB::raw("GROUP_CONCAT(bills.invoice_number SEPARATOR ',') as `invoices`")
                                 )
+                                ->where('bill_items.company_id', $company_id)
                                 ->where('sku', $sku)
                                 ->when(!empty($year), function ($query) use ($year) {
                                     return $query->whereRaw('YEAR(bills.date) = ?', [$year]);
