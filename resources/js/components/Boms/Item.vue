@@ -39,7 +39,7 @@
         type="number"
         :step="0.01"
         placeholder="Rate"
-        :disabled="operation === 'view'"
+        disabled
         @keyup="calculateTotal"
       />
     </td>

@@ -274,6 +274,7 @@ class RegisterController extends Controller
                                         DB::raw('SUM(total) / SUM(quantity) as sale_item_rate'),
                                         DB::raw('0 as sale_item_avg_rate'),
                                 )
+                                ->where('sale_items.company_id', $company_id)
                                 ->where('sku', $sku)
                                 ->when(!empty($year), function ($query) use ($year) {
                                     return $query->whereRaw('YEAR(sales.date) = ?', [$year]);
