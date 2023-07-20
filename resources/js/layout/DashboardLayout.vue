@@ -120,16 +120,16 @@
                 Cogs
               </el-menu-item>
             </router-link>
-            <router-link :to="'/' + $route.params.slug + '/companies'" style="text-decoration: none;"
+            <!-- <router-link :to="'/' + $route.params.slug + '/companies'" style="text-decoration: none;"
                          :style="[$route.path === '/companies' ? {color: 'royalblue'} : {color: 'black'}]">
               <el-menu-item index="9">
-                <!-- <el-icon><icon-menu /></el-icon> -->
+                
                 <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px">
                   <CreditCard/>
                 </el-icon>
                 Companies
               </el-menu-item>
-            </router-link>
+            </router-link> -->
             <!-- <router-link to="/exl-table" style="text-decoration: none;"
                          :style="[$route.path === '/exl-table' ? {color: 'royalblue'} : {color: 'black'}]">
                 <el-menu-item index="5">
