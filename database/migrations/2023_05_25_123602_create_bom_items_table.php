@@ -18,9 +18,9 @@ return new class extends Migration
             $table->text('sku');
             $table->string('name')->nullable();
             $table->string('unit')->nullable();
-            $table->float('quantity')->default(0.0000);
-            $table->double('rate')->default(0);
-            $table->double('total')->default(0);
+            $table->float('quantity', 8, 4)->default(0.0000);
+            $table->float('rate', 8, 4)->default(0.0000);
+            $table->float('total', 8, 4)->default(0.0000);
             $table->integer('company_id');
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
