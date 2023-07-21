@@ -26,7 +26,7 @@ import DashboardLayout from './layout/DashboardLayout.vue'
 import FcRegister from './components/FcRegister/Show.vue'
 import FcRegisterList from './components/FcRegister/List.vue'
 import FcRegisterShow from './components/FcRegister/Show.vue'
-import getLogedInUser from "./helper";
+import helper from "./helper";
 
 import { useAuthUserStore } from "@/stores/AuthUser";
 
@@ -202,7 +202,7 @@ router.beforeEach((to, from) => {
     loggedUser.loggedUser();
 
 
-    const user = getLogedInUser();
+    const user = helper.getLogedInUser();
     console.log('user:', user);
     console.log('to:', to);
     if (to.meta.requiresAuth) {
