@@ -66,6 +66,7 @@ class BomSaleController extends Controller
                         'sku' => $bomItem['sku'],
                         'rate' => $bomItem['rate'],
                         'quantity' => $bomItem['quantity'] * $item['quantity'],
+                        'unit' => $bomItem['unit'],
                         'total' => $bomItem['rate'] * ($bomItem['quantity'] * $item['quantity'])
                     ];
                     SaleItem::create($saleStorableData);
