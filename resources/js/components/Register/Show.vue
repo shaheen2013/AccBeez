@@ -91,8 +91,16 @@
                 {{ formattedData(scope.row.opening_date_rate) }}
               </template>
             </el-table-column>
-            <el-table-column prop="opening_date_quantity" label="Quantity" width="100%"/>
-            <el-table-column prop="opening_date_total" label="Value"/>
+            <el-table-column prop="opening_date_quantity" label="Quantity" width="100%">
+              <template #default="scope">
+                {{ formattedData(scope.row.opening_date_quantity) }}
+              </template>
+            </el-table-column>
+            <el-table-column prop="opening_date_total" label="Value">
+              <template #default="scope">
+                {{ formattedData(scope.row.opening_date_total) }}
+              </template>
+            </el-table-column>
           </el-table-column>
           <el-table-column label="Purchase">
             <!-- <el-table-column prop="bill_item_rate" label="Rate" /> -->
@@ -101,8 +109,16 @@
                 {{ formattedData(scope.row.bill_item_rate) }}
               </template>
             </el-table-column>
-            <el-table-column prop="bill_item_quantity" label="Quantity"/>
-            <el-table-column prop="bill_item_total" label="Value"/>
+            <el-table-column prop="bill_item_quantity" label="Quantity">
+              <template #default="scope">
+                {{ formattedData(scope.row.bill_item_quantity) }}
+              </template>
+            </el-table-column>
+            <el-table-column prop="bill_item_total" label="Value">
+              <template #default="scope">
+                {{ formattedData(scope.row.bill_item_total) }}
+              </template>
+            </el-table-column>
           </el-table-column>
           <el-table-column label="Sale">
             <!-- <el-table-column prop="sale_item_rate" label="Rate" width="100%" /> -->
@@ -111,8 +127,16 @@
                 {{ formattedData(scope.row.sale_item_rate) }}
               </template>
             </el-table-column>
-            <el-table-column prop="sale_item_quantity" label="Quantity" width="100%"/>
-            <el-table-column prop="sale_item_total" label="Value"/>
+            <el-table-column prop="sale_item_quantity" label="Quantity" width="100%">
+              <template #default="scope">
+                {{ formattedData(scope.row.sale_item_quantity) }}
+              </template>
+            </el-table-column>
+            <el-table-column prop="sale_item_total" label="Value">
+              <template #default="scope">
+                {{ formattedData(scope.row.sale_item_total) }}
+              </template>
+            </el-table-column>
           </el-table-column>
           <el-table-column label="Closing Inventory">
             <!-- <el-table-column prop="closing_date_rate" label="Rate" width="100%" /> -->
@@ -121,8 +145,16 @@
                 {{ formattedData(scope.row.closing_date_rate) }}
               </template>
             </el-table-column>
-            <el-table-column prop="closing_date_quantity" label="Quantity" width="100%"/>
-            <el-table-column prop="closing_date_total" label="Value"/>
+            <el-table-column prop="closing_date_quantity" label="Quantity" width="100%">
+              <template #default="scope">
+                {{ formattedData(scope.row.closing_date_quantity) }}
+              </template>
+            </el-table-column>
+            <el-table-column prop="closing_date_total" label="Value">
+              <template #default="scope">
+                {{ formattedData(scope.row.closing_date_total) }}
+              </template>
+            </el-table-column>
           </el-table-column>
           <!-- <el-table-column  label="Invoice Number">
           </el-table-column> -->
@@ -268,7 +300,7 @@ export default {
     },
     formattedData(value) {
       if (value !== null && value !== undefined) {
-        return value.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        return value.toLocaleString('en-US', {minimumFractionDigits: 4, maximumFractionDigits: 4});
       }
     },
     handleInvoiceClick(invoice) {

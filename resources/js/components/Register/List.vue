@@ -189,8 +189,8 @@ export default {
     formattedAverage(value) {
       if (value !== null) {
         return [
-          value.total_cost.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 4}),
-          value.total_items.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 4}),
+          value.total_cost.toLocaleString('en-US', {minimumFractionDigits: 4, maximumFractionDigits: 4}),
+          value.total_items.toLocaleString('en-US', {minimumFractionDigits: 4, maximumFractionDigits: 4}),
         ]
 
         // return value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
