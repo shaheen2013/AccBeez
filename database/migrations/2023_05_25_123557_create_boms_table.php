@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('boms', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->float('invoice_total', 8, 4)->default(0.0000);
-            $table->float('sub_total', 8, 4)->default(0.0000);
+            $table->double('invoice_total')->default(0);
+            $table->double('sub_total')->default(0);
             $table->integer('company_id');
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();

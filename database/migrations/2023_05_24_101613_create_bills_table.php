@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('description')->nullable();
             $table->string('date');
-            $table->float('invoice_total', 8, 4)->default(0.0000);
+            $table->double('invoice_total')->default(0);
             $table->string('bill_number')->nullable();
             $table->string('vendor_name')->nullable();
             $table->integer('company_id');
