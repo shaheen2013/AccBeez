@@ -13,6 +13,8 @@ use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Requests\SaleRequest;
+use App\Models\ProductionSale;
+use App\Models\ProductionSaleItem;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Query\Builder;
@@ -32,7 +34,7 @@ class SaleController extends Controller
         $company_id = getCompanyIdBySlug($searchParams['slug']);
         $limit = Arr::get($searchParams, 'limit', 5);
         $keyword = Arr::get($searchParams, 'keyword', '');
-        $salesQuery = DB::table('sales')
+        $salesQuery = DB::table('production_sales')
                         ->where('company_id', $company_id)
                         ->when(!empty($keyword), function (Builder $query) use ($keyword) {
                             return $query->where('description', 'LIKE', '%' . $keyword . '%');
@@ -49,7 +51,7 @@ class SaleController extends Controller
 
             $saleData['company_id'] = $company_id;
             DB::beginTransaction();
-            $sale = Sale::create($saleData);
+            $sale = ProductionSale::create($saleData);
             $now = Carbon::now();
             $unique_code = $now->format('u');
             // $unique_code = mt_rand(10000,99999);
@@ -59,7 +61,7 @@ class SaleController extends Controller
             foreach($request->items as $item){
                 $item['sale_id'] = $sale->id;
                 $item['company_id'] = $company_id;
-                SaleItem::create($item);
+                ProductionSaleItem::create($item);
             }
             DB::commit();
             return $sale;
@@ -73,7 +75,7 @@ class SaleController extends Controller
     public function edit($id)
     {
         // dd('hi index');
-        $sale = Sale::with('saleItems')->find($id);
+        $sale = ProductionSale::with('saleItems')->find($id);
 
         // Return the customers as a response
         return response()->json($sale);
