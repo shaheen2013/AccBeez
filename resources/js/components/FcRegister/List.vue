@@ -55,7 +55,7 @@
     <el-table :data="registers" class="small-font-table" v-loading="loading">
       <el-table-column fixed prop="name" label="Name"/>
       <el-table-column fixed prop="sku" label="SKU"/>
-      <template v-for="month in months">
+      <template v-for="(month, index) in months" :key="index">
         <el-table-column :label="original_months[month.split('-')[1] - 1]+'-'+month.split('-')[0]">
 
 

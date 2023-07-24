@@ -28,10 +28,6 @@
                             <tr>
                                 <th :style="operation === 'view' ? { 'width': '25%' } : { 'width': '15%' }">
                                     <span class="required-indicator" v-if="operation !== 'view'">*</span>
-                                    <span>SKU</span>
-                                </th>
-                                <th width="15%">
-                                    <span class="required-indicator" v-if="operation !== 'view'">*</span>
                                     <span>Name</span>
                                 </th>
                                 <th width="15%">
@@ -125,7 +121,6 @@ export default {
                 invoice_number: 0,
                 date: '',
                 items: [{
-                    sku: null,
                     name: '',
                     rate: 0,
                     unit: '',
@@ -166,9 +161,10 @@ export default {
         }
 
 
-        await axios.get(`/api/products?slug=` + this.$route.params.slug).
+        await axios.get(`/api/bom-sale-items?slug=` + this.$route.params.slug).
                 then((res) => {
-                    this.products = res.data;
+                    console.log('res====================', res.data.data);
+                    this.products = res.data.data;
                 });
     },
     methods: {

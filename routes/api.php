@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BomSaleController;
 use App\Http\Controllers\COGSController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ExportController;
@@ -139,4 +140,4 @@ Route::get('/company/list',[CompanyController::class, 'getAll']);
 Route::delete('/company/delete/{id}',[CompanyController::class, 'destroy']);
 Route::put('/company/restore/{id}',[CompanyController::class, 'restore']);
 
-
+Route::get('/bom-sale-items', [BomSaleController::class, 'getBomSaleItems']);

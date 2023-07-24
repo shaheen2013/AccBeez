@@ -87,6 +87,17 @@ class BomSaleController extends Controller
             return response()->json( new \Illuminate\Support\MessageBag(['catch_exception'=>$ex->getMessage()]), 403);
         }
     }
+    public function getBomSaleItems(Request $request)
+    {
+        $company_id = getCompanyIdBySlug($request->slug);
+
+        $bomSaleItems = BomSaleItem::where('company_id', $company_id)->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $bomSaleItems
+        ]);
+    }
 
     private function bomSales($item, $quantity=0, $bomSale)
     {
