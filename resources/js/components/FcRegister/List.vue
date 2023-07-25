@@ -54,7 +54,6 @@
 
     <el-table :data="registers" class="small-font-table" v-loading="loading">
       <el-table-column fixed prop="name" label="Name"/>
-      <el-table-column fixed prop="sku" label="SKU"/>
       <template v-for="(month, index) in months" :key="index">
         <el-table-column :label="original_months[month.split('-')[1] - 1]+'-'+month.split('-')[0]">
 
@@ -62,7 +61,7 @@
           <template #default="scope" >
             <div class="d-flex  justify-content-center  ">
               <div class=" pe-2  ps-2 border-end fw-bold fs-6 text-success text-nowrap">
-                {{ getqty(scope.row[`month-${month}`]) }}
+                {{ getqty(scope.row[`month-${month}`]) }} {{ scope.row[`month-${month}`].unit }}
               </div>
               <div class="ps-2 pe-2 fw-bold fs-6 text-nowrap">
 
@@ -107,9 +106,6 @@
 
 
 <script>
-import * as XLSX from 'xlsx';
-import {saveAs} from 'file-saver';
-import {excelParser} from "../../utils/excel-parser.js";
 
 export default {
   name: 'Register',
@@ -189,8 +185,8 @@ export default {
     formattedAverage(value) {
       if (value !== null) {
         return [
-          value.total_cost.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}),
-          value.total_items.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}),
+          value.total_cost.toLocaleString('en-US', {minimumFractionDigits: 4, maximumFractionDigits: 4}),
+          value.total_items.toLocaleString('en-US', {minimumFractionDigits: 4, maximumFractionDigits: 4}),
         ]
 
         // return value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
