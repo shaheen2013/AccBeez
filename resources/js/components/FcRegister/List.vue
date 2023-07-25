@@ -159,7 +159,7 @@ export default {
         slug   : this.$route.params.slug
       }
       console.log('params', params, this.query.year);
-      await axios.get(`/api/registers`, {params}).then((res) => {
+      await axios.get(`/api/fc-registers`, {params}).then((res) => {
         console.log(res.data)
         //console.log('response in register list:', res);
         this.registers  = res.data.register_list;
