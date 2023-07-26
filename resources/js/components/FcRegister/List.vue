@@ -78,7 +78,7 @@
 
       <el-table-column fixed='right' prop="bill_item_id" label="Operations">
         <template #default="scope">
-          <router-link :to="'/' + $route.params.slug + '/fc-registers/view/'+scope.row.bill_item_id">
+          <router-link :to="'/' + $route.params.slug + '/fc-registers/view/'+scope.row.bom_sale_item_id">
             <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px">
               <View/>
             </el-icon>
