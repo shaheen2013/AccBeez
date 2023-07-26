@@ -116,7 +116,7 @@ export default {
   data() {
     return {
       registers: [],
-      loading:true,
+      loading:false,
       months: [],
 
       original_months: [
@@ -158,7 +158,7 @@ export default {
         year   : this.query.year,
         slug   : this.$route.params.slug
       }
-      console.log('params', params, this.query.year);
+      this.loading = true;
       await axios.get(`/api/registers`, {params}).then((res) => {
         console.log(res.data)
         //console.log('response in register list:', res);
@@ -167,6 +167,10 @@ export default {
         // this.query.page = res.data.current_page;
         this.total      = res.data.total;
         this.totalPages = Math.ceil(res.data.total / this.pageSize);
+
+        this.loading = false;
+      }).catch(err => {
+        this.loading = false;
       });
     },
     handleYearFilter() {

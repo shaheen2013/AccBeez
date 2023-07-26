@@ -112,7 +112,7 @@ export default {
   data() {
     return {
       registers: [],
-      loading:true,
+      loading:false,
       months: [],
 
       original_months: [
@@ -138,11 +138,10 @@ export default {
   async mounted() {
     try {
       await this.getList();
-      if (this.registers.length > 0){
-        this.loading=false
-      }
+      
     } catch (error) {
       console.error(error);
+      this.loading = false;
     }
   },
   methods: {
@@ -154,16 +153,19 @@ export default {
         year   : this.query.year,
         slug   : this.$route.params.slug
       }
-      console.log('params', params, this.query.year);
-      await axios.get(`/api/fc-registers`, {params}).then((res) => {
-        console.log(res.data)
-        //console.log('response in register list:', res);
-        this.registers  = res.data.register_list;
-        this.months     = res.data.distinct_months;
-        // this.query.page = res.data.current_page;
-        this.total      = res.data.total;
-        this.totalPages = Math.ceil(res.data.total / this.pageSize);
-      });
+      this.loading = true;
+      axios.get(`/api/fc-registers`, {params})
+            .then((res) => {
+
+            this.loading = false;
+            //console.log('response in register list:', res);
+            this.registers  = res.data.register_list;
+            this.months     = res.data.distinct_months;
+            // this.query.page = res.data.current_page;
+            this.total      = res.data.total;
+            this.totalPages = Math.ceil(res.data.total / this.pageSize);
+          })
+          .catch(err => this.loading = false);
     },
     handleYearFilter() {
       this.query.year = new Date(this.year).getFullYear();
