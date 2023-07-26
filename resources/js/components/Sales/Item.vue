@@ -2,21 +2,18 @@
     <tr>
         <td>
             <el-autocomplete
-                v-model="item.sku"
+                v-model="item.name"
                 :fetch-suggestions="querySearch"
                 popper-class="my-autocomplete"
-                placeholder="SKU"
+                placeholder="Name"
                 @select="handleSelect"
                 style="width:100%"
                 :disabled="operation === 'view'"
             >
                 <template #default="{ item }">
-                    <div class="value">{{ item.sku }}</div>
+                    <div class="value">{{ item.name }}</div>
                 </template>
             </el-autocomplete>
-        </td>
-        <td>
-            <el-input v-model="item.name" type="text" placeholder="Name" :disabled="operation === 'view'"/>
         </td>
         <td>
             <!-- <el-input v-model="formattedRate" type="number" placeholder="Rate" :disabled="operation === 'view'"
@@ -95,7 +92,7 @@ export default {
         },
         createFilter(queryString) {
             return (product) => {
-                return product.sku.toLowerCase().includes( queryString.toLowerCase());
+                return product.name.toLowerCase().includes( queryString.toLowerCase());
             };
         },
         handleSelect(product) {
@@ -114,7 +111,6 @@ export default {
                 //     }
                 // });
             } else {
-                this.item.sku = product.sku;
                 this.item.name = product.name;
                 this.item.rate = product.rate;
             }
@@ -123,7 +119,7 @@ export default {
         itemExist(product) {
             // console.log('itemExist', product);
             return this.saleItems.some(el => {
-                return el.sku === product.sku;
+                return el.name === product.name;
             });
         },
     },

@@ -35,7 +35,7 @@ class BomController extends Controller
     public function store(BomRequest $request)
     {
         try {
-            $bomData = $request->only('name', 'invoice_total', 'slug');
+            $bomData = $request->only('name', 'invoice_total', 'slug', 'sub_total');
             $company_id = getCompanyIdBySlug($bomData['slug']);
             $bomData['company_id'] = $company_id;
 
@@ -44,7 +44,7 @@ class BomController extends Controller
             foreach($request->items as $item){
                 $item['bom_id'] = $bom->id;
                 $item['company_id'] = $company_id;
-                BomItem::create($item);
+                $bomItem = BomItem::create($item);
             }
             DB::commit();
             return $bom;
@@ -149,7 +149,7 @@ class BomController extends Controller
     public function getAllBoms(Request $request)
     {
         $company_id = getCompanyIdBySlug($request->slug);
-        $boms = Bom::select('name', 'invoice_total')
+        $boms = Bom::select('name', 'invoice_total', 'id', 'sub_total')
                             ->where('company_id', $company_id)
                             ->orderBy('name', 'asc')
                             ->get();

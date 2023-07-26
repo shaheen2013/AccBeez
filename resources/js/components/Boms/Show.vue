@@ -24,14 +24,14 @@
                         <tbody>
                             <tr v-for="item in bom.items" :key="item.id">
                                 <td>{{ item.sku }}</td>
-                                <td>{{ item.quantity }}</td>
-                                <td>{{ formatCurrency(item.rate) }}</td>
-                                <td style="text-align: right;">{{ formatCurrency(item.total) }}</td>
+                                <td>{{ formatValue(item.quantity) }}</td>
+                                <td>{{ formatValue(item.rate) }}</td>
+                                <td style="text-align: right;">{{ formatValue(item.total) }}</td>
                             </tr>
                             <tr>
                                 <td style="border: none;" colspan="2"></td>
                                 <td style="border: none;">Invoice Total</td>
-                                <td colspan="2" style="text-align: right;">{{ formatCurrency(bom.invoice_total) }}</td>
+                                <td colspan="2" style="text-align: right;">{{ formatValue(bom.sub_total) }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -54,6 +54,7 @@
 </template>
 
 <script>
+import helper from '../../helper';
 export default {
     name: 'BomShow',
     data() {
@@ -78,7 +79,7 @@ export default {
                     console.log('res:', res);
                     this.bom.id = res.data.id;
                     this.bom.name = res.data.name;
-                    this.bom.invoice_total = res.data.invoice_total;
+                    this.bom.sub_total = res.data.sub_total;
                     this.bom.items = res.data.bom_items;
                 });
     },
@@ -87,7 +88,7 @@ export default {
             window.location.href = `/boms/download-pdf/`+this.bom.id;
         },
         formatCurrency(value) {
-            return parseFloat(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            return parseFloat(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 });
         },
         exportBomXLS(){
             let format = 'xls';
@@ -97,6 +98,9 @@ export default {
             let format = 'csv';
             window.location.href = `/api/bom/blade/`+this.bom.id+`/export/`+format;
         },
+        formatValue(val){
+            return helper.formatNumberToFraction(val);
+        }
     },
 };
 </script>

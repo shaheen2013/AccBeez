@@ -55,14 +55,14 @@
     <el-table :data="registers" class="small-font-table" v-loading="this.loading">
       <el-table-column fixed prop="name" label="Name"/>
       <el-table-column fixed prop="sku" label="SKU"/>
-      <template v-for="month in months" >
+      <template v-for="(month, index) in months" :key="index">
         <el-table-column :label="original_months[month.split('-')[1] - 1]+'-'+month.split('-')[0]">
 
 
           <template #default="scope" >
             <div class="d-flex  justify-content-center  ">
             <div class=" pe-2  ps-2 border-end fw-bold fs-6 text-success text-nowrap">
-              {{ getqty(scope.row[`month-${month}`]) }}
+              {{ getqty(scope.row[`month-${month}`]) }} {{ getUnit(scope.row[`month-${month}`]) }}
             </div>
             <div class="ps-2 pe-2 fw-bold fs-6 text-nowrap">
 
@@ -189,8 +189,8 @@ export default {
     formattedAverage(value) {
       if (value !== null) {
         return [
-          value.total_cost.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}),
-          value.total_items.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}),
+          value.total_cost.toLocaleString('en-US', {minimumFractionDigits: 4, maximumFractionDigits: 4}),
+          value.total_items.toLocaleString('en-US', {minimumFractionDigits: 4, maximumFractionDigits: 4}),
         ]
 
         // return value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -209,6 +209,9 @@ export default {
       if (qty) {
         return qty[0];
       }
+    },
+    getUnit(value) {
+      return !value.unit ? '' : value.unit
     },
 
 

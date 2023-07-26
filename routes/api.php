@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\BomSaleController;
 use App\Http\Controllers\COGSController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\FcRegisterController;
 use App\Http\Controllers\ImportController;
 use App\Http\Controllers\RolePermissionController;
 use Illuminate\Http\Request;
@@ -139,4 +141,5 @@ Route::get('/company/list',[CompanyController::class, 'getAll']);
 Route::delete('/company/delete/{id}',[CompanyController::class, 'destroy']);
 Route::put('/company/restore/{id}',[CompanyController::class, 'restore']);
 
-
+Route::get('/bom-sale-items', [BomSaleController::class, 'getBomSaleItems']);
+Route::get('fc-registers', [FcRegisterController::class, 'index']);

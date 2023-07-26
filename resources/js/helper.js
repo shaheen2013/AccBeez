@@ -5,4 +5,10 @@ function getLogedInUser(){
     });
 };
 
-export default getLogedInUser;
+function formatNumberToFraction(value) {
+    if (value !== null && value !== undefined) {
+      return value.toLocaleString('en-US', {minimumFractionDigits: 4, maximumFractionDigits: 4});
+    }
+}
+
+export default {getLogedInUser, formatNumberToFraction};

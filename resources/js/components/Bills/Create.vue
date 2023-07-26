@@ -148,7 +148,7 @@
       <el-form-item label="Invoice Total">
         <el-input
           v-model="formattedTotal"
-          type="number"
+          type="text"
           placeholder="Invoice Total"
           disabled
         />
@@ -326,7 +326,7 @@ export default {
   },
   computed: {
     formattedTotal() {
-      return this.bill.invoice_total.toFixed(2); // Apply precision formatting
+      return this.bill.invoice_total.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 4}); // Apply precision formatting
     },
   },
 };

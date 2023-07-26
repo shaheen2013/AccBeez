@@ -120,6 +120,7 @@ export default {
                 invoice_number: 0,
                 date: '',
                 items: [{
+                    id: null,
                     name: null,
                     rate: 0,
                     unit: '',
@@ -213,7 +214,7 @@ export default {
     },
     computed: {
         formattedTotal() {
-            return this.bomSale.invoice_total.toFixed(2); // Apply precision formatting
+            return this.bomSale.invoice_total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 }); // Apply precision formatting
         },
     },
 };

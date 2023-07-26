@@ -21,17 +21,17 @@ class DatabaseSeeder extends Seeder
             RolePermissionSeeder::class,
             PermissionToRoleSeeder::class,
             AssignRoleSeeder::class,
-            BillSeeder::class,
-            BillItemSeeder::class,
+            // BillSeeder::class,
+            // BillItemSeeder::class,
         ]);
 
-        Bom::factory(100)
-            ->has(BomItem::factory()->count(10))
-            ->create();
+        // Bom::factory(100)
+        //     ->has(BomItem::factory()->count(10))
+        //     ->create();
 
-        Sale::factory(100)
-            ->has(SaleItem::factory()->count(10))
-            ->create();
+        // Sale::factory(100)
+        //     ->has(SaleItem::factory()->count(10))
+        //     ->create();
 
 
     }

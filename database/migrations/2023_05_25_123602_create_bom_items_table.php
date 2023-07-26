@@ -14,8 +14,11 @@ return new class extends Migration
         Schema::create('bom_items', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('bom_id');
+            $table->text('bom_item_sku')->nullable();
             $table->text('sku');
-            $table->integer('quantity')->default(0);
+            $table->string('name')->nullable();
+            $table->string('unit')->nullable();
+            $table->float('quantity', 8, 4)->default(0.0000);
             $table->double('rate')->default(0);
             $table->double('total')->default(0);
             $table->integer('company_id');

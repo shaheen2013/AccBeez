@@ -27,7 +27,7 @@
                         <tbody>
                             <tr v-for="item in bill.items" :key="item.id">
                                 <td>{{ item.sku }}</td>
-                                <td>{{ item.quantity }}</td>
+                                <td>{{ formatValue(item.quantity) }}</td>
                                 <td>{{ formatCurrency(item.rate) }}</td>
                                 <td style="text-align: right;">{{ formatCurrency(item.total) }}</td>
                             </tr>
@@ -57,6 +57,8 @@
 </template>
 
 <script>
+import helper from '../../helper';
+
 export default {
     name: 'BillShow',
     data() {
@@ -104,8 +106,11 @@ export default {
             window.location.href = `/api/bill/blade/`+this.bill.id+`/export/`+format;
         },
         formatCurrency(value) {
-            return parseFloat(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            return parseFloat(value).toLocaleString('en-US', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
         },
+        formatValue(val) {
+            return helper.formatNumberToFraction(val)
+        }
     },
 };
 </script>
@@ -120,4 +125,4 @@ export default {
         border: 1px solid #ccc;
         padding: 8px;
     }
-</style>>
+</style>
