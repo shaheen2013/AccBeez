@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Bill;
 use App\Models\BillItem;
 use App\Models\ClosingDate;
+use App\Models\ProductionSale;
 use App\Models\Sale;
 use DateTime;
 use Illuminate\Database\Query\Builder;
@@ -137,18 +138,18 @@ class FcRegisterController extends Controller
                                 ->get()
                                 ->keyBy('date')
                                 ->toArray();
-        $saleItemDates = Sale::leftJoin('sale_items', 'sales.id', '=', 'sale_items.sale_id')
+        $saleItemDates = ProductionSale::leftJoin('production_sale_items', 'production_sales.id', '=', 'production_sale_items.production_sale_id')
                                 ->groupBy('date')
-                                ->select('sales.date', 'sale_items.sku', DB::raw("'saleItem' as model"), 'sale_items.unit',
+                                ->select('production_sales.date', 'production_sale_items.sku', DB::raw("'saleItem' as model"), 'production_sale_items.unit',
                                         DB::raw('SUM(quantity) as sale_item_quantity'),
                                         DB::raw('SUM(total) as sale_item_total'),
                                         DB::raw('SUM(total) / SUM(quantity) as sale_item_rate'),
                                         DB::raw('0 as sale_item_avg_rate'),
                                 )
-                                ->where('sale_items.company_id', $company_id)
+                                ->where('production_sale_items.company_id', $company_id)
                                 ->where('sku', $sku)
                                 ->when(!empty($year), function ($query) use ($year) {
-                                    return $query->whereRaw('YEAR(sales.date) = ?', [$year]);
+                                    return $query->whereRaw('YEAR(production_sales.date) = ?', [$year]);
                                 })
                                 ->distinct('date')
                                 ->get()
@@ -264,12 +265,6 @@ class FcRegisterController extends Controller
         $closingRate = 0;
         $closingQuantity = 0;
         $closingTotal = 0;
-        $bill_item_avg_rate = 0;
-        $bill_item_sum_quantity = 0;
-        $bill_item_sum_total = 0;
-        $sale_item_avg_rate = 0;
-        $sale_item_sum_quantity = 0;
-        $sale_item_sum_total = 0;
         // dump($mergedArray);
 
 
