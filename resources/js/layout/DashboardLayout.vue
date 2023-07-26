@@ -1,7 +1,7 @@
 <template>
   <div class="common-layout">
     <el-container class="full-width-container">
-      <el-aside width="200px">
+      <el-aside width="200px" v-if="isSidebar">
         <el-scrollbar>
           <el-menu>
             <router-link
@@ -120,16 +120,6 @@
                 Cogs
               </el-menu-item>
             </router-link>
-            <router-link :to="'/' + $route.params.slug + '/companies'" style="text-decoration: none;"
-                         :style="[$route.path === '/companies' ? {color: 'royalblue'} : {color: 'black'}]">
-              <el-menu-item index="9">
-                <!-- <el-icon><icon-menu /></el-icon> -->
-                <el-icon :size="20" style="width: 1em; height: 1em; margin-right: 8px">
-                  <CreditCard/>
-                </el-icon>
-                Companies
-              </el-menu-item>
-            </router-link>
             <!-- <router-link to="/exl-table" style="text-decoration: none;"
                          :style="[$route.path === '/exl-table' ? {color: 'royalblue'} : {color: 'black'}]">
                 <el-menu-item index="5">
@@ -173,8 +163,24 @@
 <script>
 import {useAuthUserStore} from "@/stores/AuthUser";
 import {mapState} from "pinia";
+import helper from '../helper';
 
 export default {
+  data() {
+    return {
+      isSidebar: true
+    }
+  },
+  created() {
+    const path = this.$route.path.split('/');
+    if(path.length == 2 && helper.commonRoutes.includes(path[1])){
+      this.isSidebar = false
+    }else{
+      this.isSidebar = true
+    }
+    console.log('created_routeName', this.$route.path.split('/'));
+    console.log('created_helper_commonRoutes===', helper.commonRoutes);
+  },
   computed: {
     ...mapState(useAuthUserStore, {user: "user"}),
   },
