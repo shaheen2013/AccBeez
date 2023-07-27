@@ -37,15 +37,23 @@ class FcRegisterController extends Controller
                             ->pluck('month', 'month')
                             ->unique()
                             ->toArray();
-                            
+        $subquery = DB::table('production_sale_items')
+                        ->select('name',
+                                DB::raw('SUM(quantity) as total_quantity'),
+                                DB::raw('SUM(total) as total_cost'))
+                        ->groupBy('name')
+                        ->toSql();                    
         $registers = DB::table('bom_sale_items')
             ->leftJoin('bom_sales', 'bom_sale_items.bom_sale_id', '=', 'bom_sales.id')
+            ->leftJoin(DB::raw("($subquery) as sale_items"), function($join){
+                $join->on('bom_sale_items.name', '=', 'sale_items.name');
+            })
             ->select(
                 'bom_sale_items.name',
                 'bom_sale_items.id as bom_sale_item_id',
                 'bom_sale_items.unit',
-                DB::raw('SUM(bom_sale_items.quantity) as total_items'),
-                DB::raw('SUM(bom_sale_items.total) as total_cost'),
+                DB::raw('SUM(bom_sale_items.quantity) - IFNULL(sale_items.total_quantity, 0) as total_items'),
+                DB::raw('SUM(bom_sale_items.total) - IFNULL(sale_items.total_cost, 0) as total_cost'),
                 DB::raw('SUM(bom_sale_items.total) / SUM(bom_sale_items.quantity) as avg_cost'),
                 DB::raw('YEAR(bom_sales.date) as year'),
                 DB::raw("DATE_FORMAT(bom_sales.date, '%Y-%m') as month")
