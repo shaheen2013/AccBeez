@@ -10,7 +10,7 @@ class ProductionSale extends Model
     use HasFactory;
     protected $guarded = [];
 
-    public function productionSaleItems(){
+    public function saleItems(){
         return $this->hasMany(ProductionSaleItem::class);
     }
 }

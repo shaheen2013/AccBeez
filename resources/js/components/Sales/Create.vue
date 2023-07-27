@@ -65,7 +65,9 @@
                             />
                         </tbody>
                     </table>
-                    <el-button type="info" @click="addItem" v-if="operation === 'create' || operation === 'edit'"
+                    <el-button type="info" 
+                                @click="addItem" 
+                                v-if="operation === 'create' || operation === 'edit'"
                                 class="mb-3">
                         Add
                     </el-button>
@@ -148,8 +150,8 @@ export default {
             this.sale.id = paths[3];
         }
         if(this.sale.id){
-            axios.get(`/api/sales/edit/`+this.sale.id).
-                    then((res) => {
+            axios.get(`/api/sales/edit/`+this.sale.id)
+                    .then((res) => {
                         console.log('res:', res);
                         this.sale.id = res.data.id;
                         this.sale.description = res.data.description;
@@ -161,8 +163,8 @@ export default {
         }
 
 
-        await axios.get(`/api/bom-sale-items?slug=` + this.$route.params.slug).
-                then((res) => {
+        await axios.get(`/api/bom-sale-items?slug=` + this.$route.params.slug)
+                .then((res) => {
                     console.log('res====================', res.data.data);
                     this.products = res.data.data;
                 });
@@ -184,11 +186,11 @@ export default {
             console.log('createSale:', this.sale)
             this.sale.slug = this.$route.params.slug;
             try {
-                await axios.post(`/api/sales`, this.sale).
-                        then((res) => {
-                            console.log('res:', res, this.$router);
-                            this.$router.push('/'+ this.$route.params.slug + '/sales');
-                        });
+                await axios.post(`/api/sales`, this.sale)
+                            .then((res) => {
+                                console.log('res:', res, this.$router);
+                                this.$router.push('/'+ this.$route.params.slug + '/sales');
+                            });
             } catch (error) {
                 showErrors(error);
                 console.error('error in response:', error.response.data);
