@@ -121,7 +121,15 @@ export default {
                 //         item.quantity++;
                 //     }
                 // });
-            } else {
+            } 
+            else if(product.available_quantity == 0){
+                ElNotification({
+                    type: 'error',
+                    title: 'Error',
+                    message: 'No Available Production for This Item',
+                });
+            }
+            else {
                 this.item.name = product.name;
                 this.item.rate = product.rate;
             }

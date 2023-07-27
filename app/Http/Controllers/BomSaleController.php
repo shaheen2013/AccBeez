@@ -91,7 +91,24 @@ class BomSaleController extends Controller
     {
         $company_id = getCompanyIdBySlug($request->slug);
 
-        $bomSaleItems = BomSaleItem::where('company_id', $company_id)->get();
+        $subquery = DB::table('production_sale_items')
+                        ->select('name',
+                                DB::raw('SUM(quantity) as total_quantity'),
+                                DB::raw('SUM(total) as total_cost'))
+                        ->groupBy('name')
+                        ->toSql();  
+
+        $bomSaleItems = BomSaleItem::select(
+                                    'bom_sale_items.name',
+                                    'bom_sale_items.rate',
+                                    'bom_sale_items.unit',
+                                    'bom_sale_items.quantity as quantity',
+                                    DB::raw('SUM(bom_sale_items.quantity) - IFNULL(sale_items.total_quantity, 0) as available_quantity'),
+                                    'bom_sale_items.total'
+                                )
+                                ->leftJoin(DB::raw("($subquery) as sale_items"), function($join){
+                                    $join->on('bom_sale_items.name', '=', 'sale_items.name');
+                                })->where('company_id', $company_id)->get();
 
         return response()->json([
             'success' => true,
