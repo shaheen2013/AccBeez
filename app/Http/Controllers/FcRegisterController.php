@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Bill;
 use App\Models\BillItem;
+use App\Models\BomSale;
+use App\Models\BomSaleItem;
 use App\Models\ClosingDate;
 use App\Models\ProductionSale;
 use App\Models\Sale;
@@ -123,24 +125,24 @@ class FcRegisterController extends Controller
     {
         // dd($request->all(), $id);
         $year = $request->year;
-        $bill_item = BillItem::with('closingDates')->find($id);
+        $bill_item = BomSaleItem::with('closingDates')->find($id);
         $closingDates = $bill_item->closingDates;
-        $sku = $bill_item->sku;
+        $name = $bill_item->name;
         $company_id = getCompanyIdBySlug($request->slug);
         // Find unique dates in BillItem
-        $billItemDates = Bill::leftJoin('bill_items', 'bills.id', '=', 'bill_items.bill_id')
+        $billItemDates = BomSale::leftJoin('bom_sale_items', 'bom_sales.id', '=', 'bom_sale_items.bom_sale_id')
                                 ->groupBy('date')
-                                ->select('bills.date', 'bill_items.sku', DB::raw("'billItem' as model"), 'bill_items.unit',
+                                ->select('bom_sales.date', 'bom_sale_items.name', DB::raw("'billItem' as model"), 'bom_sale_items.unit',
                                         DB::raw('SUM(quantity) as bill_item_quantity'),
                                         DB::raw('SUM(total) as bill_item_total'),
                                         DB::raw('SUM(total) / SUM(quantity) as bill_item_rate'),
                                         DB::raw('0 as bill_item_avg_rate'),
-                                        DB::raw("GROUP_CONCAT(bills.invoice_number SEPARATOR ',') as `invoices`")
+                                        DB::raw("GROUP_CONCAT(bom_sales.invoice_number SEPARATOR ',') as `invoices`")
                                 )
-                                ->where('bill_items.company_id', $company_id)
-                                ->where('sku', $sku)
+                                ->where('bom_sale_items.company_id', $company_id)
+                                ->where('name', $name)
                                 ->when(!empty($year), function ($query) use ($year) {
-                                    return $query->whereRaw('YEAR(bills.date) = ?', [$year]);
+                                    return $query->whereRaw('YEAR(bom_sales.date) = ?', [$year]);
                                 })
                                 ->distinct('date')
                                 ->get()
@@ -155,7 +157,7 @@ class FcRegisterController extends Controller
                                         DB::raw('0 as sale_item_avg_rate'),
                                 )
                                 ->where('production_sale_items.company_id', $company_id)
-                                ->where('sku', $sku)
+                                ->where('name', $name)
                                 ->when(!empty($year), function ($query) use ($year) {
                                     return $query->whereRaw('YEAR(production_sales.date) = ?', [$year]);
                                 })
@@ -166,7 +168,6 @@ class FcRegisterController extends Controller
         $closingDates = ClosingDate::select('date', 'sku', DB::raw("'closingDate' as model"),
                                                 DB::raw('0 as closing_date_avg_rate')
                                         )
-                                        ->where('sku', $sku)
                                         ->when(!empty($year), function ($query) use ($year) {
                                             return $query->whereRaw('YEAR(date) = ?', [$year]);
                                         })

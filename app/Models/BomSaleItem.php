@@ -19,4 +19,7 @@ class BomSaleItem extends Model
     public function saleItems(){
         return $this->hasMany(SaleItem::class,'bom_sale_item_id','id');
     }
+    public function closingDates(){
+        return $this->hasMany(ClosingDate::class, 'sku', 'sku');
+    }
 }
