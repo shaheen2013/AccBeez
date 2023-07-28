@@ -74,7 +74,7 @@
             </el-row>
 
             <el-form-item label="Invoice Total">
-                <el-input v-model="formattedTotal" type="number" placeholder="Invoice Total" disabled />
+                <el-input v-model="formattedTotal" type="text" placeholder="Invoice Total" disabled />
             </el-form-item>
 
 

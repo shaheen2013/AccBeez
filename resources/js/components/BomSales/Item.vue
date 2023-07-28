@@ -53,13 +53,11 @@
       />
     </td>
     <td>
-      <el-input-number
+      <el-input
         v-model="formattedTotal"
-        type="number"
+        type="text"
         placeholder="Total"
         disabled
-        :className="text - start"
-        :controls="false"
       />
     </td>
     <td v-if="operation !== 'view'">
