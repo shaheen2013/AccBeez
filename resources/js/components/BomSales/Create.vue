@@ -123,6 +123,7 @@ export default {
                     id: null,
                     name: null,
                     rate: 0,
+                    profit_rate: 0,
                     unit: '',
                     quantity: 0,
                     total: 0,

@@ -46,7 +46,7 @@ class FcRegisterController extends Controller
                         ->groupBy('name')
                         ->toSql();                    
         $registers = DB::table('bom_sale_items')
-            ->leftJoin('bom_sales', 'bom_sale_items.bom_sale_id', '=', 'bom_sales.id')
+            ->leftJoin('bom_sales', ',.bom_sale_id', '=', 'bom_sales.id')
             ->leftJoin(DB::raw("($subquery) as sale_items"), function($join){
                 $join->on('bom_sale_items.name', '=', 'sale_items.name');
             })
