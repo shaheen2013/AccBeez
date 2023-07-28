@@ -150,6 +150,7 @@ export default {
         this.item.sku = product.sku;
         this.item.rate = product.rate;
         this.item.name = product.name;
+        this.item.unit = product.unit;
       }
     },
     itemExist(product) {
