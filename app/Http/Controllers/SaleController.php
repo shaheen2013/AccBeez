@@ -43,11 +43,11 @@ class SaleController extends Controller
         return response()->json($salesQuery->paginate($limit));
     }
 
-    public function store(SaleRequest $request)
+    public function store(Request $request)
     {
         try {
-            $saleData = $request->only('description', 'date', 'invoice_total', 'slug');
-            $company_id = getCompanyIdBySlug($saleData['slug']);
+            $saleData = $request->only('description', 'date', 'invoice_total');
+            $company_id = getCompanyIdBySlug($request->slug);
 
             $saleData['company_id'] = $company_id;
             DB::beginTransaction();
@@ -59,7 +59,7 @@ class SaleController extends Controller
             $sale->save();
             // dd('store', $request->all(), $saleData);
             foreach($request->items as $item){
-                $item['sale_id'] = $sale->id;
+                $item['production_sale_id'] = $sale->id;
                 $item['company_id'] = $company_id;
                 ProductionSaleItem::create($item);
             }
@@ -82,11 +82,11 @@ class SaleController extends Controller
     }
 
 
-    public function update(SaleRequest $request, $id)
+    public function update(Request $request, $id)
     {
         try {
             $saleData = $request->only('description', 'date', 'invoice_total');
-            $sale = Sale::find($id);
+            $sale = ProductionSale::find($id);
             DB::beginTransaction();
             $sale->update($saleData);
             foreach($request->deletedItemsID as $deletedID){
@@ -96,9 +96,9 @@ class SaleController extends Controller
             foreach($request->items as $item){
                 $item['sale_id'] = $sale->id;
                 if(isset($item['id'])){
-                    SaleItem::find($item['id'])->update($item);
+                    ProductionSaleItem::find($item['id'])->update($item);
                 } else {
-                    SaleItem::create($item);
+                    ProductionSaleItem::create($item);
                 }
             }
             DB::commit();
@@ -112,13 +112,13 @@ class SaleController extends Controller
     public function delete($id)
     {
         try {
-            $sale = Sale::find($id);
+            $sale = ProductionSale::find($id);
             DB::beginTransaction();
-            SaleItem::where('sale_id', $id)->delete();
+            ProductionSaleItem::where('production_sale_id', $id)->delete();
             $sale->delete();
             DB::commit();
 
-            $sales = Sale::all();
+            $sales = ProductionSale::all();
             return response()->json($sales);
         } catch (Exception $ex) {
             DB::rollBack();

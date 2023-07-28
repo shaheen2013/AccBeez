@@ -142,4 +142,5 @@ Route::delete('/company/delete/{id}',[CompanyController::class, 'destroy']);
 Route::put('/company/restore/{id}',[CompanyController::class, 'restore']);
 
 Route::get('/bom-sale-items', [BomSaleController::class, 'getBomSaleItems']);
-Route::get('fc-registers', [FcRegisterController::class, 'index']);
+Route::get('/fc-registers', [FcRegisterController::class, 'index']);
+Route::get('/fc-registers/view/{id}', [FcRegisterController::class, 'view']);

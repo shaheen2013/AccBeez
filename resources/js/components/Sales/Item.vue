@@ -18,18 +18,29 @@
         <td>
             <!-- <el-input v-model="formattedRate" type="number" placeholder="Rate" :disabled="operation === 'view'"
                         @blur="calculateTotal" /> -->
-            <el-input-number v-model="item.rate" type="text" placeholder="Rate" :disabled="operation === 'view'"
-                        :className="text-start"
-                        :controls="false"
-                        :precision="2"
-                        @blur="calculateTotal" />
+            <el-input 
+                    v-model="item.rate" 
+                    type="number" 
+                    placeholder="Rate" 
+                    :disabled="operation === 'view'"
+                    :step="0.01"
+                    @keyup="calculateTotal" />
         </td>
         <td>
-            <el-input v-model="item.unit" type="text" placeholder="Unit" :disabled="operation === 'view'"/>
+            <el-input 
+                v-model="item.unit" 
+                type="text" 
+                placeholder="Unit" 
+                :disabled="operation === 'view'"/>
         </td>
         <td>
-            <el-input v-model="item.quantity" type="number" placeholder="Quantity" :disabled="operation === 'view'"
-                        @blur="calculateTotal" />
+            <el-input 
+                v-model="item.quantity" 
+                type="number" 
+                placeholder="Quantity" 
+                :disabled="operation === 'view'"
+                :step="0.01"
+                @keyup="calculateTotal" />
         </td>
         <td>
             <el-input-number v-model="item.total" type="text" placeholder="Total" disabled
@@ -110,7 +121,15 @@ export default {
                 //         item.quantity++;
                 //     }
                 // });
-            } else {
+            } 
+            else if(product.available_quantity == 0){
+                ElNotification({
+                    type: 'error',
+                    title: 'Error',
+                    message: 'No Available Production for This Item',
+                });
+            }
+            else {
                 this.item.name = product.name;
                 this.item.rate = product.rate;
             }

@@ -93,7 +93,7 @@ import { saveAs } from 'file-saver';
 import {excelParser} from "../../utils/excel-parser.js";
 
 export default {
-    name: 'Cog',
+    name: 'CogsList',
     data() {
         return {
             cogs: [],

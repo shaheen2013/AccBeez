@@ -169,7 +169,7 @@ const routes = [
                 component: CogsList
             }, {
                 path: '/companies',
-                name: 'CogsList',
+                name: 'CompaniesShow',
                 component: CompaniesShow
             },{
                 path: '/:slug/fc-register',

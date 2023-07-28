@@ -86,7 +86,7 @@
             <el-table-column prop="opening_date_quantity" label="Quantity" width="100%"/>
             <el-table-column prop="opening_date_total" label="Value"/>
           </el-table-column>
-<!--          <el-table-column label="Purchase">
+         <el-table-column label="Purchase">
             &lt;!&ndash; <el-table-column prop="bill_item_rate" label="Rate" /> &ndash;&gt;
             <el-table-column prop="bill_item_rate" label="Rate">
               <template #default="scope">
@@ -95,7 +95,7 @@
             </el-table-column>
             <el-table-column prop="bill_item_quantity" label="Quantity"/>
             <el-table-column prop="bill_item_total" label="Value"/>
-          </el-table-column>-->
+          </el-table-column>
           <el-table-column label="Sale">
             <!-- <el-table-column prop="sale_item_rate" label="Rate" width="100%" /> -->
             <el-table-column prop="sale_item_rate" label="Rate">
@@ -121,7 +121,7 @@
           <el-table-column label="Invoice Number" width="150">
             <template v-slot="{ row }">
               <div v-if="row && row.invoices">
-                <div v-for="invoice in row.invoices.split(',')">
+                <div v-for="(invoice, index) in row.invoices.split(',')" :key="index">
                   <a href="#" class="router-link-styling" @click="handleInvoiceClick(invoice)">
                     {{ invoice }}
                   </a>
@@ -192,7 +192,7 @@ export default {
         year: this.query.year,
         slug: this.$route.params.slug
       }
-      await axios.get(`/api/registers/view/` + this.register.id, {params}).then((res) => {
+      await axios.get(`/api/fc-registers/view/` + this.register.id, {params}).then((res) => {
         console.log(res.data)
         this.register.id    = res.data.bill_item.id;
         this.register.items = res.data.mergedItems;

@@ -11,4 +11,9 @@ function formatNumberToFraction(value) {
     }
 }
 
-export default {getLogedInUser, formatNumberToFraction};
+const commonRoutes = [
+    'companies',
+    'users'
+];
+
+export default {getLogedInUser, formatNumberToFraction, commonRoutes};
