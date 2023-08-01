@@ -17,29 +17,32 @@
     >
 
     <el-card class="box-card">
-      <el-form-item label="Name" prop="name" required>
-        <el-input
-          v-model="bom.name"
-          type="text"
-          :disabled="operation === 'view'"
-        />
-      </el-form-item>
+      <el-row :gutter="12">
+        <el-col :span="12">
+          <el-form-item label="SKU" prop="sku" required>
+            <el-input
+              v-model="bom.sku"
+              type="text"
+              :disabled="operation === 'view'"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="Name" prop="name" required>
+            <el-input
+              v-model="bom.name"
+              type="text"
+              :disabled="operation === 'view'"
+            />
+          </el-form-item>
+        </el-col>
+      </el-row>
 
       <el-row>
         <el-col :span="24">
           <table class="table table-borderless">
             <thead>
               <tr>
-                <th
-                  :style="
-                    operation === 'view' ? { width: '40%' } : { width: '10%' }
-                  "
-                >
-                  <span class="required-indicator" v-if="operation !== 'view'"
-                    >*</span
-                  >
-                  <span>SKU</span>
-                </th>
                 <th
                   :style="
                     operation === 'view' ? { width: '10%' } : { width: '10%' }
@@ -179,7 +182,6 @@ export default {
       operation: "create",
       singleItem: {
         name: "",
-        bom_item_sku: null,
         sku: null,
         quantity: 0,
         rate: 0,
@@ -190,12 +192,12 @@ export default {
         id: null,
         invoice_total: 0,
         name: "",
+        sku: "",
         sub_total: "",
         estimatedProfit: 0,
         items: [
           {
             name: "",
-            bom_item_sku: "",
             sku: null,
             quantity: 0,
             unit: "",

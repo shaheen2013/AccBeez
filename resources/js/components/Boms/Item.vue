@@ -1,15 +1,6 @@
 <template>
   <tr>
     <td>
-      <el-input
-        v-model="item.bom_item_sku"
-        type="text"
-        placeholder="SKU"
-        :disabled="operation === 'view'"
-        @keyup="calculateTotal"
-      />
-    </td>
-    <td>
       <!-- <el-input v-model="item.sku" type="text" placeholder="SKU" :disabled="operation === 'view'" /> -->
       <el-autocomplete
         v-model="item.sku"
