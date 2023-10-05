@@ -120,7 +120,7 @@
               </template>
             </el-table-column>
           </el-table-column>
-          <el-table-column label="Sale">
+          <el-table-column label="Used">
             <!-- <el-table-column prop="sale_item_rate" label="Rate" width="100%" /> -->
             <el-table-column prop="sale_item_rate" label="Rate">
               <template #default="scope">

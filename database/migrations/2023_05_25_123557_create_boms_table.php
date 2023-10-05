@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('boms', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->text('sku');
             $table->double('invoice_total')->default(0);
             $table->double('sub_total')->default(0);
             $table->integer('company_id');

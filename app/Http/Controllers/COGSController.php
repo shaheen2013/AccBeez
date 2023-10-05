@@ -21,7 +21,6 @@ class COGSController extends Controller
                             ->latest()
                             ->get();
         $data = [];
-
         foreach($bomSales as $bomSale){
             foreach($bomSale->bomSaleItems as $bomSaleItem){
                 $sum = 0;
@@ -30,7 +29,7 @@ class COGSController extends Controller
                 }
 
                 $cogs = $sum;
-                $total = $bomSaleItem->total;
+                $total = $bomSaleItem->profit_total;
                 $margin = (1 - ($cogs/$total)) * 100;
                 $bomSaleItem->margin = (float)number_format($margin,2);
                 $data[] = [
@@ -43,7 +42,7 @@ class COGSController extends Controller
                     'rate'=> $bomSaleItem->rate,
                     'unit'=> $bomSaleItem->unit,
                     'quantity'=> $bomSaleItem->quantity,
-                    'total'=> $bomSaleItem->total,
+                    'total'=> $bomSaleItem->profit_total,
                     'cogs'=>$cogs,
                     'margin'=>$bomSaleItem->margin,
                 ];

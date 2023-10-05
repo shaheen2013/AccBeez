@@ -63,6 +63,7 @@ class BomSaleController extends Controller
                     $saleStorableData = [
                         'company_id' => $company_id,
                         'sale_id' => $sale->id,
+                        'bom_sale_item_id' => $item['id'],
                         'sku' => $bomItem['sku'],
                         'rate' => $bomItem['rate'],
                         'quantity' => $bomItem['quantity'] * $item['quantity'],
@@ -72,7 +73,9 @@ class BomSaleController extends Controller
                     SaleItem::create($saleStorableData);
                 }
 
-
+                if($item['profit_rate'] && $item['profit_rate'] != 0){
+                    $item['profit_total'] = $item['profit_rate'] * $item['quantity'];
+                }
 
                 $item['bom_sale_id'] = $bomSale->id;
                 $item['company_id'] = $company_id;

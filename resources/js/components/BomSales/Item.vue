@@ -25,13 +25,11 @@
             <el-input v-model="item.name" type="text" placeholder="Name" :disabled="operation === 'view'"/>
         </td> -->
     <td>
-      <el-input-number
+      <el-input
         v-model="formattedRate"
         type="text"
         placeholder="Rate"
         :disabled="operation === 'view'"
-        :className="text-start"
-        :controls="false"
         :step="0.01"
         @keyup="calculateTotal"
       />
@@ -55,13 +53,11 @@
       />
     </td>
     <td>
-      <el-input-number
+      <el-input
         v-model="formattedTotal"
-        type="number"
+        type="text"
         placeholder="Total"
         disabled
-        :className="text - start"
-        :controls="false"
       />
     </td>
     <td v-if="operation !== 'view'">
@@ -176,6 +172,7 @@ export default {
       } else {
         this.item.name = bom.name;
         this.item.rate = bom.sub_total;
+        this.item.profit_rate = bom.invoice_total ?? 0;
         this.item.id = bom.id;
       }
       this.calculateTotal();

@@ -18,9 +18,11 @@ return new class extends Migration
             $table->string('sku')->nullable();
             $table->string('name')->nullable();
             $table->double('rate')->default(0);
+            $table->double('profit_rate')->nullable();
             $table->string('unit')->nullable();
             $table->float('quantity', 8, 4)->default(0.0000);
             $table->double('total')->default(0);
+            $table->double('profit_total')->nullable();
             $table->unsignedBigInteger('client_id')->nullable();
             $table->integer('company_id');
             $table->integer('created_by')->nullable();

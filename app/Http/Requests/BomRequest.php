@@ -22,12 +22,12 @@ class BomRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required',
+            'name' => 'required|max:50',
+            'sku' => 'required|max:20',
             'items.0' => 'required|min:1',
             'items.*.sku' =>  'required|string',
             'items.*.quantity' =>  'required|numeric',
             'items.*.unit' => 'required|string',
-            'items.*.bom_item_sku' => 'required|string'
         ];
     }
     
@@ -42,7 +42,6 @@ class BomRequest extends FormRequest
             $messages['items.'.$key.'.quantity.required'] = 'Quantity for item '.$k.' is required';
             $messages['items.'.$key.'.sku.string'] = 'SKU for item '.$k.' must be string';
             $messages['items.'.$key.'.quantity.numeric'] = 'Quantity for item '.$k.' must be number';
-            $messages['items.'.$key.'.bom_item_sku.required'] = 'BOM SKU for item ' .$k. ' is required';
             $messages['items.'.$key.'.unit.required'] = 'Unit for item ' .$k. ' is required';
         }
         return $messages;

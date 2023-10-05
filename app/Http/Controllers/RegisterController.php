@@ -45,13 +45,14 @@ class RegisterController extends Controller
                             ->toArray();
                             
         $subquery = DB::table('sale_items')
+        ->where('company_id', $company_id)
         ->select('sku', DB::raw('SUM(quantity) as total_quantity'), DB::raw('SUM(total) as total_cost'))
-        ->groupBy('sku')
-        ->toSql();
+        ->groupBy('sku');
         $registers = DB::table('bill_items')
             ->leftJoin('bills', 'bill_items.bill_id', '=', 'bills.id')
-            ->leftJoin(DB::raw("($subquery) as sale_items"), function ($join) {
+            ->leftJoin(DB::raw("({$subquery->toSql()}) as sale_items"), function ($join) use ($subquery) {
                 $join->on('bill_items.sku', '=', 'sale_items.sku');
+                $join->addBinding($subquery->getBindings());
             })
             ->select(
                 'bill_items.name',
